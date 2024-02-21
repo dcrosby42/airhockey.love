@@ -49,6 +49,44 @@ return {
     name = "debug_button",
     data = { path = "modules/common/images/downArrow_lineLight25.png" },
   },
+
+
+  {
+    type = "sound",
+    name = "drop_puck1",
+    data = {
+      file = "modules/airhockey/sounds/drop_puck1.wav",
+      type = "sound",
+      volume = 1,
+    },
+  },
+  {
+    type = "sound",
+    name = "drop_puck2",
+    data = {
+      file = "modules/airhockey/sounds/drop_puck2.wav",
+      type = "sound",
+      volume = 1,
+    },
+  },
+  {
+    type = "sound",
+    name = "hit1",
+    data = {
+      file = "modules/airhockey/sounds/hit1.wav",
+      type = "sound",
+      volume = 1,
+    },
+  },
+  {
+    type = "sound",
+    name = "score_goal",
+    data = {
+      file = "modules/airhockey/sounds/score_goal.wav",
+      type = "sound",
+      volume = 1,
+    },
+  },
   -- {
   --   type = "sound",
   --   name = "pig",

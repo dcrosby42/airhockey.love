@@ -43,6 +43,7 @@ function E.background(estore, res)
   return estore:newEntity({
     { 'pos' },
     { 'pic', { id = pic_id, sx = scale, sy = scale } }
+
   })
 end
 
@@ -123,6 +124,9 @@ function E.puck(parent, res, x, y, opts)
     } },
     { 'force',       {} },
     { 'circleShape', { radius = PUCK_RADIUS } },
+
+    -- { 'sound',       { sound = "hit1", volume = 1 } },
+    { 'sound',       { sound = "drop_puck1", volume = 1 } },
   })
 end
 
