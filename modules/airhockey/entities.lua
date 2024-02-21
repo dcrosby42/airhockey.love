@@ -3,7 +3,7 @@ local Estore = require "castle.ecs.estore"
 local inspect = require "inspect"
 
 local PUCK_RADIUS = 40
-local MALLET_RADIUS = 50
+local MALLET_RADIUS = 60
 
 local E = {}
 
