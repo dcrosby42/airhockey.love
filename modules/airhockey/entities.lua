@@ -4,6 +4,14 @@ local inspect = require "inspect"
 
 local PUCK_RADIUS = 40
 local MALLET_RADIUS = 60
+local GOAL_WIDTH = 250
+local GOAL_DEPTH = 90
+
+local SHOW_RELOAD_BUTTON = true
+local SHOW_DEBUG_TOGGLE_BUTTON = false
+local DEBUG_ZOOMOUT = false
+local DEBUG_DRAW_WALLS = DEBUG_ZOOMOUT
+local DEBUG_HIDE_BACKGROUND = DEBUG_ZOOMOUT
 
 local E = {}
 
@@ -14,20 +22,46 @@ function E.initialEntities(res)
 
   local estore = Estore:new()
 
-  E.physicsWorld(estore, res)
-  E.background(estore, res)
+  local viewport = E.viewport(estore, res)
 
-  E.add_walls(estore, res)
+  E.physicsWorld(viewport, res)
 
-  -- E.puck(estore, res, 150, 150, { color = "blue" })
-  E.puck(estore, res, 450, 650, { color = "red" })
+  E.background(viewport, res)
 
-  E.mallet(estore, res, w / 2, h - 75, { color = "blue" })
-  E.mallet(estore, res, w / 2, 75, { color = "blue" })
+  E.add_walls(viewport, res)
 
-  E.buttons(estore, res)
+  -- E.puck(viewport, res, 150, 150, { color = "blue" })
+  E.puck(viewport, res, 450, 650, { color = "red" })
+
+  E.mallet(viewport, res, w / 2, h - 75, { color = "blue" })
+  E.mallet(viewport, res, w / 2, 75, { color = "blue" })
+
+
+  if SHOW_RELOAD_BUTTON then
+    E.addReloadButton(estore, res)
+  end
+  if SHOW_DEBUG_TOGGLE_BUTTON then
+    E.addDebugButton(estore, res)
+  end
 
   return estore
+end
+
+function E.viewport(estore, res)
+  local w, h = love.graphics.getDimensions()
+  local scale = 1
+  local x, y = 0, 0
+  if DEBUG_ZOOMOUT then
+    scale = 0.7
+    x, y = -100, -100
+  end
+
+  return estore:newEntity({
+    { 'name',     { name = "viewport" } },
+    { 'viewport', { sx = scale, sy = scale } },
+    { 'pos',      { x = x, y = y } },
+    { 'rect',     { w = w, h = h, offx = 0, offy = 0, draw = false } }
+  })
 end
 
 function E.physicsWorld(estore, res)
@@ -37,13 +71,13 @@ function E.physicsWorld(estore, res)
 end
 
 function E.background(estore, res)
+  if DEBUG_HIDE_BACKGROUND then return nil end
   local pic_id = "rink1"
   local imgW = res.pics[pic_id].rect.w
   local scale = res.data.screen_size.width / imgW
-  return estore:newEntity({
+  estore:newEntity({
     { 'pos' },
     { 'pic', { id = pic_id, sx = scale, sy = scale } }
-
   })
 end
 
@@ -68,36 +102,76 @@ function E.add_walls(parent, res)
   local thick = 10
 
   do
-    local x = midx
-    local y = top
-    local w = sw
+    -- top left
+    local w = sw / 2 - (GOAL_WIDTH / 2)
     local h = thick
-    local e = parent:newEntity(staticBox(x, y, w, h, { name = "top_wall", tag = "wall" }))
-    e.body.debugDraw = true
+    local x = w / 2
+    local y = top
+    local e = parent:newEntity(staticBox(x, y, w, h, { name = "top_left_wall", tag = "wall" }))
+    e.body.debugDraw = DEBUG_DRAW_WALLS
   end
   do
-    local x = midx
-    local y = bottom
-    local w = sw
+    -- top right
+    local w = sw / 2 - (GOAL_WIDTH / 2)
     local h = thick
-    local e = parent:newEntity(staticBox(x, y, w, h, { name = "bottom_wall", tag = "wall" }))
-    e.body.debugDraw = true
+    local x = sw - (w / 2)
+    local y = top
+    local e = parent:newEntity(staticBox(x, y, w, h, { name = "top_right_wall", tag = "wall" }))
+    e.body.debugDraw = DEBUG_DRAW_WALLS
   end
+  do
+    -- top goal net
+    local w = GOAL_WIDTH
+    local h = thick
+    local x = sw / 2
+    local y = top - GOAL_DEPTH
+    local e = parent:newEntity(staticBox(x, y, w, h, { name = "top_goal", tag = "wall" }))
+    e.body.debugDraw = DEBUG_DRAW_WALLS
+  end
+  do
+    -- bottom left
+    local w = sw / 2 - (GOAL_WIDTH / 2)
+    local h = thick
+    local x = w / 2
+    local y = bottom
+    local e = parent:newEntity(staticBox(x, y, w, h, { name = "bottom_left_wall", tag = "wall" }))
+    e.body.debugDraw = DEBUG_DRAW_WALLS
+  end
+  do
+    -- bottom right
+    local w = sw / 2 - (GOAL_WIDTH / 2)
+    local h = thick
+    local x = sw - (w / 2)
+    local y = bottom
+    local e = parent:newEntity(staticBox(x, y, w, h, { name = "bottom_right_wall", tag = "wall" }))
+    e.body.debugDraw = DEBUG_DRAW_WALLS
+  end
+  do
+    -- bottom goal net
+    local w = GOAL_WIDTH
+    local h = thick
+    local x = sw / 2
+    local y = bottom + GOAL_DEPTH
+    local e = parent:newEntity(staticBox(x, y, w, h, { name = "bottom_goal", tag = "wall" }))
+    e.body.debugDraw = DEBUG_DRAW_WALLS
+  end
+  -- left
   do
     local x = left
     local y = midy
     local w = thick
     local h = sh - thick
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "left_wall", tag = "wall" }))
-    e.body.debugDraw = true
+    e.body.debugDraw = DEBUG_DRAW_WALLS
   end
+  -- right
   do
     local x = right
     local y = midy
     local w = thick
     local h = sh - thick
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "right_wall", tag = "wall" }))
-    e.body.debugDraw = true
+    e.body.debugDraw = DEBUG_DRAW_WALLS
   end
 end
 
@@ -157,7 +231,7 @@ function E.mallet(parent, res, x, y, opts)
   })
 end
 
-function E.buttons(parent, res)
+function E.addReloadButton(parent, res)
   local w, h = love.graphics.getDimensions()
   do
     local x, y = w - 44, 50
@@ -168,6 +242,10 @@ function E.buttons(parent, res)
       { 'button', { kind = 'hold', eventtype = 'castle.reloadRootModule', holdtime = 0.5, radius = 40 } },
     })
   end
+end
+
+function E.addDebugButton(parent, res)
+  local w, h = love.graphics.getDimensions()
   do
     local x, y = w - 44, h - 50
     parent:newEntity({
