@@ -11,7 +11,7 @@ Comp.define("timer", { 't', 0, 'factor', 1, 'reset', 0, 'countDown', true, 'loop
 -- Comp.define("controller", {'id','','leftx',0,'lefty',0,})
 Comp.define("controller", { 'id', '' })
 
-Comp.define("viewport", { 'sx', 1, 'sy', 1 })
+Comp.define("viewport", { 'x', 0, 'y', 0, 'sx', 1, 'sy', 1 })
 Comp.define("viewportTarget", { 'offx', 0, 'offy', 0 })
 Comp.define("followable", { 'targetname', '' })
 Comp.define("follower", { 'targetname', '' })
@@ -38,7 +38,7 @@ Comp.define('body', {
   'kind', '',
   'group', 0,
   'dynamic', true,
-  'mass', '',   -- non-number tells physics system to compute its own mass
+  'mass', '', -- non-number tells physics system to compute its own mass
   'friction', 0.2,
   'restitution', 0.2,
   'fixedrotation', false,

@@ -659,6 +659,18 @@ function arity(fn)
   return debug.getinfo(fn).nparams
 end
 
+-- Given a list of funcs, return a function that executes them all in order.
+-- The funcs in the given list are expected to accept 2 args.
+-- Funcs are executed for their side effects; this is mostly for things like drawing funcs.
+-- (This isn't quite "composition" because the results of each all are discarded.)
+-- No meaningful return comes from the resulting function.
+-- IF THE FIRST FUNCTION'S ARITY IS 3:
+--    * The tail of the funcs list will be converted via recursive call to makeFuncChain2,
+--    * The first func will be invoked with that resulting tail func passed as third param.
+--    * Because...? This lets a func programmtically decide when/if to resume executing the func chain.
+--      (This was developed to allow the ViewportDrawSystem to pre/post modify
+--      global graphics transform state surrounding the remaining drawing
+--      operations)
 function makeFuncChain2(fns)
   local n = 2
   if #fns == 0 then return noop end
