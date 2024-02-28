@@ -27,6 +27,8 @@ function E.initialEntities(res)
 
   E.physicsWorld(viewport, res)
 
+  E.gameState(estore, res)
+
   E.background(viewport, res)
 
   E.add_walls(viewport, res)
@@ -39,7 +41,7 @@ function E.initialEntities(res)
   E.mallet(viewport, res, 450, 650, { color = "blue" })
   E.mallet(viewport, res, w / 2, 75, { color = "blue" })
 
-  E.scoreBoard(estore)
+  E.scoreBoard(viewport)
 
 
   if SHOW_RELOAD_BUTTON then
@@ -138,7 +140,7 @@ function E.add_walls(parent, res)
     local y = top - GOAL_DEPTH
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "top_goal", tag = "wall" }))
     e:newComp('tag', { name = "goal" })
-    e:newComp('state', { name = "winner", value = "Player 2" })
+    e:newComp('state', { name = "winner", value = "Player2" })
     e.body.debugDraw = DEBUG_DRAW_WALLS
   end
   do
@@ -167,7 +169,7 @@ function E.add_walls(parent, res)
     local y = bottom + GOAL_DEPTH
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "bottom_goal", tag = "wall" }))
     e:newComp('tag', { name = "goal" })
-    e:newComp('state', { name = "winner", value = "Player 1" })
+    e:newComp('state', { name = "winner", value = "Player1" })
     e.body.debugDraw = DEBUG_DRAW_WALLS
   end
   -- left
@@ -217,6 +219,7 @@ function E.puck(parent, res, x, y, opts)
     -- { 'sound',       { sound = "hit1", volume = 1 } },
     { 'sound',       { sound = "drop_puck1", volume = 1 } },
   })
+  return puck
 end
 
 function E.mallet(parent, res, x, y, opts)
@@ -274,8 +277,12 @@ end
 
 function E.scoreBoard(parent)
   local w, h = love.graphics.getDimensions()
+
   parent:newEntity({
-    { 'pos', { x = 100, y = (h / 2) - 10 } },
+    -- Important name format! Player1 corresponds with goal and game_state
+    { 'name',  { name = "score_Player1" } },
+    { 'state', { name = "score", value = 0 } },
+    { 'pos',   { x = 100, y = (h / 2) - 10 } },
     {
       'label',
       {
@@ -299,7 +306,10 @@ function E.scoreBoard(parent)
   })
 
   parent:newEntity({
-    { 'pos', { x = 10, y = (h / 2) + 10 } },
+    -- Important name format! Player2 corresponds with goal and game_state
+    { 'name',  { name = "score_Player2" } },
+    { 'state', { name = "score", value = 0 } },
+    { 'pos',   { x = 10, y = (h / 2) + 10 } },
     {
       'label',
       {
@@ -316,6 +326,14 @@ function E.scoreBoard(parent)
         debugdraw = false,
       },
     },
+  })
+end
+
+function E.gameState(parent, res)
+  parent:newEntity({
+    { 'name',  { name = 'game_state' } },
+    { 'state', { name = 'Player1', value = 0 } },
+    { 'state', { name = 'Player2', value = 0 } },
   })
 end
 

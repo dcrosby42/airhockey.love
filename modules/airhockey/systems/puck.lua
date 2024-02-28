@@ -46,7 +46,6 @@ return defineUpdateSystem(
       if hitE.tags.goal then
         estore:newEntity({
           { 'tag',   { name = 'goal_scored' } },
-          { 'state', { name = 'fsm', value = 'init' } },
           { 'state', { name = 'winner', value = hitE.states.winner.value } },
         })
         estore:destroyEntity(e)

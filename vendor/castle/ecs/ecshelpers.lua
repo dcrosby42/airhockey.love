@@ -225,6 +225,7 @@ function nameEnt(e, name)
   end
 end
 
+-- for use with castle.systems.selfdestruct
 function selfDestructEnt(e, t)
   tagEnt(e, "self_destruct")
   e:newComp('timer', { t = t, name = 'self_destruct' })
