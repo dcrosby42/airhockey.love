@@ -1,6 +1,7 @@
-local Debug = require("mydebug").sub("Mallet", true, true)
+local Debug = require("mydebug").sub("Mallet", false, false)
 local inspect = require "inspect"
 
+-- Controll the mallets (paddles) by touch-n-drag
 return defineUpdateSystem(allOf(hasComps("touch", "pos"), hasTag("mallet")), function(e, estore, input, res)
   if e.touch.state == "moved" then
     local boost = 30
@@ -12,6 +13,4 @@ return defineUpdateSystem(allOf(hasComps("touch", "pos"), hasTag("mallet")), fun
     e.vel.dx = 0
     e.vel.dy = 0
   end
-  -- Debug.println(inspect(e.touch))
-  -- Debug.println("hi")
 end)

@@ -6,5 +6,6 @@ return {
   "castle.systems.touchable",
   "castle.systems.touchbutton",
   "modules.airhockey.systems.mallet",
-  "modules.airhockey.systems.puck"
+  "modules.airhockey.systems.puck",
+  "modules.airhockey.systems.goal_scored",
 }

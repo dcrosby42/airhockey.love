@@ -31,9 +31,11 @@ function E.initialEntities(res)
   E.add_walls(viewport, res)
 
   -- E.puck(viewport, res, 150, 150, { color = "blue" })
-  E.puck(viewport, res, 450, 650, { color = "red" })
+  -- E.puck(viewport, res, 450, 650, { color = "red" })
+  E.puck(viewport, res, w / 2, h - 75, { color = "red" })
 
-  E.mallet(viewport, res, w / 2, h - 75, { color = "blue" })
+  -- E.mallet(viewport, res, w / 2, h - 75, { color = "blue" })
+  E.mallet(viewport, res, 450, 650, { color = "blue" })
   E.mallet(viewport, res, w / 2, 75, { color = "blue" })
 
 
@@ -126,6 +128,8 @@ function E.add_walls(parent, res)
     local x = sw / 2
     local y = top - GOAL_DEPTH
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "top_goal", tag = "wall" }))
+    e:newComp('tag', { name = "goal" })
+    e:newComp('state', { name = "winner", value = "Player 2" })
     e.body.debugDraw = DEBUG_DRAW_WALLS
   end
   do
@@ -153,6 +157,8 @@ function E.add_walls(parent, res)
     local x = sw / 2
     local y = bottom + GOAL_DEPTH
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "bottom_goal", tag = "wall" }))
+    e:newComp('tag', { name = "goal" })
+    e:newComp('state', { name = "winner", value = "Player 1" })
     e.body.debugDraw = DEBUG_DRAW_WALLS
   end
   -- left
