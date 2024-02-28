@@ -12,6 +12,7 @@ local SHOW_DEBUG_TOGGLE_BUTTON = false
 local DEBUG_ZOOMOUT = false
 local DEBUG_DRAW_WALLS = DEBUG_ZOOMOUT
 local DEBUG_HIDE_BACKGROUND = DEBUG_ZOOMOUT
+-- local DEBUG_HIDE_BACKGROUND = true
 
 local E = {}
 
@@ -37,6 +38,8 @@ function E.initialEntities(res)
   -- E.mallet(viewport, res, w / 2, h - 75, { color = "blue" })
   E.mallet(viewport, res, 450, 650, { color = "blue" })
   E.mallet(viewport, res, w / 2, 75, { color = "blue" })
+
+  E.scoreBoard(estore)
 
 
   if SHOW_RELOAD_BUTTON then
@@ -68,6 +71,7 @@ end
 
 function E.physicsWorld(estore, res)
   return estore:newEntity({
+    { 'name',         { name = "physics_world" } },
     { 'physicsWorld', { allowSleep = false } }, -- no gravity
   })
 end
@@ -78,19 +82,24 @@ function E.background(estore, res)
   local imgW = res.pics[pic_id].rect.w
   local scale = res.data.screen_size.width / imgW
   estore:newEntity({
+    { 'name', { name = "background" } },
     { 'pos' },
-    { 'pic', { id = pic_id, sx = scale, sy = scale } }
+    { 'pic',  { id = pic_id, sx = scale, sy = scale } }
   })
 end
 
 local function staticBox(x, y, w, h, opts)
   opts = opts or {}
-  return {
+  local comps = {
     { 'tag',            { name = opts.tag or 'block' } },
     { 'body',           { dynamic = false } },
     { 'rectangleShape', { w = w, h = h } },
     { 'pos',            { x = x, y = y } },
   }
+  if opts.name then
+    table.insert(comps, { 'name', { name = opts.name } })
+  end
+  return comps
 end
 
 function E.add_walls(parent, res)
@@ -261,6 +270,53 @@ function E.addDebugButton(parent, res)
       { 'button', { kind = 'hold', eventtype = 'castle.toggleDebugLog', holdtime = 0.4, radius = 40 } },
     })
   end
+end
+
+function E.scoreBoard(parent)
+  local w, h = love.graphics.getDimensions()
+  parent:newEntity({
+    { 'pos', { x = 100, y = (h / 2) - 10 } },
+    {
+      'label',
+      {
+        text = "00",
+        color = { 0, 0, 1, 0.35 },
+
+        width = 90,
+        height = 70,
+        r = math.pi,
+        offx = 0, --90 / 2,
+        offy = 0, --70 / 2,
+        align = "center",
+        valign = "middle",
+        -- shadowcolor = { 0, 0, 0, 0.5 },
+        -- shadowx = 3,
+        -- shadowy = 3,
+        font = 'alarm_clock_medium',
+        debugdraw = false,
+      },
+    },
+  })
+
+  parent:newEntity({
+    { 'pos', { x = 10, y = (h / 2) + 10 } },
+    {
+      'label',
+      {
+        text = "00",
+        color = { 1, 0, 0, 0.35 },
+        width = 90,
+        height = 70,
+        align = "center",
+        valign = "middle",
+        -- shadowcolor = { 0, 0, 0, 0.5 },
+        -- shadowx = 3,
+        -- shadowy = 3,
+        font = 'alarm_clock_medium',
+        debugdraw = false,
+      },
+    },
+  })
 end
 
 return E

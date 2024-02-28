@@ -87,6 +87,18 @@ return {
       volume = 1,
     },
   },
+  {
+    type = "font",
+    name = "alarm_clock",
+    data = {
+      file = "modules/airhockey/fonts/alarm_clock.ttf",
+      choices = {
+        { name = "small",  size = 24 },
+        -- { name = "medium", size = 48 },
+        { name = "medium", size = 64 },
+      },
+    },
+  },
   -- {
   --   type = "sound",
   --   name = "pig",

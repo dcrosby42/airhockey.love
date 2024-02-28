@@ -28,7 +28,7 @@ Comp.define("sound",
 
 Comp.define("label",
   { 'text', 'Label', 'color', { 0, 0, 0 }, 'font', '', 'width', 0, 'align', 'left', 'height', 0, 'valign', 'middle',
-    'debugonly', false, 'shadowcolor', false, 'shadowx', 0, 'shadowy', 0, 'debugdraw', false })
+    'r', 0, 'offx', 0, 'offy', 0, 'debugonly', false, 'shadowcolor', false, 'shadowx', 0, 'shadowy', 0, 'debugdraw', false })
 Comp.define("circle", { 'offx', 0, 'offy', 0, 'radius', 0, 'fill', true, 'color', { 0, 0, 0 } })
 Comp.define("rect", { 'offx', 0, 'offy', 0, 'w', 0, 'h', 0, 'color', { 1, 1, 1 }, 'style', 'fill', 'draw', true,
   'debugonly', false })

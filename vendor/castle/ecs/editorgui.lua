@@ -14,16 +14,16 @@ function Editor.init()
     history = History:new(10 * 60),
     historyIndex = 0,
     ui = {
-      bgOpacity = {value = 0.8, min = 0, max = 1},
-      timeSpeedSlider = {value = 1, min = 0, max = 2},
-      historyCheckbox = {text = "Record", checked = false},
-      pausedCheckbox = {text = "Paused", checked = false},
-      estoreCheckbox = {text = "Entities", checked = true},
-      timeNavSlider = {value = 0, min = 0, max = 0, step = 1},
-      entityFilterInput = {text = ""},
+      bgOpacity = { value = 0.8, min = 0, max = 1 },
+      timeSpeedSlider = { value = 1, min = 0, max = 2 },
+      historyCheckbox = { text = "Record", checked = false },
+      pausedCheckbox = { text = "Paused", checked = false },
+      estoreCheckbox = { text = "Entities", checked = true },
+      timeNavSlider = { value = 0, min = 0, max = 0, step = 1 },
+      entityFilterInput = { text = "" },
       ents = {},
       pinnedEnts = {},
-      notesBox = {w = 400, h = "full", pin = "right"},
+      notesBox = { w = 400, h = "full", pin = "right" },
     },
   }
   return editor
@@ -34,7 +34,7 @@ local function getEstore(editor)
     local es = editor.history:get(editor.historyIndex)
     if es == nil then
       print("!! DANG: editor.historyIndex=" .. editor.historyIndex ..
-                " but len is " .. editor.history:length())
+        " but len is " .. editor.history:length())
       return editor.estore
     end
     return es
@@ -78,20 +78,20 @@ local function updateCompGui(c)
   local str = c.type
   str = string.sub(str, 1, 13)
   suit.Label("  ", suit.layout:row(10, h))
-  suit.Button(str, {id = c.cid, align = "right"}, suit.layout:col(100, h))
+  suit.Button(str, { id = c.cid, align = "right" }, suit.layout:col(100, h))
 
   local h = 15
   local w = 1000
   if c.type == "pos" then
     local str = nameBlurb(c) .. "(" .. round(c.x, 3) .. ", " .. round(c.y, 3) ..
-                    ") r: " .. round(c.r, 3)
-    suit.Label(str, {align = "left"}, suit.layout:col(w, h))
+        ") r: " .. round(c.r, 3)
+    suit.Label(str, { align = "left" }, suit.layout:col(w, h))
   elseif c.type == "contact" then
     local str = c.otherEid .. " N" .. coordStrParen(c.nx, c.ny) .. " loc" ..
-                    coordStrParen(c.x, c.y)
-    suit.Label(str, {align = "left"}, suit.layout:col(w, h))
+        coordStrParen(c.x, c.y)
+    suit.Label(str, { align = "left" }, suit.layout:col(w, h))
   elseif c.type == "tag" then
-    suit.Label(c.name, {align = "left"}, suit.layout:col(w, h))
+    suit.Label(c.name, { align = "left" }, suit.layout:col(w, h))
   else
     local str = nameBlurb(c)
     for key, val in pairs(c) do
@@ -101,19 +101,21 @@ local function updateCompGui(c)
         str = str .. key .. ": " .. inspect(val) .. " "
       end
     end
-    suit.Label(str, {align = "left"}, suit.layout:col(w, h))
+    suit.Label(str, { align = "left" }, suit.layout:col(w, h))
   end
 
   suit.layout:returnLeft()
 end
 
 local function makeFilter(filterTxt, pinnedEnts)
-  return {text = filterText, pat = "^" .. filterTxt, pinned = pinnedEnts}
+  return { text = filterText, pat = "^" .. filterTxt, pinned = pinnedEnts }
 end
 
 local function matchEntity(e, f)
   if (f.pinned and f.pinned[e.eid]) or e.eid:match(f.pat) or
-      (e.name and e.name.name:match(f.pat)) then return true end
+      (e.name and e.name.name:match(f.pat)) then
+    return true
+  end
   return false
 end
 
@@ -135,17 +137,20 @@ local function updateEstoreGui(ui, estore)
   suit.layout:returnLeft()
   local filterTxt = ui.entityFilterInput.text
   local ents = getFilteredEntities(estore.ents,
-                                   makeFilter(filterTxt, ui.pinnedEnts))
+    makeFilter(filterTxt, ui.pinnedEnts))
   -- For each Entity (sorted ascend by numeric eid)
   -- for eid,e in pairsByKeys(estore.ents, compareEids) do
   for _, e in ipairs(ents) do
     local eid = e.eid
     -- Entity name button
     local name = eid
-    if e.name then name = name .. "." .. e.name.name end
+    if e.name then
+      name = name .. "." .. e.name.name
+    elseif e.tag then
+      name = name .. "." .. e.tag.name
+    end
     if #name > 17 then name = name:sub(1, 17) .. ">" end
-    if suit.Button(name, {id = eid, align = "left"}, suit.layout:row(130, h))
-        .hit then
+    if suit.Button(name, { id = eid, align = "left" }, suit.layout:row(130, h)).hit then
       if ui.ents[eid] then
         ui.ents[eid] = nil
       else
@@ -156,8 +161,8 @@ local function updateEstoreGui(ui, estore)
 
     -- Entity "pinned" checkbox
     local pinned = ui.pinnedEnts[eid] == true
-    if suit.Checkbox({checked = pinned}, {id = eid .. "_keep", align = "right"},
-                     suit.layout:col(100, 15)).hit then
+    if suit.Checkbox({ checked = pinned }, { id = eid .. "_keep", align = "right" },
+          suit.layout:col(100, 15)).hit then
       if not pinned then
         ui.pinnedEnts[eid] = true
       else
@@ -192,15 +197,15 @@ function Editor.update(editor)
   local h = 25
   suit.layout:reset(x, y, 5, 2)
 
-  suit.Label("Opacity", {align = "left"}, suit.layout:row(100, h))
+  suit.Label("Opacity", { align = "left" }, suit.layout:row(100, h))
   suit.Slider(ui.bgOpacity, suit.layout:col(100, h))
   suit.Label(tostring(ui.bgOpacity.value), suit.layout:col(50, h))
-  if suit.Button("Reset", {id = "reset2"}, suit.layout:col(50, h)).hit then
+  if suit.Button("Reset", { id = "reset2" }, suit.layout:col(50, h)).hit then
     ui.bgOpacity.value = 0.8
   end
 
   suit.layout:returnLeft()
-  suit.Label("Time Dilation", {align = "left"}, suit.layout:row(100, h))
+  suit.Label("Time Dilation", { align = "left" }, suit.layout:row(100, h))
   suit.Slider(ui.timeSpeedSlider, suit.layout:col(100, h))
   suit.Label(tostring(ui.timeSpeedSlider.value), suit.layout:col(50, h))
   if suit.Button("Reset", suit.layout:col(50, h)).hit then
@@ -218,7 +223,7 @@ function Editor.update(editor)
   ui.timeNavSlider.max = editor.history:length()
   ui.timeNavSlider.value = editor.historyIndex
 
-  suit.Label("History:", {align = "left"}, suit.layout:col(50, h))
+  suit.Label("History:", { align = "left" }, suit.layout:col(50, h))
   if editor.history:length() > 0 then
     suit.Slider(ui.timeNavSlider, suit.layout:col(300, h))
     roundSliderValue(ui.timeNavSlider)
@@ -259,6 +264,7 @@ end
 function Editor.keypressed(key)
   suit.keypressed(key)
 end
+
 function Editor.textinput(text)
   suit.textinput(text)
 end
