@@ -81,12 +81,13 @@ end
 function E.background(estore, res)
   if DEBUG_HIDE_BACKGROUND then return nil end
   local pic_id = "rink1"
-  local imgW = res.pics[pic_id].rect.w
-  local scale = res.data.screen_size.width / imgW
+  local imgW, imgH = res.pics[pic_id].rect.w, res.pics[pic_id].rect.h
+  local sx = res.data.screen_size.width / imgW
+  local sy = res.data.screen_size.height / imgH
   estore:newEntity({
     { 'name', { name = "background" } },
     { 'pos' },
-    { 'pic',  { id = pic_id, sx = scale, sy = scale } }
+    { 'pic',  { id = pic_id, sx = sx, sy = sy } }
   })
 end
 
@@ -278,11 +279,12 @@ end
 function E.scoreBoard(parent)
   local w, h = love.graphics.getDimensions()
 
+  -- P1 Score
   parent:newEntity({
     -- Important name format! Player1 corresponds with goal and game_state
     { 'name',  { name = "score_Player1" } },
     { 'state', { name = "score", value = 0 } },
-    { 'pos',   { x = 100, y = (h / 2) - 10 } },
+    { 'pos',   { x = w - 10, y = (h / 2) - 10 } },
     {
       'label',
       {
@@ -305,6 +307,7 @@ function E.scoreBoard(parent)
     },
   })
 
+  -- P2 Score
   parent:newEntity({
     -- Important name format! Player2 corresponds with goal and game_state
     { 'name',  { name = "score_Player2" } },
