@@ -10,6 +10,7 @@ local GC = require 'garbagecollect'
 local MyDebug = require 'mydebug'
 MyDebug.setup()
 local showDebugLog = false
+local Debug = MyDebug.sub("castle.main", true, true)
 
 local SoundCanvas = require "castle.soundcanvas"
 local sndCanvas = SoundCanvas.default
@@ -64,8 +65,11 @@ local function loadItUp(opts)
 
   if opts.doOnload ~= false then
     if Hooks.onload then Hooks.onload() end
-    Config.width = love.graphics.getWidth()
-    Config.height = love.graphics.getHeight()
+    local w, h = love.graphics.getDimensions()
+    Config.width = w
+    Config.height = h
+    Debug.println("castle.onload -> screen size: " .. tostring(w) .. "," .. tostring(h))
+    Debug.println("castle.onload -> dpi scale: " .. tostring(love.graphics.getDPIScale()))
   end
 
   world = RootModule.newWorld(opts.newWorldOpts)
@@ -352,6 +356,7 @@ function love.textinput(text)
 end
 
 function love.resize(w, h)
+  Debug.println("love.resize(" .. tostring(w) .. "," .. tostring(h) .. ")")
   updateWorld({ type = "resize", w = w, h = h })
 end
 
