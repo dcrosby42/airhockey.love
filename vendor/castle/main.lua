@@ -27,6 +27,8 @@ local Hooks = {}
 local RootModule
 local world, errWorld
 
+INITIAL_FONT = love.graphics.getFont()
+
 local function setErrorMode(err, traceback)
   print("!! CAUGHT ERROR !!")
   print(err)

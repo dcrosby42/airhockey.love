@@ -1,6 +1,11 @@
 local inspect = require('inspect')
 local G = love.graphics
 
+local function reset()
+  G.setColor(1, 1, 1, 1)
+  G.setFont(INITIAL_FONT)
+end
+
 local function drawRotatedRectangle(mode, x, y, width, height, angle, offx, offy)
   -- We cannot rotate the rectangle directly, but we
   -- can move and rotate the coordinate system.
@@ -14,9 +19,7 @@ local function drawRotatedRectangle(mode, x, y, width, height, angle, offx, offy
 end
 
 local function drawLabel(e, label, res)
-  local savedFont
   if label.font then
-    savedFont = G.getFont()
     -- lookup font and apply it
     local font = res.fonts[label.font]
     if font then G.setFont(font) end
@@ -66,18 +69,37 @@ local function drawLabel(e, label, res)
   G.setColor(r, g, b, a)
   G.printf(label.text, x, y, width, align, rot)
 
-  if savedFont then G.setFont(savedFont) end
-  G.setColor(1, 1, 1, 1)
+  reset()
 end
 
 local function drawLabels(e, res)
   if e.label then
-    for cid, label in pairs(e.labels) do drawLabel(e, label, res) end
+    for _cid, label in pairs(e.labels) do
+      drawLabel(e, label, res)
+    end
+  end
+end
+
+local function drawRect(e, rect, res)
+  if not e.rect.draw then return end
+  local x, y = getPos(e)
+  love.graphics.setColor(unpack(rect.color))
+  print(rect.style)
+  love.graphics.rectangle(rect.style, x - rect.offx, y - rect.offy, rect.w, rect.h)
+  reset()
+end
+
+local function drawRects(e, res)
+  if e.rect then
+    for _cid, rect in pairs(e.rects) do
+      drawRect(e, rect, res)
+    end
   end
 end
 
 
 return {
   drawLabels = drawLabels,
+  drawRects = drawRects,
   drawRotatedRectangle = drawRotatedRectangle,
 }
