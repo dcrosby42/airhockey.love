@@ -3,9 +3,9 @@ local Castle = require "vendor/castle/main"
 Castle.module_name = "modules/root"
 Castle.onload = function()
   love.window.setMode(600, 800, {
-    fullscreen = true,
+    fullscreen = false,
     resizable = true,
-    highdpi = false,
+    highdpi = true,
   })
 end
 

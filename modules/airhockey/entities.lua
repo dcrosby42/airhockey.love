@@ -9,10 +9,12 @@ local GOAL_DEPTH = 90
 
 local SHOW_RELOAD_BUTTON = true
 local SHOW_DEBUG_TOGGLE_BUTTON = false
-local DEBUG_ZOOMOUT = false
+local DEBUG_ZOOMOUT = true
 local DEBUG_DRAW_WALLS = DEBUG_ZOOMOUT
 local DEBUG_HIDE_BACKGROUND = DEBUG_ZOOMOUT
--- local DEBUG_HIDE_BACKGROUND = true
+
+local DEBUG_DRAW_WALLS = true
+local DEBUG_HIDE_BACKGROUND = true
 
 local E = {}
 
