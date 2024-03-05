@@ -4,7 +4,12 @@ Comp.define("bounds", { 'offx', 0, 'offy', 0, 'w', 0, 'h', 0 })
 Comp.define("pos", { 'x', 0, 'y', 0, 'r', 0 })
 Comp.define("vel", { 'dx', 0, 'dy', 0, 'angularvelocity', 0, 'lineardamping', 0, 'angulardamping', 0 })
 
+Comp.define("scale", { 'x', 1, 'y', 1 })
+Comp.define("rot", { 'r', 0 })
+
 Comp.define("tag", {})
+
+Comp.define("bgcolor", { 'color', { 0, 0, 0 } })
 
 Comp.define("timer", { 't', 0, 'factor', 1, 'reset', 0, 'countDown', true, 'loop', false, 'alarm', false, 'event', '' })
 
@@ -82,5 +87,10 @@ Comp.define("touch", { 'touchid', '', 'state', '',
 
 Comp.define("manipulator", { 'id', '', 'mode', '', 'x', 0, 'y', 0, 'dx', 0, 'dy', 0 })
 
+Comp.define("screen_grid", { 'spacex', 10, 'spacey', '', 'color', { 1, 1, 1, 0.3 } })
+
 Comp.define("health", { 'hp', 10, 'maxhp', 10 })
+
+
+
 return Comp
