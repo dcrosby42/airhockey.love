@@ -7,12 +7,18 @@ return {
       components = { data = {} },
       systems = { datafile = "modules/newdraw/systems.lua" },
       drawSystems = { datafile = "modules/newdraw/drawSystems.lua" },
+      name = "Scenegraph Experiment",
     },
   },
   {
     type = "settings",
     name = "dev",
     data = { bgmusic = false },
+  },
+  {
+    type = "pic",
+    name = "tree",
+    data = { path = "modules/newdraw/images/Tree2_85x110.png" },
   },
   {
     type = "pic",

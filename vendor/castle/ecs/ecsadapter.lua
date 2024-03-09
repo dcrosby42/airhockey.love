@@ -1,18 +1,27 @@
 --
 -- ECS module adapter
 --
--- A function that converts an "ECS Module" into a "castle Module"
+-- A function that adapts an "ECS Module" into a "castle Module"
 --
+
+-- (ecshelpers injects a bunch of commonly useful component/entity funcs globally)
 require 'castle.ecs.ecshelpers'
 local Editor = require('castle.ecs.editorgui')
 local JoystickAdapter = require('castle.ecs.joystickadapter')
 local G = love.graphics
 local soundmanager = require('castle.soundmanager')
 
-local function newWorld(ecsMod)
-  local res = ecsMod.loadResources()
+-- Implements
+local function newWorld(ecsArgs)
+  local res = ecsArgs.loadResources()
+  local estore = ecsArgs.create(res)
+  if not estore then
+    local name = ecsArgs.name or "UNNAMED ECS MODULE"
+    print(require("inspect")(ecsArgs))
+    error("ecsArgs.create() for '" .. name .. "' must return an Estore!")
+  end
   local world = {
-    estore = ecsMod.create(res),
+    estore = estore,
     input = { dt = 0, events = {} },
     resources = res,
 
@@ -125,16 +134,16 @@ end
 --   update(estore, action, resources) -> estore,sidefx
 --   draw(estore,resources) -> nil
 --
-return function(ecsMod)
+return function(ecsArgs)
   return {
     newWorld = function()
-      return newWorld(ecsMod)
+      return newWorld(ecsArgs)
     end,
     updateWorld = function(world, action)
-      return updateWorld(ecsMod, world, action)
+      return updateWorld(ecsArgs, world, action)
     end,
     drawWorld = function(world)
-      return drawWorld(ecsMod, world)
+      return drawWorld(ecsArgs, world)
     end,
   }
 end

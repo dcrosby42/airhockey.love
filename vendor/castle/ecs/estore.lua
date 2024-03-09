@@ -114,8 +114,10 @@ end
 --         comp.eid == 100
 function Estore:addComp(e, comp)
   if not self.ents[e.eid] then
-    -- shenanigans... if while modifying an entity, it becomes empty of comps, it may have gotten cleaned out of the ents cache.  end
-    self.ents[e.eid] = e                    
+    -- shenanigans... if while modifying an entity, it becomes empty of comps,
+    -- it may have gotten cleaned out of the ents cache.
+    self.ents[e.eid] = e
+  end
 
   -- Officially relate this comp to its entity
   comp.eid = e.eid

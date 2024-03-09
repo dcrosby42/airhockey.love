@@ -6,8 +6,13 @@ local function draw(e, pic, res)
     error("No pic resource '" .. pic.id .. "'")
   end
 
+  local x, y, r = pic.x, pic.y, pic.r
+  local sx, sy = pic.sx, pic.sy
+  local offx = pic.centerx * picRes.rect.w
+  local offy = pic.centery * picRes.rect.h
+
   love.graphics.setColor(pic.color)
-  love.graphics.draw(picRes.image, picRes.quad)
+  love.graphics.draw(picRes.image, picRes.quad, x, y, r, sx, sy, offx, offy)
 
   -- local offx = 0
   -- local offy = 0

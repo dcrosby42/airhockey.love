@@ -5,7 +5,7 @@ Comp.define("pos", { 'x', 0, 'y', 0, 'r', 0 })
 Comp.define("vel", { 'dx', 0, 'dy', 0, 'angularvelocity', 0, 'lineardamping', 0, 'angulardamping', 0 })
 
 Comp.define("scale", { 'x', 1, 'y', 1 })
-Comp.define("rot", { 'r', 0 })
+Comp.define("rot", { 'r', 0, 'aboutx', 0, 'abouty', 0 })
 
 Comp.define("tag", {})
 
@@ -22,7 +22,7 @@ Comp.define("followable", { 'targetname', '' })
 Comp.define("follower", { 'targetname', '' })
 
 Comp.define("pic",
-  { 'id', '', 'centerx', '', 'centery', '', 'offx', 0, 'offy', 0, 'sx', 1, 'sy', 1, 'r', 0, 'color', { 1, 1, 1, 1 },
+  { 'id', '', 'centerx', 0, 'centery', 0, 'offx', 0, 'offy', 0, 'sx', 1, 'sy', 1, 'r', 0, 'color', { 1, 1, 1, 1 },
     'drawbounds', false })
 Comp.define("anim",
   { 'id', '', 'timescale', 1, 'centerx', '', 'centery', '', 'offx', 0, 'offy', 0, 'sx', 1, 'sy', 1, 'r', 0, 'color', { 1, 1, 1, 1 },

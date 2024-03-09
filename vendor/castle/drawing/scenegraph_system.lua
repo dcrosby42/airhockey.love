@@ -1,7 +1,9 @@
 local drawFuncs = {
+  require('castle.drawing.draw_screengrid_entity'),
   require('castle.drawing.draw_pic_entities'),
   -- DrawPic.drawAnims,
-  require('castle.drawing.draw_screengrid_entity'),
+  require('castle.drawing.draw_geom_entities'),
+
 
   -- pic
   -- shapes
@@ -18,7 +20,9 @@ return function(estore, res)
       love.graphics.translate(e.pos.x, e.pos.y)
     end
     if e.rot then
+      love.graphics.translate(e.rot.aboutx, e.rot.abouty)
       love.graphics.rotate(e.rot.r)
+      love.graphics.translate(-e.rot.aboutx, -e.rot.abouty)
     end
     if e.scale then
       love.graphics.scale(e.scale.x, e.scale.y)
