@@ -200,6 +200,21 @@ function tconcat(t1, t2)
   return t1
 end
 
+function appendlist(l1, l2)
+  local r = {}
+  if l1 then
+    for i = 1, #l1 do
+      r[#r + 1] = l1[i]
+    end
+  end
+  if l2 then
+    for i = 1, #l2 do
+      r[#r + 1] = l2[i]
+    end
+  end
+  return r
+end
+
 function tdebug(t, ind)
   if not ind then
     ind = ""

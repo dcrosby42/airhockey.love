@@ -1,11 +1,54 @@
+-- require 'castle.helpers'
 local Comp = require 'castle/ecs/component'
 
-Comp.define("bounds", { 'offx', 0, 'offy', 0, 'w', 0, 'h', 0 })
-Comp.define("pos", { 'x', 0, 'y', 0, 'r', 0 })
-Comp.define("vel", { 'dx', 0, 'dy', 0, 'angularvelocity', 0, 'lineardamping', 0, 'angulardamping', 0 })
+-- local ext = appendlist
 
+local TrAttrs = { 'x', 0, 'y', 0, 'r', 0, 'sx', 1, 'sy', 1 }
+-- local SizeAttrs = { 'w', 0, 'h', 0, 'cx', 0, 'cy', 0 }
+
+Comp.define("tr", TrAttrs)
+Comp.define("b", { 'x', 0, 'y', 0, 'w', 0, 'h', 0, 'cx', 0, 'cy', 0, 'debug', false }) -- sx,sy?
+Comp.define("img", {
+  'img', 'UNSET',
+  'x', 0, 'y', 0, 'cx', 0, 'cy', 0,
+  'r', 0,
+  'sx', 1, 'sy', 1,
+  'color', { 1, 1, 1, 1 },
+  'debug', false,
+}) -- w,h?
+
+
+Comp.define("rect2", { 'style', 'line', 'x', 0, 'y', 0, 'w', 0, 'h', 0, 'cx', 0, 'cy', 0 }) -- sx,sy?
+
+Comp.define("circle", { 'offx', 0, 'offy', 0, 'radius', 0, 'fill', true, 'color', { 0, 0, 0 } })
+Comp.define("rect", { 'offx', 0, 'offy', 0, 'w', 0, 'h', 0, 'color', { 1, 1, 1 }, 'style', 'fill', 'draw', true,
+  'debugonly', false })
+
+-- Comp.define("text", {
+--   'text', 'Words',
+--   'color', { 0, 0, 0 },
+--   'font', '',
+--   'width', 0,
+--   'align', 'left',
+--   'height', 0,
+--   'valign', 'middle',
+--   'r', 0,
+--   'offx', 0,
+--   'offy', 0,
+--   'debugonly', false,
+--   'shadowcolor', false,
+--   'shadowx', 0,
+--   'shadowy', 0,
+--   'debugdraw', false })
+
+--
+Comp.define("pos", { 'x', 0, 'y', 0, 'r', 0 })
 Comp.define("scale", { 'x', 1, 'y', 1 })
 Comp.define("rot", { 'r', 0, 'aboutx', 0, 'abouty', 0 })
+Comp.define("bounds", { 'offx', 0, 'offy', 0, 'w', 0, 'h', 0 })
+--
+
+Comp.define("vel", { 'dx', 0, 'dy', 0, 'angularvelocity', 0, 'lineardamping', 0, 'angulardamping', 0 })
 
 Comp.define("tag", {})
 
@@ -34,9 +77,6 @@ Comp.define("sound",
 Comp.define("label",
   { 'text', 'Label', 'color', { 0, 0, 0 }, 'font', '', 'width', 0, 'align', 'left', 'height', 0, 'valign', 'middle',
     'r', 0, 'offx', 0, 'offy', 0, 'debugonly', false, 'shadowcolor', false, 'shadowx', 0, 'shadowy', 0, 'debugdraw', false })
-Comp.define("circle", { 'offx', 0, 'offy', 0, 'radius', 0, 'fill', true, 'color', { 0, 0, 0 } })
-Comp.define("rect", { 'offx', 0, 'offy', 0, 'w', 0, 'h', 0, 'color', { 1, 1, 1 }, 'style', 'fill', 'draw', true,
-  'debugonly', false })
 
 Comp.define('physicsWorld', { 'gx', 0, 'gy', 0, 'allowSleep', true })
 Comp.define('body', {
