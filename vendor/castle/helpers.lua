@@ -442,12 +442,32 @@ end
 
 dist = math.dist
 
-function math.pointinrect(x1, y1, rx, ry, rw, rh)
-  return x1 >= rx and x1 < rx + rw and y1 >= ry and y1 < ry + rh
+function math.pointinrect(ptx, pty, x1, y1, x2, y2)
+  return ptx >= x1 and ptx <= x2 and pty >= y1 and pty <= y2
+end
+
+function math.pointinrectwh(ptx, pty, rx, ry, rw, rh)
+  return ptx >= rx and ptx < rx + rw and pty >= ry and pty < ry + rh
 end
 
 function math.pointinbounds(x1, y1, b)
   return x1 >= b.x and x1 < b.x + b.w and y1 >= b.y and y1 < b.y + b.h
+end
+
+-- Returns true if two rectangles overlap, false if they don't.
+function math.rectanglesintersect(ax1, ay1, ax2, ay2, bx1, by1, bx2, by2)
+  return ax1 < bx2 and
+      bx1 < ax2 and
+      ay1 < by2 and
+      by1 < ay2
+end
+
+-- Returns true if two rectangles overlap, false if they don't.
+function math.rectanglesintersectwh(x1, y1, w1, h1, x2, y2, w2, h2)
+  return x1 < x2 + w2 and
+      x2 < x1 + w1 and
+      y1 < y2 + h2 and
+      y2 < y1 + h1
 end
 
 function math.clamp(val, min, max)

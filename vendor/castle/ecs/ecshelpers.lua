@@ -241,3 +241,13 @@ function findEntity(estoreOrEnt, filter)
   end)
   return found
 end
+
+-- Return all the Entities matching the given entity predicate.
+-- Return empty table if none found
+function findEntities(estore, filter)
+  local ents = {}
+  estore:walkEntities(filter, function(e)
+    table.insert(ents, e)
+  end)
+  return ents
+end

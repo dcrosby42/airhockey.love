@@ -6,4 +6,5 @@ return {
   "castle.systems.touchable",
   "castle.systems.touchbutton",
   "modules.newdraw.systems.devsystem",
+  "modules.newdraw.systems.xformtest",
 }

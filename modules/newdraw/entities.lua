@@ -1,6 +1,10 @@
 local Estore = require "castle.ecs.estore"
 -- local inspect = require "inspect"
 
+local function tag(name)
+  return { 'tag', { name = name } }
+end
+
 local E = {}
 function E.initialEntities(res)
   local w, h = love.graphics.getDimensions()
@@ -13,48 +17,94 @@ function E.initialEntities(res)
   })
 
   -- E.transformTestGrids(estore, res)
-  E.treeTest(estore, res)
+  local base = estore:newEntity({
+    { 'name', { name = "base" } },
+    { 'tr',   { x = 0, y = 0, r = 0, sx = 1, sy = 1 } },
+  })
+
+  estore:newEntity({
+    { 'name',    { name = 'blueDot' } },
+    { 'tr',      { x = 0, y = 0 } },
+    { 'circle2', { style = 'fill', r = 5, color = { 0, 0, 1 } } }
+  })
+
+  estore:newEntity({
+    { 'name',    { name = 'selectbox' } },
+    { 'tr',      { x = 0, y = 0 } },
+    { 'circle2', { style = 'fill', r = 4, color = { 1, 1, 1 } } }
+    -- { 'b',     { w = 100, h = 66, cx = 0.5, cy = 0.5, debug = false } },
+    -- { 'rect2', { w = 100, h = 66, cx = 0.5, cy = 0.5, color = { 1, 1, 1 } } },
+  })
+
+  E.treeTest(base, res)
 
   return estore
 end
 
-function E.treeTest(estore, res)
-  estore:newEntity({
+function E.treeTest(parent, res)
+  parent:newEntity({
     { 'tr',  { x = 0, y = 0, r = 0, sx = 1, sy = 1 } },
     { 'img', { img = "tree", debug = true }, }
   })
 
-  estore:newEntity({
+  parent:newEntity({
     { 'tr',  { x = 200, y = 100, r = 0, sx = 0.8, sy = 0.8 } },
     { 'img', { img = "tree", x = -30, y = -10, debug = true }, }
   })
 
-  estore:newEntity({
+  parent:newEntity({
     { 'tr',  { x = 300, y = 100, r = 0, sx = 0.8, sy = 0.8 } },
     { 'img', { img = "tree", x = 5, cx = 0.5, cy = 1.0, debug = true }, }
   })
-  estore:newEntity({
+  parent:newEntity({
     { 'tr',  { x = 400, y = 100, r = 0, sx = 1, sy = 1 } },
     -- { 'img', { img = "tree", x = 5, cx = 0.5, cy = 1.0, sx = 0.5, sy = 0.9, debug = true }, }
     { 'img', { img = "tree", sx = 0.75, sy = 0.5, debug = true }, }
   })
-  estore:newEntity({
+  parent:newEntity({
     { 'tr',  { x = 500, y = 100, r = 0, sx = 0.75, sy = 0.5 } },
     -- { 'img', { img = "tree", x = 5, cx = 0.5, cy = 1.0, sx = 0.5, sy = 0.9, debug = true }, }
     { 'img', { img = "tree", debug = true }, }
   })
 
-  estore:newEntity({
+  parent:newEntity({
     { 'tr',  { x = 100, y = 300, r = 0, sx = 0.8, sy = 0.8 } },
     { 'img', { img = "tree", r = -math.pi / 4, x = 5, cx = 0.5, cy = 1.0, debug = true } },
     { 'img', { img = "grid_white", } },
     { 'b',   { w = 50, h = 100, cx = 0.5, cy = 0.75, debug = true } }
   })
-  estore:newEntity({
-    { 'tr',  { x = 300, y = 300, r = -math.pi / 4, sx = 0.8, sy = 0.8 } },
+  parent:newEntity({
+    { 'tr',  { x = 300, y = 300, r = 0, sx = 1.2, sy = 0.8 } },
+    { 'img', { img = "tree", r = -math.pi / 4, x = 5, cx = 0.5, cy = 1.0, debug = true } },
+    { 'img', { img = "grid_white", } },
+    { 'b',   { w = 50, h = 100, cx = 0.5, cy = 0.75, debug = true } },
+    tag("clickable"),
+    { 'tag', }
+  })
+  local findme = parent:newEntity({
+    { 'tr',    { x = 500, y = 300, r = -math.pi / 4, sx = 0.8, sy = 0.8 } },
+    { 'img',   { img = "tree", x = 5, cx = 0.5, cy = 1.0, debug = true } },
+    { 'img',   { img = "grid_white" } },
+    { 'b',     { w = 50, h = 100, cx = 0.5, cy = 0.75, debug = true } },
+    { 'name',  { name = "findme" } },
+    { 'tag',   { name = "spinme" } },
+    { 'state', { name = "spinspeed", value = 0.7 } },
+    tag("clickable"),
+  })
+  findme:newEntity({
+    { 'name',    { name = 'greenDot' } },
+    { 'tr',      { x = 0, y = 0 } },
+    { 'circle2', { style = 'fill', r = 5, color = { 0, 1, 0 } } }
+  })
+
+
+
+  parent:newEntity({
+    { 'tr',  { x = 700, y = 300, r = -math.pi / 4, sx = 1.5, sy = 0.6 } },
     { 'img', { img = "tree", x = 5, cx = 0.5, cy = 1.0, debug = true } },
     { 'img', { img = "grid_white" } },
-    { 'b',   { w = 50, h = 100, cx = 0.5, cy = 0.75, debug = true } }
+    { 'b',   { w = 50, h = 100, cx = 0.5, cy = 0.75, debug = true } },
+    tag("clickable"),
   })
 end
 

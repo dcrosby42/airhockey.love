@@ -1,13 +1,14 @@
 -- require 'castle.helpers'
 local Comp = require 'castle/ecs/component'
 
--- local ext = appendlist
+local ext = appendlist
 
 local TrAttrs = { 'x', 0, 'y', 0, 'r', 0, 'sx', 1, 'sy', 1 }
+local RectAttrs = { 'x', 0, 'y', 0, 'w', 0, 'h', 0, 'cx', 0, 'cy', 0 } -- sx,sy?
 -- local SizeAttrs = { 'w', 0, 'h', 0, 'cx', 0, 'cy', 0 }
 
 Comp.define("tr", TrAttrs)
-Comp.define("b", { 'x', 0, 'y', 0, 'w', 0, 'h', 0, 'cx', 0, 'cy', 0, 'debug', false }) -- sx,sy?
+Comp.define("b", ext(RectAttrs, { 'debug', false })) -- sx,sy?
 Comp.define("img", {
   'img', 'UNSET',
   'x', 0, 'y', 0, 'cx', 0, 'cy', 0,
@@ -18,7 +19,8 @@ Comp.define("img", {
 }) -- w,h?
 
 
-Comp.define("rect2", { 'style', 'line', 'x', 0, 'y', 0, 'w', 0, 'h', 0, 'cx', 0, 'cy', 0 }) -- sx,sy?
+Comp.define("rect2", ext(RectAttrs, { 'style', 'line', 'color', { 1, 1, 1 } })) -- sx,sy?
+Comp.define("circle2", { 'style', 'line', 'x', 0, 'y', 0, 'r', 0, 'color', { 1, 1, 1 } })
 
 Comp.define("circle", { 'offx', 0, 'offy', 0, 'radius', 0, 'fill', true, 'color', { 0, 0, 0 } })
 Comp.define("rect", { 'offx', 0, 'offy', 0, 'w', 0, 'h', 0, 'color', { 1, 1, 1 }, 'style', 'fill', 'draw', true,
