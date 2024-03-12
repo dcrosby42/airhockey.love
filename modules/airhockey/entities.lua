@@ -9,12 +9,12 @@ local GOAL_DEPTH = 90
 
 local SHOW_RELOAD_BUTTON = true
 local SHOW_DEBUG_TOGGLE_BUTTON = false
-local DEBUG_ZOOMOUT = true
+local DEBUG_ZOOMOUT = false
 local DEBUG_DRAW_WALLS = DEBUG_ZOOMOUT
 local DEBUG_HIDE_BACKGROUND = DEBUG_ZOOMOUT
 
-local DEBUG_DRAW_WALLS = true
-local DEBUG_HIDE_BACKGROUND = true
+-- local DEBUG_DRAW_WALLS = true
+-- local DEBUG_HIDE_BACKGROUND = true
 
 local E = {}
 
@@ -25,33 +25,33 @@ function E.initialEntities(res)
 
   local estore = Estore:new()
 
-  local viewport = E.viewport(estore, res)
+  -- local viewport = E.viewport(estore, res)
+  -- local parent = viewport
+  local parent = estore
 
-  E.physicsWorld(viewport, res)
+  E.physicsWorld(parent, res)
 
-  E.gameState(estore, res)
+  -- E.gameState(estore, res)
 
-  E.background(viewport, res)
+  -- E.background(parent, res)
 
-  E.add_walls(viewport, res)
+  E.add_walls(parent, res)
 
-  -- E.puck(viewport, res, 150, 150, { color = "blue" })
-  -- E.puck(viewport, res, 450, 650, { color = "red" })
-  E.puck(viewport, res, w / 2, h - 75, { color = "red" })
+  -- E.puck(parent, res, w / 2, h - 75, { color = "red" })
+  E.puck(parent, res, w / 2, h - 75, { color = "red" })
 
-  -- E.mallet(viewport, res, w / 2, h - 75, { color = "blue" })
-  E.mallet(viewport, res, 450, 650, { color = "blue" })
-  E.mallet(viewport, res, w / 2, 75, { color = "blue" })
+  E.mallet(parent, res, 450, 650, { color = "blue" })
+  -- E.mallet(parent, res, w / 2, 75, { color = "blue" })
 
-  E.scoreBoard(viewport)
+  -- E.scoreBoard(parent)
 
 
-  if SHOW_RELOAD_BUTTON then
-    E.addReloadButton(estore, res)
-  end
-  if SHOW_DEBUG_TOGGLE_BUTTON then
-    E.addDebugButton(estore, res)
-  end
+  -- if SHOW_RELOAD_BUTTON then
+  --   E.addReloadButton(estore, res)
+  -- end
+  -- if SHOW_DEBUG_TOGGLE_BUTTON then
+  --   E.addDebugButton(estore, res)
+  -- end
 
   return estore
 end
@@ -206,10 +206,14 @@ function E.puck(parent, res, x, y, opts)
   local puck = parent:newEntity({
     { 'name', { name = opts.name } },
     { 'tag',  { name = 'puck' } },
-    { 'pic',  { id = pic_id, sx = ratio, sy = ratio, centerx = 0.5, centery = 0.5 } },
-    { 'pos',  { x = x, y = y } },
-    -- { 'vel',  { dx = 400, dy = 230 } },
-    { 'vel',  { dx = 0, dy = 0 } },
+
+    { 'tr',   { x = x, y = y } },
+    { 'img',  { img = pic_id, sx = ratio, sy = ratio, cx = 0.5, cy = 0.5 } },
+    { 'vel',  { dx = 100, dy = 0 } },
+
+    -- { 'pic',  { id = pic_id, sx = ratio, sy = ratio, centerx = 0.5, centery = 0.5 } },
+    -- { 'pos',  { x = x, y = y } },
+    -- { 'vel',  { dx = 0, dy = 0 } },
     { 'body', {
       mass = 1,
       friction = 0.0,
@@ -219,7 +223,6 @@ function E.puck(parent, res, x, y, opts)
     { 'force',       {} },
     { 'circleShape', { radius = PUCK_RADIUS } },
 
-    -- { 'sound',       { sound = "hit1", volume = 1 } },
     { 'sound',       { sound = "drop_puck1", volume = 1 } },
   })
   return puck
@@ -238,8 +241,8 @@ function E.mallet(parent, res, x, y, opts)
     { 'name',      { name = opts.name } },
     { 'tag',       { name = "mallet" } },
     { 'touchable', { radius = MALLET_RADIUS * 1.20 } },
-    { 'pic',       { id = pic_id, sx = scale, sy = scale, centerx = 0.5, centery = 0.5 } },
-    { 'pos',       { x = x, y = y } },
+    { 'img',       { img = pic_id, sx = scale, sy = scale, cx = 0.5, cy = 0.5 } },
+    { 'tr',        { x = x, y = y } },
     { 'vel',       { dx = 0, dy = 0 } },
     { 'body', {
       mass = 1,

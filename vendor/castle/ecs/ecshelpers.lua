@@ -151,6 +151,24 @@ function getPos(e)
   end
 end
 
+local function getLocation(e)
+  if e.tr then
+    return e.tr.x, e.tr.y
+  elseif e.pos then
+    return e.pos.x, e.pos.y
+  end
+  error("getLocation requires e.pos or e.tr")
+end
+local function getRotation(e)
+  if e.tr then
+    return e.tr.r
+  elseif e.pos then
+    return e.pos.r
+  end
+  error("getLocation requires e.pos or e.tr")
+end
+
+
 function getName(e)
   if e.name and e.name.name then
     return e.name.name

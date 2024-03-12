@@ -1,6 +1,6 @@
 local Comps = require "castle.components"
 local GC = require "garbagecollect"
-local Debug = (require("mydebug")).sub("Physics", false, false)
+local Debug = (require("mydebug")).sub("Physics", true, true)
 local inspect = require('inspect')
 
 -- local logDebug = print
@@ -55,8 +55,8 @@ local physicsSystem = defineUpdateSystem({ "physicsWorld" },
       end
       -- Apply values from Entity to the physics object
       local b = obj.body
-      b:setPosition(getPos(e))
-      b:setAngle(e.pos.r)
+      b:setPosition(getLocation(e))
+      b:setAngle(getRotation(e))
       if e.vel then
         b:setLinearVelocity(e.vel.dx, e.vel.dy)
         b:setLinearDamping(e.vel.lineardamping)
@@ -140,9 +140,17 @@ local physicsSystem = defineUpdateSystem({ "physicsWorld" },
         -- Copy values from physics object to entity's pos and vel components
         local b = obj.body
         local x, y = b:getPosition()
-        e.pos.x = x
-        e.pos.y = y
-        e.pos.r = b:getAngle()
+        if e.tr then
+          e.tr.x = x
+          e.tr.y = y
+          e.tr.r = b:getAngle()
+        elseif e.pos then
+          e.pos.x = x
+          e.pos.y = y
+          e.pos.r = b:getAngle()
+        else
+          error("Need a pos or a tr")
+        end
         if e.vel then
           local dx, dy = b:getLinearVelocity()
           e.vel.dx = dx
@@ -286,7 +294,7 @@ function generateCollisionEvents(collbuf, estore, events)
             x = a_x,
             y = a_y,
             dx = a_dx,
-            y = a_dy,
+            dy = a_dy,
           })
         else
           -- Emit a "begin collision" event
@@ -393,7 +401,7 @@ function newBody(pw, e)
     return nil
     -- error("newGeneric() requires the Entity have rectangleShape, polygonShape or circleShape component(s)")
   end
-  local x, y = getPos(e)
+  local x, y = getLocation(e)
   local dyn = "dynamic"
   if not e.body.dynamic then dyn = "static" end
   local b = P.newBody(pw, x, y, dyn)
