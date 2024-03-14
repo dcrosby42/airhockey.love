@@ -31,9 +31,9 @@ function E.initialEntities(res)
 
   E.physicsWorld(parent, res)
 
-  -- E.gameState(estore, res)
+  E.gameState(estore, res)
 
-  -- E.background(parent, res)
+  E.background(parent, res)
 
   E.add_walls(parent, res)
 
@@ -41,9 +41,9 @@ function E.initialEntities(res)
   E.puck(parent, res, w / 2, h - 75, { color = "red" })
 
   E.mallet(parent, res, 450, 650, { color = "blue" })
-  -- E.mallet(parent, res, w / 2, 75, { color = "blue" })
+  E.mallet(parent, res, w / 2, 75, { color = "blue" })
 
-  -- E.scoreBoard(parent)
+  E.scoreBoard(parent)
 
 
   -- if SHOW_RELOAD_BUTTON then

@@ -1,5 +1,5 @@
 local EventHelpers = require 'castle.systems.eventhelpers'
-local Debug = require('mydebug').sub("Touchable", true, true)
+local Debug = require('mydebug').sub("Touchable", false, false)
 local Vec = require 'vector-light'
 local inspect = require "inspect"
 
@@ -13,16 +13,20 @@ local function toVPCoords(x, y, estore)
   return x, y
 end
 
+-- TODO: FACTOR THIS INTO ecshelpers.lua
 local function hasLocation(e)
   return not not (e.pos or e.tr)
 end
 
+-- TODO: FACTOR THIS INTO ecshelpers.lua
+-- TODO: when and how to consider parent transform...?
 local function getLocation(e)
   if e.tr then
     return e.tr.x, e.tr.y
   elseif e.pos then
     return e.pos.x, e.pos.y
   end
+  error("getLocation() requires e.tr or e.pos")
 end
 
 local function findTouchable(estore, touchEvt)

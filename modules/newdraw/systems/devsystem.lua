@@ -67,10 +67,12 @@ return function(estore, input, res)
 
   -- pan to the right:
   local baseE = estore:getEntityByName("base")
-  baseE.tr.x = baseE.tr.x - (30 * input.dt)
-  -- zoom slowly:
-  baseE.tr.sx = baseE.tr.sx + (0.05 * input.dt)
-  baseE.tr.sy = baseE.tr.sx
+  if baseE then
+    baseE.tr.x = baseE.tr.x - (30 * input.dt)
+    -- zoom slowly:
+    baseE.tr.sx = baseE.tr.sx + (0.05 * input.dt)
+    baseE.tr.sy = baseE.tr.sx
+  end
 
   -- spin things:
   estore:walkEntities(

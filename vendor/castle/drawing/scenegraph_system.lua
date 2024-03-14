@@ -5,6 +5,7 @@ local drawFuncs = {
   require('castle.drawing.draw_img_entities'),
   -- DrawPic.drawAnims,
   require('castle.drawing.draw_geom_entities'),
+  require('castle.drawing.draw_label_entities'),
 
 
   -- pic

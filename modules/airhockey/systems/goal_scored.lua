@@ -53,8 +53,9 @@ return defineUpdateSystem(
       if e.timers.cooldown.alarm then
         -- Add the puck back to the table
         local sw, sh = res.data.screen_size.width, res.data.screen_size.height
-        local viewport = findEntity(estore, hasName("viewport"))
-        local puck = E.puck(viewport, res, sw / 2, (sh / 2), { color = "red" })
+        -- TODO FIXME: find a better way to know which parent to add a new Puck to:
+        -- local viewport = findEntity(estore, hasName("viewport"))
+        local puck = E.puck(estore, res, sw / 2, (sh / 2), { color = "red" })
         local dir = math.random() * (2 * math.pi)
         puck.vel.dx = math.cos(dir) * DRIFT_SPEED
         puck.vel.dy = math.sin(dir) * DRIFT_SPEED

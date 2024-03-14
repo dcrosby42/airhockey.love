@@ -36,7 +36,7 @@ local function cleanup()
 end
 
 return defineUpdateSystem(
-  allOf(hasTag("puck"), hasComps("pos")),
+  allOf(hasTag("puck"), hasComps("tr")),
   function(e, estore, input, res)
     -- Regularly update elapsed time since game start
     t = t + input.dt
