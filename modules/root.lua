@@ -1,8 +1,8 @@
 local Switcher = require('castle.modules.switcher')
 local GM = require('castle.ecs.gamemodule')
 local modules = {
-  GM.newFromFile("modules/airhockey/resources.lua"),
-  -- GM.newFromFile("modules/newdraw/resources.lua"),
+  -- GM.newFromFile("modules/airhockey/resources.lua"),
+  GM.newFromFile("modules/newdraw/resources.lua"),
 }
 
 local M = {}

@@ -12,6 +12,46 @@ function E.initialEntities(res)
 
   local estore = Estore:new()
 
+  -- E.treeTestOuter(estore, res)
+  -- E.transformTestGrids(estore, res)
+  E.testLabels(estore, res)
+
+  return estore
+end
+
+function E.testLabels(estore, res)
+  estore:newEntity({
+    { 'screen_grid', { spacex = 50, color = { 1, 1, 1, 0.2 } } }
+  })
+
+  estore:newEntity({
+    { 'name', { name = "the_label" } },
+    { 'tr',   { x = 50, y = 50, r = 0, sx = 1, sy = 1 } },
+    { 'label', {
+      text = "12:05",
+      color = { 1, 0.5, 0 },
+      font = "alarm_clock_small",
+      -- font = "alarm_clock_medium",
+      x = 150,
+      y = 90,
+      w = 80,
+      h = 30,
+      cx = 0.25,
+      cy = 0.5,
+      r = -0.7,
+      align = "center",
+      valign = "center",
+      shadowcolor = { 0.5, 0.2, 0 },
+      shadowx = 2.5,
+      shadowy = 2.5,
+      debug = true,
+      sx = 2,
+      sy = 2,
+    } },
+  })
+end
+
+function E.treeTestOuter(estore, res)
   estore:newEntity({
     { 'screen_grid', { spacex = 100, color = { 1, 1, 1, 0.2 } } }
   })
@@ -37,8 +77,6 @@ function E.initialEntities(res)
   })
 
   E.treeTest(base, res)
-
-  return estore
 end
 
 function E.treeTest(parent, res)

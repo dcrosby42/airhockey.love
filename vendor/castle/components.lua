@@ -22,6 +22,19 @@ Comp.define("img", {
 Comp.define("rect2", ext(RectAttrs, { 'style', 'line', 'color', { 1, 1, 1 } })) -- sx,sy?
 Comp.define("circle2", { 'style', 'line', 'x', 0, 'y', 0, 'r', 0, 'color', { 1, 1, 1 } })
 
+Comp.define("label", ext(RectAttrs,
+  { 'text', 'Label',
+    'color', { 0, 0, 0 },
+    'font', '',
+    'align', 'left',
+    'valign', 'middle',
+    'r', 0, 'sx', 1, 'sy', 1,
+    'shadowcolor', false,
+    'shadowx', 0, 'shadowy', 0,
+    'debug', false,
+  }))
+
+
 Comp.define("circle", { 'offx', 0, 'offy', 0, 'radius', 0, 'fill', true, 'color', { 0, 0, 0 } })
 Comp.define("rect", { 'offx', 0, 'offy', 0, 'w', 0, 'h', 0, 'color', { 1, 1, 1 }, 'style', 'fill', 'draw', true,
   'debugonly', false })
@@ -75,10 +88,6 @@ Comp.define("anim",
 Comp.define("sound",
   { 'sound', '', 'loop', false, 'state', 'playing', 'volume', 1, 'pitch', 1, 'playtime', 0, 'duration',
     '' })
-
-Comp.define("label",
-  { 'text', 'Label', 'color', { 0, 0, 0 }, 'font', '', 'width', 0, 'align', 'left', 'height', 0, 'valign', 'middle',
-    'r', 0, 'offx', 0, 'offy', 0, 'debugonly', false, 'shadowcolor', false, 'shadowx', 0, 'shadowy', 0, 'debugdraw', false })
 
 Comp.define('physicsWorld', { 'gx', 0, 'gy', 0, 'allowSleep', true })
 Comp.define('body', {
