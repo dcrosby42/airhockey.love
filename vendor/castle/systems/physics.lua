@@ -1,6 +1,6 @@
 local Comps = require "castle.components"
 local GC = require "garbagecollect"
-local Debug = (require("mydebug")).sub("Physics", true, true)
+local Debug = (require("mydebug")).sub("Physics", false, false)
 local inspect = require('inspect')
 
 -- local logDebug = print

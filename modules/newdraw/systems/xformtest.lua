@@ -28,27 +28,12 @@ end
 --   end
 -- end
 
-local function calcTransform(e)
-  if e == nil or e.eid == nil then
-    -- _root node in estore has no eid nor transform, must stop here
-    return love.math.newTransform()
-  end
-
-  -- Compute a love2d Transform for the entity based on its tr component.
-  -- The transform is recursively derived up to the root ancestor entity.
-  local transform = calcTransform(e:getParent())
-  if e.tr then
-    local t = love.math.newTransform(e.tr.x, e.tr.y, e.tr.r, e.tr.sx, e.tr.sy)
-    transform:apply(t)
-  end
-  return transform
-end
 
 return function(estore, input, res)
   -- Get the "findme" entity and its transform:
   local findme = estore:getEntityByName("findme")
   if not findme then return end
-  local findmeT = calcTransform(findme)
+  local findmeT = computeEntityTransform(findme)
 
   EventHelpers.on(input.events, 'touch', 'pressed', function(evt)
     local greenDot = estore:getEntityByName("greenDot")
@@ -65,7 +50,7 @@ return function(estore, input, res)
 
   -- Move blueDot to the screen coords indicated by findme's transform:
   local blueDot = estore:getEntityByName("blueDot")
-  local x, y = findmeT:transformPoint(0, 0)
+  local x, y = findmeT:transformPoint(15, -13)
   blueDot.tr.x = x
   blueDot.tr.y = y
 

@@ -25,13 +25,18 @@ function E.initialEntities(res)
 
   local estore = Estore:new()
 
+  E.gameState(estore, res)
+
   -- local viewport = E.viewport(estore, res)
   -- local parent = viewport
-  local parent = estore
+  -- local parent = estore
+  local world = estore:newEntity({
+    { 'name', { name = 'world' } },
+    -- { 'tr',   { x = 50, y = 50, sx = 0.5, sy = 0.5 } }
+  })
+  local parent = world
 
   E.physicsWorld(parent, res)
-
-  E.gameState(estore, res)
 
   E.background(parent, res)
 

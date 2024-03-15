@@ -269,3 +269,21 @@ function findEntities(estore, filter)
   end)
   return ents
 end
+
+-- Compute the love2d Transform for the given entity by accumulating transformations
+-- from the scene root down through the entity.
+function computeEntityTransform(e)
+  if e == nil or e.eid == nil then
+    -- _root node in estore has no eid nor transform, must stop here
+    return love.math.newTransform()
+  end
+
+  -- Compute a love2d Transform for the entity based on its tr component.
+  -- The transform is recursively derived up to the root ancestor entity.
+  local transform = computeEntityTransform(e:getParent())
+  if e.tr then
+    local t = love.math.newTransform(e.tr.x, e.tr.y, e.tr.r, e.tr.sx, e.tr.sy)
+    transform:apply(t)
+  end
+  return transform
+end

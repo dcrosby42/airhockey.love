@@ -4,7 +4,7 @@ local inspect = require "inspect"
 -- Controll the mallets (paddles) by touch-n-drag
 return defineUpdateSystem(allOf(hasComps("touch"), hasTag("mallet")), function(e, estore, input, res)
   if e.touch.state == "moved" then
-    local boost = 10
+    local boost = 15
     local x = e.touch.lastx - e.touch.offx
     local y = e.touch.lasty - e.touch.offy
     if e.tr then

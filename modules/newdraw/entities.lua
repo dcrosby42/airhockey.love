@@ -12,9 +12,9 @@ function E.initialEntities(res)
 
   local estore = Estore:new()
 
-  -- E.treeTestOuter(estore, res)
+  E.treeTestOuter(estore, res)
   -- E.transformTestGrids(estore, res)
-  E.testLabels(estore, res)
+  -- E.testLabels(estore, res)
 
   return estore
 end
