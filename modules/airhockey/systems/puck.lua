@@ -44,7 +44,7 @@ return defineUpdateSystem(
     if e.contact then
       local hitE = estore:getEntity(e.contact.otherEid)
       if hitE.tags.goal then
-        estore:newEntity({
+        e:getParent():newEntity({
           { 'tag',   { name = 'goal_scored' } },
           { 'state', { name = 'winner', value = hitE.states.winner.value } },
         })

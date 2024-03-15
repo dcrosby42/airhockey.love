@@ -214,7 +214,7 @@ function E.puck(parent, res, x, y, opts)
 
     { 'tr',   { x = x, y = y } },
     { 'img',  { img = pic_id, sx = ratio, sy = ratio, cx = 0.5, cy = 0.5 } },
-    { 'vel',  { dx = 100, dy = 0 } },
+    { 'vel',  { dx = 0, dy = 0 } },
 
     -- { 'pic',  { id = pic_id, sx = ratio, sy = ratio, centerx = 0.5, centery = 0.5 } },
     -- { 'pos',  { x = x, y = y } },
@@ -243,12 +243,13 @@ function E.mallet(parent, res, x, y, opts)
   local scale = MALLET_RADIUS / (imgSize / 2)
   scale = scale * 1.05 -- mallet image is a little squished, so inflate the scale a bit
   local mallet = parent:newEntity({
-    { 'name',      { name = opts.name } },
-    { 'tag',       { name = "mallet" } },
-    { 'touchable', { radius = MALLET_RADIUS * 1.20 } },
-    { 'img',       { img = pic_id, sx = scale, sy = scale, cx = 0.5, cy = 0.5 } },
-    { 'tr',        { x = x, y = y } },
-    { 'vel',       { dx = 0, dy = 0 } },
+    { 'name',       { name = opts.name } },
+    { 'tag',        { name = "mallet" } },
+    -- { 'touchable', { radius = MALLET_RADIUS * 1.20 } },
+    { 'touchable2', { r = MALLET_RADIUS * 1.20 } },
+    { 'img',        { img = pic_id, sx = scale, sy = scale, cx = 0.5, cy = 0.5 } },
+    { 'tr',         { x = x, y = y } },
+    { 'vel',        { dx = 0, dy = 0 } },
     { 'body', {
       mass = 1,
       friction = 0.0,

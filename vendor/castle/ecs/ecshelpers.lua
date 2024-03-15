@@ -270,6 +270,14 @@ function findEntities(estore, filter)
   return ents
 end
 
+-- Given a tr component, return a new love2d transform
+function trToTransform(tr)
+  if tr then
+    return love.math.newTransform(tr.x, tr.y, tr.r, tr.sx, tr.sy)
+  end
+  return love.math.newTransform()
+end
+
 -- Compute the love2d Transform for the given entity by accumulating transformations
 -- from the scene root down through the entity.
 function computeEntityTransform(e)
@@ -282,8 +290,12 @@ function computeEntityTransform(e)
   -- The transform is recursively derived up to the root ancestor entity.
   local transform = computeEntityTransform(e:getParent())
   if e.tr then
-    local t = love.math.newTransform(e.tr.x, e.tr.y, e.tr.r, e.tr.sx, e.tr.sy)
-    transform:apply(t)
+    transform:apply(trToTransform(e.tr))
   end
   return transform
+end
+
+-- Given a screen-space coordinate pair, return the entity-relative transformed point.
+function pointToEntity(e, x, y)
+  return computeEntityTransform(e):inverseTransformPoint(x, y)
 end
