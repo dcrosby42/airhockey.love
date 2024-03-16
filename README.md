@@ -2,13 +2,16 @@
 
 Simple Air Hockey game meant for two players on an iPad.
 
+Made with [LÖVE](https://love2d.org/)
 
+## Running
 
-# Attributions
+Install Love2d, clone this project and run it using Love (double click in the file brower or from cli)
 
-## Fonts
-- Font alarm_clock.ttf: https://www.dafont.com/alarm-clock.font
- 
-## Sounds
+Eg. on mac:
+```
+cd airhockey.love
+/Applications/love.app/Contents/MacOS/love .
+```
 
--  Puck sounds: https://www.soundsnap.com/search/audio?query=air+hockey
+Rough notes on setting up for ios deployment: [README_ios_setup.md](README_ios_setup.md)
