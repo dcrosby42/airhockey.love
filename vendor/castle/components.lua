@@ -136,7 +136,19 @@ Comp.define("touch", { 'touchid', '', 'state', '',
   'offx', 0, 'offy', 0,
 })
 Comp.define('touchable2', { 'r', 20, 'x', 0, 'y', 0, 'debug', false })
-Comp.define("touch2", { 'id', '', 'state', '', 'x', 0, 'y', 0, 'dx', 0, 'dy', 0, 'offx', 0, 'offy', 0, 'debug', false })
+Comp.define("touch2", {
+  'id', '',
+  'state', '',
+  'init_x', 0,
+  'init_y', 0,
+  'init_ex', 0,
+  'init_ey', 0,
+  'prev_x', 0,
+  'prev_y', 0,
+  'x', 0,
+  'y', 0,
+  'debug', false,
+})
 
 Comp.define("manipulator", { 'id', '', 'mode', '', 'x', 0, 'y', 0, 'dx', 0, 'dy', 0 })
 

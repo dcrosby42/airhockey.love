@@ -26,35 +26,32 @@ touchPressed = function(estore, touchEvt)
       return false
     end
 
-    -- Convert touch screen location into element-relative coords:
-    local x, y = pointToEntity(e, touchEvt.x, touchEvt.y)
+    local x, y = touchEvt.x, touchEvt.y
 
+    -- Detect touch intersection:
+    local ex, ey = screenToEntityPt(e, touchEvt.x, touchEvt.y)
     local targx, targy = e.touchable2.x, e.touchable2.y
-
-    -- See if we're in range of the touchable point:
-    local d = math.dist(x, y, targx, targy)
+    local d = math.dist(ex, ey, targx, targy)
     if d > e.touchable2.r then
+      -- nope!
       return false
     end
-
-    -- Now we want to talk about the touch location relative to this entity's PARENT transform:
-    local px, py = pointToEntity(e:getParent(), touchEvt.x, touchEvt.y)
-    local ptargx, ptargy = trToTransform(e.tr):transformPoint(targx, targy)
-    local offx, offy = ptargx - px, ptargy - py
 
     -- Add a new touch component to the entity
     e:newComp('touch2', {
       name = touchName(touchEvt.id),
       id = touchEvt.id,
       state = 'pressed',
-      x = px,
-      y = py,
-      dx = 0,
-      dy = 0,
-      offx = offx,
-      offy = offy,
+      init_x = x,
+      init_y = y,
+      init_ex = ex,
+      init_ey = ey,
+      prev_x = x,
+      prev_y = y,
+      x = x,
+      y = y,
     })
-    Debug.println("Start touch " .. inspect(e.touch2))
+    Debug.println(function() return "Start touch " .. inspect(e.touch2) end)
   end)
   return true
 end
@@ -62,13 +59,12 @@ end
 touchMoved = function(estore, touchEvt)
   local e, touchComp = findTouch(estore, touchEvt.id)
   if e and touchComp and touchComp.state ~= "released" then
-    -- Convert touch screen location into PARENT-relative coords:
-    local x, y = pointToEntity(e:getParent(), touchEvt.x, touchEvt.y)
     touchComp.state = "moved"
-    touchComp.dx = x - touchComp.x
-    touchComp.dy = y - touchComp.y
-    touchComp.x = x
-    touchComp.y = y
+    touchComp.prev_x = touchComp.x
+    touchComp.prev_y = touchComp.y
+    touchComp.x = touchEvt.x
+    touchComp.y = touchEvt.y
+    Debug.println(function() return "moved " .. inspect(e.touch2) end)
   end
 end
 
@@ -77,16 +73,14 @@ touchReleased = function(estore, touchEvt)
   if e and touchComp then
     -- NB: state will be set to 'released'; during the next update, the top of
     -- this system will remove the touch component.
-    local x, y = pointToEntity(e:getParent(), touchEvt.x, touchEvt.y)
-
     touchComp.state = "released"
     if x ~= touchComp.x or y ~= touchComp.y then
-      touchComp.dx = x - touchComp.x
-      touchComp.dy = y - touchComp.y
-      touchComp.x = x
-      touchComp.y = y
+      touchComp.dx = touchEvt.x - touchComp.x
+      touchComp.dy = touchEvt.y - touchComp.y
+      touchComp.x = touchEvt.x
+      touchComp.y = touchEvt.y
     end
-    Debug.println("Relesae touch " .. inspect(e.touch2))
+    Debug.println(function() return "released " .. inspect(e.touch2) end)
   end
 end
 

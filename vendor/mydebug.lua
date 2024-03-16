@@ -9,8 +9,8 @@ D.d = {
   stringLines = {},
   notes = {},
   bounds = {},
-  bgColor = {0, 0, 0, 0.5},
-  fgColor = {1, 1, 1, 1},
+  bgColor = { 0, 0, 0, 0.5 },
+  fgColor = { 1, 1, 1, 1 },
   onces = {},
 }
 
@@ -25,13 +25,12 @@ local function appendScrolled(lines, s, max)
 end
 
 local function println(str)
-  lines = D.d.stringLines
-  appendScrolled(lines, str, D.d.maxStringLines)
+  appendScrolled(D.d.stringLines, str, D.d.maxStringLines)
 end
 
 local function toLines()
   local lines = {}
-  i = 1
+  local i = 1
   for sli, line in ipairs(D.d.stringLines) do
     lines[i] = line
     i = i + 1

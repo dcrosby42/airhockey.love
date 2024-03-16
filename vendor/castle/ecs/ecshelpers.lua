@@ -295,7 +295,20 @@ function computeEntityTransform(e)
   return transform
 end
 
+function computeEntityScaleAndRot(e)
+  local xform = computeEntityTransform(e)
+end
+
 -- Given a screen-space coordinate pair, return the entity-relative transformed point.
-function pointToEntity(e, x, y)
+function screenToEntityPt(e, x, y)
   return computeEntityTransform(e):inverseTransformPoint(x, y)
+end
+
+-- Subtract vector 0 from vector 1 after inverse-transforming them.
+-- (Eg, compute a delta vector based on screen coords as they'd appear in some other transformed context)
+-- (Namely, computing dx,dy for dragging entities.)
+function subtractInverseTransformed(xform, x1, y1, x0, y0)
+  local tx1, ty1 = xform:inverseTransformPoint(x1, y1)
+  local tx0, ty0 = xform:inverseTransformPoint(x0, y0)
+  return tx1 - tx0, ty1 - ty0
 end

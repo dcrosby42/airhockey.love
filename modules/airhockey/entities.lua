@@ -32,7 +32,8 @@ function E.initialEntities(res)
   -- local parent = estore
   local world = estore:newEntity({
     { 'name', { name = 'world' } },
-    -- { 'tr',   { x = 50, y = 50, sx = 0.5, sy = 0.5 } }
+    -- { 'tr',   { x = 150, y = 50, sx = 0.5, sy = 0.5, r = math.pi / 6 } }
+    -- { 'tr',   { x = 0, y = 0, sx = 1, sy = 1 } }
   })
   local parent = world
 
