@@ -18,7 +18,6 @@ local touchSystem = function(estore, input, res)
       touchReleased(estore, touchEvt)
     end,
   })
-  -- spikeDrag(estore, input, res)
 end
 
 touchPressed = function(estore, touchEvt)
@@ -37,9 +36,6 @@ touchPressed = function(estore, touchEvt)
     if d > e.touchable2.r then
       return false
     end
-    -- local offx, offy = trToTransform(e.tr):inverseTransformPoint(x - targx, y - targy)
-    -- Debug.println("x,y=" .. inspect({ x, y }) ..
-    --   " targx,targy=" .. inspect({ targx, targy }) .. " offx,offy=" .. inspect({ offx, offy }))
 
     -- Now we want to talk about the touch location relative to this entity's PARENT transform:
     local px, py = pointToEntity(e:getParent(), touchEvt.x, touchEvt.y)

@@ -13,31 +13,6 @@ local generateCollisionEvents, newBody, newJoint, beginContact, endContact
 
 local P = love.physics
 
--- TODO: FACTOR THIS INTO ecshelpers.lua. DUPLICATE of touchable.lua's func
-local function hasLocation(e)
-  return not not (e.pos or e.tr)
-end
-
--- TODO: FACTOR THIS INTO ecshelpers.lua
--- TODO: when and how to consider parent transform...?
-local function getLocation(e)
-  if e.tr then
-    return e.tr.x, e.tr.y
-  elseif e.pos then
-    return e.pos.x, e.pos.y
-  end
-  error("getLocation() requires e.tr or e.pos")
-end
-
-local function getRotation(e)
-  if e.tr then
-    return e.tr.r
-  elseif e.pos then
-    return e.pos.r
-  end
-  error("getRotation() requires e.tr or e.pos")
-end
-
 local _CollisionBuffer
 -- Creates and maintains a physics simulation for entities that have body components.
 local physicsSystem = defineUpdateSystem({ "physicsWorld" },

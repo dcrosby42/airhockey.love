@@ -245,7 +245,6 @@ function E.mallet(parent, res, x, y, opts)
   local mallet = parent:newEntity({
     { 'name',       { name = opts.name } },
     { 'tag',        { name = "mallet" } },
-    -- { 'touchable', { radius = MALLET_RADIUS * 1.20 } },
     { 'touchable2', { r = MALLET_RADIUS * 1.20 } },
     { 'img',        { img = pic_id, sx = scale, sy = scale, cx = 0.5, cy = 0.5 } },
     { 'tr',         { x = x, y = y } },
