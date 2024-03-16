@@ -4,6 +4,8 @@ Simple Air Hockey game meant for two players on an iPad.
 
 Made with [LÖVE](https://love2d.org/)
 
+![screenshot](screenshot.png)
+
 ## Running
 
 Install Love2d, clone this project and run it using Love (double click in the file brower or from cli)
