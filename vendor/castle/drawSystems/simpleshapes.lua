@@ -39,8 +39,8 @@ local function drawSystem(estore, res)
               local a2 = a1 + (elapsed / e.button.holdtime) * TwoPi
               love.graphics.setColor(1, 1, 1, 0.5)
               love.graphics.arc("fill", x, y, e.button.radius, a1, a2, 30)
-            -- Debug.println("arc: "..x..", "..y.." "..a1.." _ "..a2)
-            -- love.graphics.setLineWidth(lw)
+              -- Debug.println("arc: "..x..", "..y.." "..a1.." _ "..a2)
+              -- love.graphics.setLineWidth(lw)
             end
           elseif e.button and e.button.kind == "tap" and e.button.touchid ~= "" then
             local x, y = getPos(e)
@@ -68,7 +68,7 @@ local function drawSystem(estore, res)
           error("No pic resource '" .. pic.id .. "'")
         end
 
-        local offy = 0
+        local offx = 0
         local offy = 0
         if pic.centerx ~= "" then
           -- offx = pic.centerx * picRes:getWidth() * pic.sx
@@ -99,7 +99,7 @@ local function drawSystem(estore, res)
 
         if e.names and e.names.mouthcoal_1 then
           Debug.noteObj(
-            {e.eid, "mouth1"},
+            { e.eid, "mouth1" },
             {
               picRes = tostring(picRes),
               x = x,
@@ -137,7 +137,7 @@ local function drawSystem(estore, res)
               r = r + e.anim.r
             end
 
-            local offy = 0
+            local offx = 0
             local offy = 0
             if anim.centerx ~= "" then
               offx = anim.centerx * picRes.rect.w

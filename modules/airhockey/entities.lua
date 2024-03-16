@@ -25,33 +25,38 @@ function E.initialEntities(res)
 
   local estore = Estore:new()
 
-  local viewport = E.viewport(estore, res)
-
-  E.physicsWorld(viewport, res)
-
   E.gameState(estore, res)
 
-  E.background(viewport, res)
+  -- local viewport = E.viewport(estore, res)
+  -- local parent = viewport
+  -- local parent = estore
+  local world = estore:newEntity({
+    { 'name', { name = 'world' } },
+    -- { 'tr',   { x = 50, y = 50, sx = 0.5, sy = 0.5 } }
+  })
+  local parent = world
 
-  E.add_walls(viewport, res)
+  E.physicsWorld(parent, res)
 
-  -- E.puck(viewport, res, 150, 150, { color = "blue" })
-  -- E.puck(viewport, res, 450, 650, { color = "red" })
-  E.puck(viewport, res, w / 2, h - 75, { color = "red" })
+  E.background(parent, res)
 
-  -- E.mallet(viewport, res, w / 2, h - 75, { color = "blue" })
-  E.mallet(viewport, res, 450, 650, { color = "blue" })
-  E.mallet(viewport, res, w / 2, 75, { color = "blue" })
+  E.add_walls(parent, res)
 
-  E.scoreBoard(viewport)
+  -- E.puck(parent, res, w / 2, h - 75, { color = "red" })
+  E.puck(parent, res, w / 2, h - 75, { color = "red" })
+
+  E.mallet(parent, res, 450, 650, { color = "blue" })
+  E.mallet(parent, res, w / 2, 75, { color = "blue" })
+
+  E.scoreBoard(parent)
 
 
-  if SHOW_RELOAD_BUTTON then
-    E.addReloadButton(estore, res)
-  end
-  if SHOW_DEBUG_TOGGLE_BUTTON then
-    E.addDebugButton(estore, res)
-  end
+  -- if SHOW_RELOAD_BUTTON then
+  --   E.addReloadButton(estore, res)
+  -- end
+  -- if SHOW_DEBUG_TOGGLE_BUTTON then
+  --   E.addDebugButton(estore, res)
+  -- end
 
   return estore
 end
@@ -206,10 +211,14 @@ function E.puck(parent, res, x, y, opts)
   local puck = parent:newEntity({
     { 'name', { name = opts.name } },
     { 'tag',  { name = 'puck' } },
-    { 'pic',  { id = pic_id, sx = ratio, sy = ratio, centerx = 0.5, centery = 0.5 } },
-    { 'pos',  { x = x, y = y } },
-    -- { 'vel',  { dx = 400, dy = 230 } },
+
+    { 'tr',   { x = x, y = y } },
+    { 'img',  { img = pic_id, sx = ratio, sy = ratio, cx = 0.5, cy = 0.5 } },
     { 'vel',  { dx = 0, dy = 0 } },
+
+    -- { 'pic',  { id = pic_id, sx = ratio, sy = ratio, centerx = 0.5, centery = 0.5 } },
+    -- { 'pos',  { x = x, y = y } },
+    -- { 'vel',  { dx = 0, dy = 0 } },
     { 'body', {
       mass = 1,
       friction = 0.0,
@@ -219,7 +228,6 @@ function E.puck(parent, res, x, y, opts)
     { 'force',       {} },
     { 'circleShape', { radius = PUCK_RADIUS } },
 
-    -- { 'sound',       { sound = "hit1", volume = 1 } },
     { 'sound',       { sound = "drop_puck1", volume = 1 } },
   })
   return puck
@@ -235,12 +243,13 @@ function E.mallet(parent, res, x, y, opts)
   local scale = MALLET_RADIUS / (imgSize / 2)
   scale = scale * 1.05 -- mallet image is a little squished, so inflate the scale a bit
   local mallet = parent:newEntity({
-    { 'name',      { name = opts.name } },
-    { 'tag',       { name = "mallet" } },
-    { 'touchable', { radius = MALLET_RADIUS * 1.20 } },
-    { 'pic',       { id = pic_id, sx = scale, sy = scale, centerx = 0.5, centery = 0.5 } },
-    { 'pos',       { x = x, y = y } },
-    { 'vel',       { dx = 0, dy = 0 } },
+    { 'name',       { name = opts.name } },
+    { 'tag',        { name = "mallet" } },
+    -- { 'touchable', { radius = MALLET_RADIUS * 1.20 } },
+    { 'touchable2', { r = MALLET_RADIUS * 1.20 } },
+    { 'img',        { img = pic_id, sx = scale, sy = scale, cx = 0.5, cy = 0.5 } },
+    { 'tr',         { x = x, y = y } },
+    { 'vel',        { dx = 0, dy = 0 } },
     { 'body', {
       mass = 1,
       friction = 0.0,
@@ -286,25 +295,21 @@ function E.scoreBoard(parent)
     -- Important name format! Player1 corresponds with goal and game_state
     { 'name',  { name = "score_Player1" } },
     { 'state', { name = "score", value = 0 } },
-    { 'pos',   { x = w - 10, y = (h / 2) - 10 } },
+    { 'tr',    { x = w - 45 - 10, y = (h / 2) - 35 - 10 } },
     {
       'label',
       {
         text = "00",
         color = { 0, 0, 1, 0.35 },
-
-        width = 90,
-        height = 70,
+        w = 90,
+        h = 70,
+        cx = 0.5,
+        cy = 0.5,
         r = math.pi,
-        offx = 0, --90 / 2,
-        offy = 0, --70 / 2,
         align = "center",
-        valign = "middle",
-        -- shadowcolor = { 0, 0, 0, 0.5 },
-        -- shadowx = 3,
-        -- shadowy = 3,
+        valign = "center",
         font = 'alarm_clock_medium',
-        debugdraw = false,
+        -- debug = true,
       },
     },
   })
@@ -314,21 +319,21 @@ function E.scoreBoard(parent)
     -- Important name format! Player2 corresponds with goal and game_state
     { 'name',  { name = "score_Player2" } },
     { 'state', { name = "score", value = 0 } },
-    { 'pos',   { x = 10, y = (h / 2) + 10 } },
+    -- { 'pos',   { x = 10, y = (h / 2) + 10 } },
+    { 'tr',    { x = 45 + 5, y = (h / 2) + 35 + 10 } },
     {
       'label',
       {
         text = "00",
         color = { 1, 0, 0, 0.35 },
-        width = 90,
-        height = 70,
+        w = 90,
+        h = 70,
+        cx = 0.5,
+        cy = 0.5,
         align = "center",
-        valign = "middle",
-        -- shadowcolor = { 0, 0, 0, 0.5 },
-        -- shadowx = 3,
-        -- shadowy = 3,
+        valign = "center",
         font = 'alarm_clock_medium',
-        debugdraw = false,
+        -- debug = true,
       },
     },
   })

@@ -151,6 +151,24 @@ function getPos(e)
   end
 end
 
+local function getLocation(e)
+  if e.tr then
+    return e.tr.x, e.tr.y
+  elseif e.pos then
+    return e.pos.x, e.pos.y
+  end
+  error("getLocation requires e.pos or e.tr")
+end
+local function getRotation(e)
+  if e.tr then
+    return e.tr.r
+  elseif e.pos then
+    return e.pos.r
+  end
+  error("getLocation requires e.pos or e.tr")
+end
+
+
 function getName(e)
   if e.name and e.name.name then
     return e.name.name
@@ -240,4 +258,44 @@ function findEntity(estoreOrEnt, filter)
     return true
   end)
   return found
+end
+
+-- Return all the Entities matching the given entity predicate.
+-- Return empty table if none found
+function findEntities(estore, filter)
+  local ents = {}
+  estore:walkEntities(filter, function(e)
+    table.insert(ents, e)
+  end)
+  return ents
+end
+
+-- Given a tr component, return a new love2d transform
+function trToTransform(tr)
+  if tr then
+    return love.math.newTransform(tr.x, tr.y, tr.r, tr.sx, tr.sy)
+  end
+  return love.math.newTransform()
+end
+
+-- Compute the love2d Transform for the given entity by accumulating transformations
+-- from the scene root down through the entity.
+function computeEntityTransform(e)
+  if e == nil or e.eid == nil then
+    -- _root node in estore has no eid nor transform, must stop here
+    return love.math.newTransform()
+  end
+
+  -- Compute a love2d Transform for the entity based on its tr component.
+  -- The transform is recursively derived up to the root ancestor entity.
+  local transform = computeEntityTransform(e:getParent())
+  if e.tr then
+    transform:apply(trToTransform(e.tr))
+  end
+  return transform
+end
+
+-- Given a screen-space coordinate pair, return the entity-relative transformed point.
+function pointToEntity(e, x, y)
+  return computeEntityTransform(e):inverseTransformPoint(x, y)
 end

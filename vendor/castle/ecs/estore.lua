@@ -5,7 +5,7 @@ require 'castle/ecs/debug'
 local Estore = {}
 
 local removeChildEntityFrom -- defined below
-local addChildEntityTo -- defined below
+local addChildEntityTo      -- defined below
 
 function Estore:new(o)
   local o = o or {
@@ -14,7 +14,7 @@ function Estore:new(o)
     comps = {},
     ents = {},
     caches = {},
-    _root = {_root = true, _children = {}},
+    _root = { _root = true, _children = {} },
     _reorderLockout = false,
   }
   setmetatable(o, self)
@@ -86,7 +86,7 @@ end
 -- Once initialized, the comp is then added via Estore:addComp(e,comp)... see those docs for more info.
 function Estore:newComp(e, typeName, data)
   local compType = assert(Comp.types[typeName],
-                          "No component type '" .. typeName .. "'")
+    "No component type '" .. typeName .. "'")
   local comp = compType.cleanCopy(data)
   return self:addComp(e, comp)
 end
@@ -114,7 +114,9 @@ end
 --         comp.eid == 100
 function Estore:addComp(e, comp)
   if not self.ents[e.eid] then
-    self.ents[e.eid] = e -- shenanigans... if while modifying an entity, it becomes empty of comps, it may have gotten cleaned out of the ents cache.
+    -- shenanigans... if while modifying an entity, it becomes empty of comps,
+    -- it may have gotten cleaned out of the ents cache.
+    self.ents[e.eid] = e
   end
 
   -- Officially relate this comp to its entity
@@ -133,11 +135,11 @@ function Estore:addComp(e, comp)
     if e.parent then
       -- if e._parent and not e._parent._root then
       error(
-          "UNACCEPTABLE! only one 'parent' Component per Entity please!\nExisting parent Comonent: " ..
-              Comp.debugString(e.parent) .. "\nNew parent Component: " ..
-              Comp.debugString(comp) .. "\nThis Entity: " ..
-              entityDebugString(e) .. "\nExisting parent: " ..
-              tdebug1(e._parent))
+        "UNACCEPTABLE! only one 'parent' Component per Entity please!\nExisting parent Comonent: " ..
+        Comp.debugString(e.parent) .. "\nNew parent Component: " ..
+        Comp.debugString(comp) .. "\nThis Entity: " ..
+        entityDebugString(e) .. "\nExisting parent: " ..
+        tdebug1(e._parent))
     end
     local pid = comp.parentEid
     local parentEntity = self.ents[pid]
@@ -161,7 +163,7 @@ function Estore:addComp(e, comp)
       end
     else
       print("!! ERR Estore:addComp(): parentEntity with eid=" .. pid ..
-                " not found for comp: " .. Comp.debugString(comp))
+        " not found for comp: " .. Comp.debugString(comp))
     end
   end
 
@@ -196,9 +198,9 @@ function Estore:detachComp(e, comp)
     -- If this comp was the singular comp ref, pick a different comp (or nil) to replace it:
     if e[key] and e[key].cid == comp.cid then
       _, val = next(e[keyp], nil) -- pluck any comp from the plural ref
-      e[key] = val -- will either be another comp or nil, if there weren't any more
+      e[key] = val                -- will either be another comp or nil, if there weren't any more
       if not val then
-        e[keyp] = nil -- plural ref was empty, clean it out
+        e[keyp] = nil             -- plural ref was empty, clean it out
       end
     end
 
@@ -271,7 +273,34 @@ function Estore:walkEntity(e, matchFn, doFn)
   if (not matchFn) or matchFn(e) then -- execute doFn if either a) no matcher, or b) matcher provided and returns true
     if doFn(e) == false then return end
   end
-  for _, ch in ipairs(e._children) do self:walkEntity(ch, matchFn, doFn) end
+  self:walkChildren(e, matchFn, doFn)
+end
+
+-- Iterate the children of an entity, passing each to self:walkEntity
+function Estore:walkChildren(e, matchFn, doFn)
+  for _, ch in ipairs(e._children) do
+    self:walkEntity(ch, matchFn, doFn)
+  end
+end
+
+function Estore:walkEntities2(matchFn, doFn)
+  for _, e in ipairs(self._root._children) do
+    self:walkEntity2(e, matchFn, doFn)
+  end
+end
+
+-- Just like walkEntity, except instead of doFn-then-children, the doFn itself
+-- is given a func to execute descent into child entities
+function Estore:walkEntity2(e, matchFn, doFn)
+  if (not matchFn) or matchFn(e) then
+    -- we'll pass this func to doFn such that it can control the timing of descent
+    local descend = function()
+      for _, ch in ipairs(e._children) do
+        self:walkEntity2(ch, matchFn, doFn)
+      end
+    end
+    if doFn(e, descend) == false then return end
+  end
 end
 
 -- Similar to walkEntities, but with the purpose of finding a particular result then exiting the search immediately.
@@ -339,7 +368,7 @@ end
 
 function Estore:setupParent(parentEnt, childEnt)
   if childEnt.parent then self:removeComp(childEnt.parent) end
-  self:newComp(childEnt, 'parent', {parentEid = parentEnt.eid})
+  self:newComp(childEnt, 'parent', { parentEid = parentEnt.eid })
 end
 
 function Estore:search(matchFn, doFn)
@@ -397,7 +426,7 @@ function Estore:debugString()
   local s = ""
   s = s .. "-- Estore:\n"
   s = s .. "--- Next eid: e" .. self.eidCounter .. ", Next cid: c" ..
-          self.cidCounter .. "\n"
+      self.cidCounter .. "\n"
   s = s .. "--- Entities:\n"
   for eid, e in pairs(self.ents) do s = s .. entityDebugString(e) end
   s = s .. "--- Entity Tree:\n"

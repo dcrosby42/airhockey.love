@@ -13,14 +13,33 @@ local function toVPCoords(x, y, estore)
   return x, y
 end
 
+-- TODO: FACTOR THIS INTO ecshelpers.lua
+local function hasLocation(e)
+  return not not (e.pos or e.tr)
+end
+
+-- TODO: FACTOR THIS INTO ecshelpers.lua
+-- TODO: when and how to consider parent transform...?
+local function getLocation(e)
+  if e.tr then
+    return e.tr.x, e.tr.y
+  elseif e.pos then
+    return e.pos.x, e.pos.y
+  end
+  error("getLocation() requires e.tr or e.pos")
+end
+
 local function findTouchable(estore, touchEvt)
   local x, y = toVPCoords(touchEvt.x, touchEvt.y, estore)
   return findEntity(estore, function(e)
-    if e.touchable and e.touchable.enabled and e.pos then
-      local ex = e.pos.x + e.touchable.offx
-      local ey = e.pos.y + e.touchable.offy
+    if e.touchable and e.touchable.enabled and hasLocation(e) then
+      local ex, ey = getLocation(e)
+      ex = ex + e.touchable.offx
+      ey = ey + e.touchable.offy
       local d = Vec.dist(x, y, ex, ey)
-      return Vec.dist(x, y, ex, ey) <= e.touchable.radius
+      local hitting = Vec.dist(x, y, ex, ey) <= e.touchable.radius
+      Debug.println("findTouchable: x,y=" .. inspect({ x, y }) .. " d=" .. d .. " hittint=" .. tostring(hitting))
+      return hitting
     end
     return false
   end)
@@ -62,7 +81,7 @@ local function updateTouchComp(touchComp, touchEvt, estore)
   touchComp.lasty = y
   touchComp.lastscreenx = touchEvt.x
   touchComp.lastscreeny = touchEvt.y
-  touchComp.lastdx = touchEvt.dy
+  touchComp.lastdx = touchEvt.dx
   touchComp.lastdy = touchEvt.dy
   return touchComp
 end
@@ -93,8 +112,8 @@ return function(estore, input, res)
         touchComp.starty = touchComp.lasty
         touchComp.startscreenx = touch.x
         touchComp.startscreeny = touch.y
-        if e.pos then
-          local x, y = getPos(e)
+        if hasLocation(e) then
+          local x, y = getLocation(e)
           touchComp.offx = touchComp.startx - x
           touchComp.offy = touchComp.starty - y
         end

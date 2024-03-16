@@ -36,7 +36,7 @@ local function cleanup()
 end
 
 return defineUpdateSystem(
-  allOf(hasTag("puck"), hasComps("pos")),
+  allOf(hasTag("puck"), hasComps("tr")),
   function(e, estore, input, res)
     -- Regularly update elapsed time since game start
     t = t + input.dt
@@ -44,7 +44,7 @@ return defineUpdateSystem(
     if e.contact then
       local hitE = estore:getEntity(e.contact.otherEid)
       if hitE.tags.goal then
-        estore:newEntity({
+        e:getParent():newEntity({
           { 'tag',   { name = 'goal_scored' } },
           { 'state', { name = 'winner', value = hitE.states.winner.value } },
         })

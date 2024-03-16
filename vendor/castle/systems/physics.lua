@@ -13,6 +13,31 @@ local generateCollisionEvents, newBody, newJoint, beginContact, endContact
 
 local P = love.physics
 
+-- TODO: FACTOR THIS INTO ecshelpers.lua. DUPLICATE of touchable.lua's func
+local function hasLocation(e)
+  return not not (e.pos or e.tr)
+end
+
+-- TODO: FACTOR THIS INTO ecshelpers.lua
+-- TODO: when and how to consider parent transform...?
+local function getLocation(e)
+  if e.tr then
+    return e.tr.x, e.tr.y
+  elseif e.pos then
+    return e.pos.x, e.pos.y
+  end
+  error("getLocation() requires e.tr or e.pos")
+end
+
+local function getRotation(e)
+  if e.tr then
+    return e.tr.r
+  elseif e.pos then
+    return e.pos.r
+  end
+  error("getRotation() requires e.tr or e.pos")
+end
+
 local _CollisionBuffer
 -- Creates and maintains a physics simulation for entities that have body components.
 local physicsSystem = defineUpdateSystem({ "physicsWorld" },
@@ -55,8 +80,8 @@ local physicsSystem = defineUpdateSystem({ "physicsWorld" },
       end
       -- Apply values from Entity to the physics object
       local b = obj.body
-      b:setPosition(getPos(e))
-      b:setAngle(e.pos.r)
+      b:setPosition(getLocation(e))
+      b:setAngle(getRotation(e))
       if e.vel then
         b:setLinearVelocity(e.vel.dx, e.vel.dy)
         b:setLinearDamping(e.vel.lineardamping)
@@ -140,9 +165,17 @@ local physicsSystem = defineUpdateSystem({ "physicsWorld" },
         -- Copy values from physics object to entity's pos and vel components
         local b = obj.body
         local x, y = b:getPosition()
-        e.pos.x = x
-        e.pos.y = y
-        e.pos.r = b:getAngle()
+        if e.tr then
+          e.tr.x = x
+          e.tr.y = y
+          e.tr.r = b:getAngle()
+        elseif e.pos then
+          e.pos.x = x
+          e.pos.y = y
+          e.pos.r = b:getAngle()
+        else
+          error("Need a pos or a tr")
+        end
         if e.vel then
           local dx, dy = b:getLinearVelocity()
           e.vel.dx = dx
@@ -286,7 +319,7 @@ function generateCollisionEvents(collbuf, estore, events)
             x = a_x,
             y = a_y,
             dx = a_dx,
-            y = a_dy,
+            dy = a_dy,
           })
         else
           -- Emit a "begin collision" event
@@ -393,7 +426,7 @@ function newBody(pw, e)
     return nil
     -- error("newGeneric() requires the Entity have rectangleShape, polygonShape or circleShape component(s)")
   end
-  local x, y = getPos(e)
+  local x, y = getLocation(e)
   local dyn = "dynamic"
   if not e.body.dynamic then dyn = "static" end
   local b = P.newBody(pw, x, y, dyn)

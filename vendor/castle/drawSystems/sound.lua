@@ -9,7 +9,7 @@ Debug = Debug.sub("SoundManager", false, false)
 local DrawSound = {}
 
 -- This module can be used in a couple ways:
--- 1. As a "regular" drawSystem, by virtue of the returned drawSystem property being set to a 
+-- 1. As a "regular" drawSystem, by virtue of the returned drawSystem property being set to a
 --    shared default sound space.
 -- 2. As a constructor for isolated sound space.  Users import this module and create their own
 --    instance, eg, DrawSound.new("qbert")
@@ -27,13 +27,13 @@ local DrawSound = {}
 --
 
 function DrawSound.new(prefix)
-  return defineDrawSystem({"sound"}, function(e, estore, res)
+  return defineDrawSystem({ "sound" }, function(e, estore, res)
     -- For each sound component in this entity:
     for _, soundComp in pairs(e.sounds) do
       local key = prefix .. "." .. soundComp.sound .. "." .. soundComp.cid
       local soundConfig = res.sounds[soundComp.sound]
       assert(soundConfig, "No sound configured for '" .. soundComp.sound ..
-                 "', in sound Component of Entity: " .. entityDebugString(e))
+        "', in sound Component of Entity: " .. entityDebugString(e))
       local soundState = {
         playState = soundComp.state,
         volume = soundComp.volume,
@@ -44,8 +44,8 @@ function DrawSound.new(prefix)
       }
       sndCanvas:drawSound(key, soundConfig, soundState)
     end -- end for-each sound component
-  end -- end handler
-  ) -- end system
-end -- end "new"
+  end   -- end handler
+  )     -- end system
+end     -- end "new"
 
-return {new = DrawSound.new, drawSystem = DrawSound.new("default")}
+return { new = DrawSound.new, drawSystem = DrawSound.new("default") }
