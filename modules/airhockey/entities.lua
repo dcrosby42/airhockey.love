@@ -7,7 +7,7 @@ local MALLET_RADIUS = 60
 local GOAL_WIDTH = 250
 local GOAL_DEPTH = 90
 
-local SHOW_RELOAD_BUTTON = false
+local SHOW_RELOAD_BUTTON = true
 local SHOW_DEBUG_TOGGLE_BUTTON = false
 local DEBUG_ZOOMOUT = false
 local DEBUG_DRAW_WALLS = DEBUG_ZOOMOUT
@@ -43,18 +43,20 @@ function E.initialEntities(res)
 
   E.add_walls(parent, res)
 
-  -- E.puck(parent, res, w / 2, h - 75, { color = "red" })
-  E.puck(parent, res, w / 2, h - 75, { color = "red" })
-
-  E.mallet(parent, res, 450, 650, { color = "blue" })
-  E.mallet(parent, res, w / 2, 75, { color = "blue" })
-
   E.scoreBoard(parent)
+  E.malletResetButton_p1(parent, res)
+  E.malletResetButton_p2(parent, res)
+  E.puckResetButton(parent, res)
+
+  E.puck_init(parent, res)
+
+  E.mallet_p1(parent, res)
+  E.mallet_p2(parent, res)
 
 
-  -- if SHOW_RELOAD_BUTTON then
-  --   E.addReloadButton(estore, res)
-  -- end
+  if SHOW_RELOAD_BUTTON then
+    E.addReloadButton(estore, res)
+  end
   -- if SHOW_DEBUG_TOGGLE_BUTTON then
   --   E.addDebugButton(estore, res)
   -- end
@@ -205,7 +207,7 @@ function E.puck(parent, res, x, y, opts)
   opts = opts or {}
   opts.color = opts.color or "blue"
   local pic_id = "puck_" .. opts.color
-  opts.name = opts.name or pic_id
+  opts.name = opts.name or "puck"
 
   local imgSize = res.pics[pic_id].rect.w
   local ratio = PUCK_RADIUS / (imgSize / 2)
@@ -234,6 +236,51 @@ function E.puck(parent, res, x, y, opts)
   return puck
 end
 
+function E.puck_init(parent, res)
+  local w, h = love.graphics.getDimensions()
+  return E.puck(parent, res, w / 2, h / 2, { color = "red" })
+end
+
+function E.puck_drop(parent, res)
+  local w, h = love.graphics.getDimensions()
+  local puck = E.puck(parent, res, w / 2, (h / 2), { color = "red" })
+
+  local driftSpeed = 30
+  local dir = math.random() * (2 * math.pi)
+  puck.vel.dx = math.cos(dir) * driftSpeed
+  puck.vel.dy = math.sin(dir) * driftSpeed
+  return puck
+end
+
+function E.puckResetButton(parent, res)
+  local w, h = love.graphics.getDimensions()
+  do
+    local x, y = w / 2, h / 2
+    parent:newEntity({
+      { 'name', { name = "puck_reset" } },
+      { 'tr',   { x = x, y = y } },
+      { 'button2', {
+        kind = 'hold',
+        eventtype = "puck_reset",
+        eventstate = "center",
+        holdtime = 1.5,
+        progresssize = 32,
+      } },
+      { 'touchable2', { r = 40 } },
+    })
+  end
+end
+
+function E.mallet_p1(parent, res)
+  local w, _ = love.graphics.getDimensions()
+  return E.mallet(parent, res, w / 2, 75, { name = "mallet_p1", color = "blue" })
+end
+
+function E.mallet_p2(parent, res)
+  local w, h = love.graphics.getDimensions()
+  return E.mallet(parent, res, w / 2, h - 75, { name = "mallet_p2", color = "blue" })
+end
+
 function E.mallet(parent, res, x, y, opts)
   opts = opts or {}
   opts.color = opts.color or "blue"
@@ -259,6 +306,61 @@ function E.mallet(parent, res, x, y, opts)
     { 'force',       {} },
     { 'circleShape', { radius = MALLET_RADIUS } },
   })
+  return mallet
+end
+
+function E.malletResetButton_p1(parent, res)
+  -- local w, h = love.graphics.getDimensions()
+  do
+    local x, y = 44, 50
+    parent:newEntity({
+      { 'name', { name = "mallet_reset_p1" } },
+      { 'tr',   { x = x, y = y, r = math.pi } },
+      { 'button2', {
+        kind = 'hold',
+        eventtype = "mallet_reset",
+        eventstate = "p1",
+        holdtime = 0.5,
+        progresssize = 32,
+      } },
+      { 'touchable2', { r = 40 } },
+      { 'img', {
+        img = 'power_button',
+        sx = 0.25,
+        sy = 0.25,
+        cx = 0.5,
+        cy = 0.5,
+        color = { 1, 1, 1, 0.2 }
+      } },
+    })
+  end
+end
+
+function E.malletResetButton_p2(parent, res)
+  local w, h = love.graphics.getDimensions()
+  do
+    local x, y = w - 44, h - 50
+    parent:newEntity({
+      { 'name', { name = "mallet_reset_p1" } },
+      { 'tr',   { x = x, y = y } },
+      { 'button2', {
+        kind = 'hold',
+        eventtype = "mallet_reset",
+        eventstate = "p2",
+        holdtime = 0.5,
+        progresssize = 32,
+      } },
+      { 'touchable2', { r = 40 } },
+      { 'img', {
+        img = 'power_button',
+        sx = 0.25,
+        sy = 0.25,
+        cx = 0.5,
+        cy = 0.5,
+        color = { 1, 1, 1, 0.2 }
+      } },
+    })
+  end
 end
 
 function E.addReloadButton(parent, res)
@@ -266,26 +368,39 @@ function E.addReloadButton(parent, res)
   do
     local x, y = w - 44, 50
     parent:newEntity({
-      { 'name',   { name = "power_button" } },
-      { 'pic',    { id = 'power_button', sx = 0.25, sy = 0.25, centerx = 0.5, centery = 0.5, color = { 1, 1, 1, 0.2 } } },
-      { 'pos',    { x = x, y = y } },
-      { 'button', { kind = 'hold', eventtype = 'castle.reloadRootModule', holdtime = 0.5, radius = 40 } },
+      { 'name', { name = "power_button" } },
+      { 'tr',   { x = x, y = y } },
+      { 'button2', {
+        kind = 'hold',
+        eventtype = 'castle.reloadRootModule',
+        holdtime = 0.5,
+        progresssize = 32,
+      } },
+      { 'touchable2', { r = 40 } },
+      { 'img', {
+        img = 'power_button',
+        sx = 0.25,
+        sy = 0.25,
+        cx = 0.5,
+        cy = 0.5,
+        color = { 1, 1, 1, 0.2 }
+      } },
     })
   end
 end
 
-function E.addDebugButton(parent, res)
-  local w, h = love.graphics.getDimensions()
-  do
-    local x, y = w - 44, h - 50
-    parent:newEntity({
-      { 'name',   { name = "debug_button" } },
-      { 'pic',    { id = 'debug_button', sx = 0.7, sy = 0.7, centerx = 0.5, centery = 0.5, color = { 1, 1, 1, 0.75 } } },
-      { 'pos',    { x = x, y = y } },
-      { 'button', { kind = 'hold', eventtype = 'castle.toggleDebugLog', holdtime = 0.4, radius = 40 } },
-    })
-  end
-end
+-- function E.addDebugButton(parent, res)
+--   local w, h = love.graphics.getDimensions()
+--   do
+--     local x, y = w - 44, h - 50
+--     parent:newEntity({
+--       { 'name',   { name = "debug_button" } },
+--       { 'pic',    { id = 'debug_button', sx = 0.7, sy = 0.7, centerx = 0.5, centery = 0.5, color = { 1, 1, 1, 0.75 } } },
+--       { 'pos',    { x = x, y = y } },
+--       { 'button', { kind = 'hold', eventtype = 'castle.toggleDebugLog', holdtime = 0.4, radius = 40 } },
+--     })
+--   end
+-- end
 
 function E.scoreBoard(parent)
   local w, h = love.graphics.getDimensions()
@@ -295,7 +410,11 @@ function E.scoreBoard(parent)
     -- Important name format! Player1 corresponds with goal and game_state
     { 'name',  { name = "score_Player1" } },
     { 'state', { name = "score", value = 0 } },
-    { 'tr',    { x = w - 45 - 10, y = (h / 2) - 35 - 10 } },
+    { 'tr', {
+      x = w - 45 - 10,
+      y = (h / 2) - 35 - 10,
+      r = math.pi,
+    } },
     {
       'label',
       {
@@ -305,7 +424,7 @@ function E.scoreBoard(parent)
         h = 70,
         cx = 0.5,
         cy = 0.5,
-        r = math.pi,
+        -- r = math.pi,
         align = "center",
         valign = "center",
         font = 'alarm_clock_medium',
@@ -319,7 +438,6 @@ function E.scoreBoard(parent)
     -- Important name format! Player2 corresponds with goal and game_state
     { 'name',  { name = "score_Player2" } },
     { 'state', { name = "score", value = 0 } },
-    -- { 'pos',   { x = 10, y = (h / 2) + 10 } },
     { 'tr',    { x = 45 + 5, y = (h / 2) + 35 + 10 } },
     {
       'label',

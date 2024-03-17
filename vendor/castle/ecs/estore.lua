@@ -67,6 +67,7 @@ function Estore:buildEntity(compList, subs)
 end
 
 function Estore:destroyEntity(e)
+  if not e then return end
   for _, childEnt in ipairs(e._children) do self:destroyEntity(childEnt) end
 
   local compsToRemove = {}

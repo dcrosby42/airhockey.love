@@ -52,13 +52,7 @@ return defineUpdateSystem(
     elseif state == "grace_period" then
       if e.timers.cooldown.alarm then
         -- Add the puck back to the table
-        local sw, sh = res.data.screen_size.width, res.data.screen_size.height
-        -- TODO FIXME: find a better way to know which parent to add a new Puck to:
-        -- local viewport = findEntity(estore, hasName("viewport"))
-        local puck = E.puck(e:getParent(), res, sw / 2, (sh / 2), { color = "red" })
-        local dir = math.random() * (2 * math.pi)
-        puck.vel.dx = math.cos(dir) * DRIFT_SPEED
-        puck.vel.dy = math.sin(dir) * DRIFT_SPEED
+        E.puck_drop(e:getParent(), res)
         fsm.setState(e, "done")
       end
       return

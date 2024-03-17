@@ -123,6 +123,15 @@ Comp.define("contact",
 
 Comp.define("button", { 'kind', 'tap', 'touchid', '', 'holdtime', 1, 'eventtype', '', 'shape', 'circle', 'radius', 40,
   'w', 80, 'h', 80 })
+Comp.define("button2", {
+  'kind', 'tap', -- hold, tap
+  'eventtype', '',
+  'eventstate', '',
+  'holdtime', 1,
+  'shape', 'circle',
+  'progresssize', 50,
+  'progresscolor', { 1, 1, 1, 0.5 },
+})
 
 Comp.define("state", { 'value', '' })
 
