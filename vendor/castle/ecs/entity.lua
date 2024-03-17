@@ -1,10 +1,14 @@
 local Entity = {}
 
 function Entity:new(o)
-  local o = o or {eid = nil, _estore = nil}
+  local o = o or { eid = nil, _estore = nil }
   setmetatable(o, self)
   self.__index = self
   return o
+end
+
+function Entity:getEstore()
+  return self._estore
 end
 
 function Entity:newComp(ctype, data)
@@ -28,7 +32,7 @@ function Entity:getChildren()
 end
 
 function Entity:newChild(compInfos, subs)
-  parentInfo = {'parent', {parentEid = self.eid}}
+  parentInfo = { 'parent', { parentEid = self.eid } }
   if compInfos then
     local parentInfoFound = false
     for i, info in ipairs(compInfos) do
@@ -43,7 +47,7 @@ function Entity:newChild(compInfos, subs)
     end
     if not parentInfoFound then table.insert(compInfos, parentInfo) end
   else
-    compInfos = {parentInfo}
+    compInfos = { parentInfo }
   end
 
   return self._estore:newEntity(compInfos, subs)
@@ -63,16 +67,17 @@ function Entity:walkEntities(matchFn, handler)
 end
 
 function Entity:walkChildren(matchFn, handler)
-  self._estore:walkChildren(self,matchFn,handler)
+  self._estore:walkChildren(self, matchFn, handler)
 end
 
 function Entity:seekEntity(matchFn, doFn)
-  self._estore:_seekEntity(self,matchFn,doFn)
+  self._estore:_seekEntity(self, matchFn, doFn)
 end
 
 function Entity:resortChildren(deep)
   if self._children then sortEntities(self._children, deep) end
 end
+
 function Entity:destroy()
   self._estore:destroyEntity(self)
 end

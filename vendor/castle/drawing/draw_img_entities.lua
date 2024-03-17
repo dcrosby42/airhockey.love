@@ -15,12 +15,15 @@ local function draw(e, img, res)
   love.graphics.draw(picRes.image, picRes.quad, img.x, img.y, img.r, img.sx, img.sy, ox, oy)
 
   if img.debug then
-    -- 0,0 in this entity's transform
+    -- circle at 0,0 in this entity's transform
     love.graphics.setColor(0.8, 0.8, 1)
     love.graphics.circle("line", 0, 0, 5)
 
-    local x, y = img.x - ox, img.y - oy
-    withTransform(x, y, img.r, ox, oy, img.sx, img.sy, function()
+    -- (offset requires manual scaling here; the above .draw does this on the fly)
+    local scox, scoy = ox * img.sx, oy * img.sy
+    local x, y = img.x - scox, img.y - scoy
+    -- withTransform(x, y, img.r, ox, oy, img.sx, img.sy, function()
+    withTransform(x, y, img.r, scox, scoy, img.sx, img.sy, function()
       -- greay img bounding box
       love.graphics.setColor(0.3, 0.3, 0.3)
       love.graphics.rectangle("line", 0, 0, w, h)
