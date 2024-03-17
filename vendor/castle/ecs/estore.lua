@@ -308,7 +308,10 @@ end
 -- If the doFn() is applied to an Entity and returns explicitly true, the traversal exits and returns true.
 function Estore:seekEntity(matchFn, doFn)
   for _, e in ipairs(self._root._children) do
-    if self:_seekEntity(e, matchFn, doFn) == true then return true end
+    if self:_seekEntity(e, matchFn, doFn) == true then
+      -- doFn returning explicitly true means: seeking should end
+      return true
+    end
   end
 end
 
@@ -324,10 +327,16 @@ end
 -- (recursive step of seekEntity)
 function Estore:_seekEntity(e, matchFn, doFn)
   if (not matchFn) or matchFn(e) then -- execute doFn if either a) no matcher, or b) matcher provided and returns true
-    if doFn(e) == true then return true end
+    if doFn(e) == true then
+      -- stop seeking
+      return true
+    end
   end
   for _, ch in ipairs(e._children) do
-    if self:_seekEntity(ch, matchFn, doFn) == true then return true end
+    if self:_seekEntity(ch, matchFn, doFn) == true then
+      -- stop seeking
+      return true
+    end
   end
 end
 

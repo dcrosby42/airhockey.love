@@ -16,16 +16,16 @@ local touchSystem = function(estore, input, res)
     end,
     released = function(touchEvt)
       touchReleased(estore, touchEvt)
+      -- Returning false here to preserve touchEvt instead of consuming.
+      -- This is defensive of cases where some bad logic has left a
+      -- touch component that needs to be cleaned up.
+      return false
     end,
   })
 end
 
 touchPressed = function(estore, touchEvt)
-  estore:seekEntity(function(e)
-    if not e.touchable2 then
-      return false
-    end
-
+  estore:seekEntity(hasComps("touchable2"), function(e)
     local x, y = touchEvt.x, touchEvt.y
 
     -- Detect touch intersection:
@@ -52,6 +52,7 @@ touchPressed = function(estore, touchEvt)
       y = y,
     })
     Debug.println(function() return "Start touch " .. inspect(e.touch2) end)
+    return true -- signal to seekEntity that we've hit; stop seeking
   end)
   return true
 end
@@ -74,7 +75,7 @@ touchReleased = function(estore, touchEvt)
     -- NB: state will be set to 'released'; during the next update, the top of
     -- this system will remove the touch component.
     touchComp.state = "released"
-    if x ~= touchComp.x or y ~= touchComp.y then
+    if touchEvt.x ~= touchComp.x or touchEvt.y ~= touchComp.y then
       touchComp.dx = touchEvt.x - touchComp.x
       touchComp.dy = touchEvt.y - touchComp.y
       touchComp.x = touchEvt.x

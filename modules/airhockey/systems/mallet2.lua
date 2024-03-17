@@ -1,4 +1,4 @@
-local Debug = require("mydebug").sub("Mallet", true, true)
+local Debug = require("mydebug").sub("Mallet", false, false)
 local inspect = require "inspect"
 
 local Impact = 15
@@ -41,5 +41,11 @@ return defineUpdateSystem(allOf(hasComps("touch2"), hasTag("mallet")),
     else
       e.vel.dx = 0
       e.vel.dy = 0
+    end
+    if e.touch2.state ~= "idle" then
+      Debug.println(function()
+        return "touch= " ..
+            e.touch2.state .. " x,y=" .. inspect({ e.tr.x, e.tr.y }) .. " vel=" .. inspect({ e.vel.dx, e.vel.dy })
+      end)
     end
   end)
