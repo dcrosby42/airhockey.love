@@ -9,12 +9,18 @@ local GOAL_DEPTH = 90
 
 local SHOW_RELOAD_BUTTON = true
 local SHOW_DEBUG_TOGGLE_BUTTON = false
-local DEBUG_ZOOMOUT = false
-local DEBUG_DRAW_WALLS = DEBUG_ZOOMOUT
-local DEBUG_HIDE_BACKGROUND = DEBUG_ZOOMOUT
 
--- local DEBUG_DRAW_WALLS = true
--- local DEBUG_HIDE_BACKGROUND = true
+local DEBUG_DRAW = false
+local DEBUG_ZOOMOUT = DEBUG_DRAW
+local DEBUG_DRAW_WALLS = DEBUG_DRAW
+local DEBUG_HIDE_BACKGROUND = DEBUG_DRAW
+local DEBUG_MALLET_IMG = DEBUG_DRAW
+local DEBUG_MALLET_BODY = DEBUG_DRAW
+local DEBUG_PUCK_IMG = DEBUG_DRAW
+local DEBUG_PUCK_BODY = DEBUG_DRAW
+
+local DEBUG_ZOOMOUT = false
+-- local DEBUG_HIDE_BACKGROUND = false
 
 local E = {}
 
@@ -32,8 +38,15 @@ function E.initialEntities(res)
   -- local parent = estore
   local viewroot = estore:newEntity({
     { 'name', { name = 'viewroot' } },
-    { 'tr',   { x = 150, y = 150, r = 0.3, sx = 0.7, sy = 0.7 } }
+    { 'tr',   {} },
+    -- { 'tr',   { x = 150, y = 150, r = 0.3, sx = 0.7, sy = 0.7 } }
   })
+  if DEBUG_ZOOMOUT then
+    viewroot.tr.x = 100
+    viewroot.tr.y = 100
+    viewroot.tr.sx = 0.7
+    viewroot.tr.sy = 0.7
+  end
   local gameTable = E.game_table(viewroot, res)
   local parent = gameTable
 
@@ -113,7 +126,7 @@ local function staticBox(x, y, w, h, opts)
   opts = opts or {}
   local comps = {
     { 'tag',            { name = opts.tag or 'block' } },
-    { 'body',           { dynamic = false } },
+    { 'body',           { dynamic = false, debugDraw = DEBUG_DRAW_WALLS } },
     { 'rectangleShape', { w = w, h = h } },
     { 'pos',            { x = x, y = y } },
   }
@@ -131,83 +144,76 @@ function E.add_walls(parent, res)
   local top = 0
   local left = 0
   local right = sw
-  local thick = 10
+  local thick = 100
+
 
   do
     -- top left
     local w = sw / 2 - (GOAL_WIDTH / 2)
     local h = thick
     local x = w / 2
-    local y = top
+    local y = top - (thick / 2)
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "top_left_wall", tag = "wall" }))
-    e.body.debugDraw = DEBUG_DRAW_WALLS
   end
   do
     -- top right
     local w = sw / 2 - (GOAL_WIDTH / 2)
     local h = thick
     local x = sw - (w / 2)
-    local y = top
+    local y = top - (thick / 2)
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "top_right_wall", tag = "wall" }))
-    e.body.debugDraw = DEBUG_DRAW_WALLS
   end
   do
     -- top goal net
     local w = GOAL_WIDTH
     local h = thick
     local x = sw / 2
-    local y = top - GOAL_DEPTH
+    local y = top - GOAL_DEPTH - (thick / 2)
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "top_goal", tag = "wall" }))
     e:newComp('tag', { name = "goal" })
     e:newComp('state', { name = "winner", value = "Player2" })
-    e.body.debugDraw = DEBUG_DRAW_WALLS
   end
   do
     -- bottom left
     local w = sw / 2 - (GOAL_WIDTH / 2)
     local h = thick
     local x = w / 2
-    local y = bottom
+    local y = bottom + (thick / 2)
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "bottom_left_wall", tag = "wall" }))
-    e.body.debugDraw = DEBUG_DRAW_WALLS
   end
   do
     -- bottom right
     local w = sw / 2 - (GOAL_WIDTH / 2)
     local h = thick
     local x = sw - (w / 2)
-    local y = bottom
+    local y = bottom + (thick / 2)
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "bottom_right_wall", tag = "wall" }))
-    e.body.debugDraw = DEBUG_DRAW_WALLS
   end
   do
     -- bottom goal net
     local w = GOAL_WIDTH
     local h = thick
     local x = sw / 2
-    local y = bottom + GOAL_DEPTH
+    local y = bottom + GOAL_DEPTH + (thick / 2)
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "bottom_goal", tag = "wall" }))
     e:newComp('tag', { name = "goal" })
     e:newComp('state', { name = "winner", value = "Player1" })
-    e.body.debugDraw = DEBUG_DRAW_WALLS
   end
   -- left
   do
-    local x = left
+    local x = left - (thick / 2)
     local y = midy
     local w = thick
-    local h = sh - thick
+    local h = sh -- - thick
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "left_wall", tag = "wall" }))
-    e.body.debugDraw = DEBUG_DRAW_WALLS
   end
   -- right
   do
-    local x = right
+    local x = right + (thick / 2)
     local y = midy
     local w = thick
-    local h = sh - thick
+    local h = sh --- thick
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "right_wall", tag = "wall" }))
-    e.body.debugDraw = DEBUG_DRAW_WALLS
   end
 end
 
@@ -219,12 +225,13 @@ function E.puck(parent, res, x, y, opts)
 
   local imgSize = res.pics[pic_id].rect.w
   local ratio = PUCK_RADIUS / (imgSize / 2)
+  local r = math.pi / 4
   local puck = parent:newEntity({
     { 'name', { name = opts.name } },
     { 'tag',  { name = 'puck' } },
 
     { 'tr',   { x = x, y = y } },
-    { 'img',  { img = pic_id, sx = ratio, sy = ratio, cx = 0.5, cy = 0.5 } },
+    { 'img',  { r = r, img = pic_id, sx = ratio, sy = ratio, cx = 0.5, cy = 0.5, debug = DEBUG_PUCK_IMG } },
     { 'vel',  { dx = 0, dy = 0 } },
 
     -- { 'pic',  { id = pic_id, sx = ratio, sy = ratio, centerx = 0.5, centery = 0.5 } },
@@ -234,7 +241,7 @@ function E.puck(parent, res, x, y, opts)
       mass = 1,
       friction = 0.0,
       restitution = 0.9,
-      debugDraw = false,
+      debugDraw = DEBUG_PUCK_BODY,
     } },
     { 'force',       {} },
     { 'circleShape', { radius = PUCK_RADIUS } },
@@ -302,14 +309,14 @@ function E.mallet(parent, res, x, y, opts)
     { 'name',       { name = opts.name } },
     { 'tag',        { name = "mallet" } },
     { 'touchable2', { r = MALLET_RADIUS * 1.20 } },
-    { 'img',        { img = pic_id, sx = scale, sy = scale, cx = 0.5, cy = 0.5 } },
+    { 'img',        { img = pic_id, sx = scale, sy = scale, cx = 0.5, cy = 0.5, debug = DEBUG_MALLET_IMG } },
     { 'tr',         { x = x, y = y } },
     { 'vel',        { dx = 0, dy = 0 } },
     { 'body', {
       mass = 1,
       friction = 0.0,
       restitution = 0.9,
-      debugDraw = false,
+      debugDraw = DEBUG_MALLET_BODY,
     } },
     { 'force',       {} },
     { 'circleShape', { radius = MALLET_RADIUS } },
