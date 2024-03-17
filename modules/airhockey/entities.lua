@@ -324,57 +324,70 @@ function E.mallet(parent, res, x, y, opts)
   return mallet
 end
 
-function E.malletResetButton_p1(parent, res)
-  do
-    local x, y = 44, 50
-    parent:newEntity({
-      { 'name', { name = "mallet_reset_p1" } },
-      { 'tr',   { x = x, y = y, r = math.pi } },
-      { 'button2', {
-        kind = 'hold',
-        eventtype = "mallet_reset",
-        eventstate = "p1",
-        holdtime = 0.5,
-        progresssize = 32,
-      } },
-      { 'touchable2', { r = 40 } },
-      { 'img', {
-        img = 'power_button',
-        sx = 0.25,
-        sy = 0.25,
-        cx = 0.5,
-        cy = 0.5,
-        color = { 1, 1, 1, 0.2 }
-      } },
-    })
+function E.mallet_reset_button(parent, res, opts)
+  opts = opts or {}
+  local r = 0
+  if opts.inverted then
+    r = math.pi
   end
+  if not opts.player then
+    error("opts.player required. eg 'p1'")
+  end
+  if not (opts.x and opts.y) then
+    error("opts.x and opts.y required")
+  end
+
+  parent:newEntity({
+    { 'name', { name = "mallet_reset_" .. opts.player } }, -- eg "p1"
+    { 'tr',   { x = opts.x, y = opts.y, r = r } },
+    { 'button2', {
+      kind = 'hold',
+      eventtype = "mallet_reset",
+      eventstate = opts.player, -- eg "p1"
+      holdtime = 0.5,
+      progresssize = 32,
+    } },
+    { 'touchable2', { r = 40 } },
+    { 'img', {
+      img = 'mallet_icon',
+      sx = 0.6,
+      sy = 0.6,
+      cx = 0.5,
+      cy = 0.5,
+      color = { 1, 1, 1, 0.4 }
+    } },
+  })
+end
+
+function E.malletResetButton_p1(parent, res)
+  E.mallet_reset_button(parent, res, { player = "p1", x = 44, y = 50, inverted = true })
 end
 
 function E.malletResetButton_p2(parent, res)
   local w, h = parent.b.w, parent.b.h
-  do
-    local x, y = w - 44, h - 50
-    parent:newEntity({
-      { 'name', { name = "mallet_reset_p1" } },
-      { 'tr',   { x = x, y = y } },
-      { 'button2', {
-        kind = 'hold',
-        eventtype = "mallet_reset",
-        eventstate = "p2",
-        holdtime = 0.5,
-        progresssize = 32,
-      } },
-      { 'touchable2', { r = 40 } },
-      { 'img', {
-        img = 'power_button',
-        sx = 0.25,
-        sy = 0.25,
-        cx = 0.5,
-        cy = 0.5,
-        color = { 1, 1, 1, 0.2 }
-      } },
-    })
-  end
+  E.mallet_reset_button(parent, res, { player = "p2", x = w - 44, y = h - 50 })
+  -- local x, y = w - 44, h - 50
+  -- parent:newEntity({
+  --   { 'name', { name = "mallet_reset_p1" } },
+  --   { 'tr',   { x = x, y = y } },
+  --   { 'button2', {
+  --     kind = 'hold',
+  --     eventtype = "mallet_reset",
+  --     eventstate = "p2",
+  --     holdtime = 0.5,
+  --     progresssize = 32,
+  --   } },
+  --   { 'touchable2', { r = 40 } },
+  --   { 'img', {
+  --     img = 'power_button',
+  --     sx = 0.25,
+  --     sy = 0.25,
+  --     cx = 0.5,
+  --     cy = 0.5,
+  --     color = { 1, 1, 1, 0.2 }
+  --   } },
+  -- })
+  -- end
 end
 
 function E.addReloadButton(parent, res)

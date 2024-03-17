@@ -36,6 +36,11 @@ return {
   },
   {
     type = "pic",
+    name = "mallet_icon",
+    data = { path = "modules/airhockey/images/mallet-icon-white.png" },
+  },
+  {
+    type = "pic",
     name = "power_button",
     data = { path = "modules/common/images/power-button-outline.png" },
   },
