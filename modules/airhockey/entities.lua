@@ -30,12 +30,12 @@ function E.initialEntities(res)
   -- local viewport = E.viewport(estore, res)
   -- local parent = viewport
   -- local parent = estore
-  local world = estore:newEntity({
-    { 'name', { name = 'world' } },
-    -- { 'tr',   { x = 150, y = 50, sx = 0.5, sy = 0.5, r = math.pi / 6 } }
-    -- { 'tr',   { x = 0, y = 0, sx = 1, sy = 1 } }
+  local viewroot = estore:newEntity({
+    { 'name', { name = 'viewroot' } },
+    { 'tr',   { x = 150, y = 150, r = 0.3, sx = 0.7, sy = 0.7 } }
   })
-  local parent = world
+  local gameTable = E.game_table(viewroot, res)
+  local parent = gameTable
 
   E.physicsWorld(parent, res)
 
@@ -43,12 +43,12 @@ function E.initialEntities(res)
 
   E.add_walls(parent, res)
 
-  E.scoreBoard(parent)
+  E.scoreBoard(parent, res)
   E.malletResetButton_p1(parent, res)
   E.malletResetButton_p2(parent, res)
   E.puckResetButton(parent, res)
 
-  E.puck_init(parent, res)
+  E.puck_drop(parent, res, { drift = false })
 
   E.mallet_p1(parent, res)
   E.mallet_p2(parent, res)
@@ -64,22 +64,30 @@ function E.initialEntities(res)
   return estore
 end
 
-function E.viewport(estore, res)
+function E.game_table(parent, res)
   local w, h = love.graphics.getDimensions()
-  local scale = 1
-  local x, y = 0, 0
-  if DEBUG_ZOOMOUT then
-    scale = 0.7
-    x, y = -100, -100
-  end
-
-  return estore:newEntity({
-    { 'name',     { name = "viewport" } },
-    { 'viewport', { sx = scale, sy = scale } },
-    { 'pos',      { x = x, y = y } },
-    { 'rect',     { w = w, h = h, offx = 0, offy = 0, draw = false } }
+  return parent:newEntity({
+    { 'name', { name = "table" } },
+    { 'b',    { w = w, h = h } },
   })
 end
+
+-- function E.viewport(estore, res)
+--   local w, h = love.graphics.getDimensions()
+--   local scale = 1
+--   local x, y = 0, 0
+--   if DEBUG_ZOOMOUT then
+--     scale = 0.7
+--     x, y = -100, -100
+--   end
+
+--   return estore:newEntity({
+--     { 'name',     { name = "viewport" } },
+--     { 'viewport', { sx = scale, sy = scale } },
+--     { 'pos',      { x = x, y = y } },
+--     { 'rect',     { w = w, h = h, offx = 0, offy = 0, draw = false } }
+--   })
+-- end
 
 function E.physicsWorld(estore, res)
   return estore:newEntity({
@@ -236,24 +244,24 @@ function E.puck(parent, res, x, y, opts)
   return puck
 end
 
-function E.puck_init(parent, res)
-  local w, h = love.graphics.getDimensions()
-  return E.puck(parent, res, w / 2, h / 2, { color = "red" })
-end
-
-function E.puck_drop(parent, res)
-  local w, h = love.graphics.getDimensions()
+-- Place a new puck mid table.
+-- opts.drift (bool,true): add a bit of random drift.
+function E.puck_drop(parent, res, opts)
+  opts = opts or {}
+  local w, h = parent.b.w, parent.b.h
   local puck = E.puck(parent, res, w / 2, (h / 2), { color = "red" })
 
-  local driftSpeed = 30
-  local dir = math.random() * (2 * math.pi)
-  puck.vel.dx = math.cos(dir) * driftSpeed
-  puck.vel.dy = math.sin(dir) * driftSpeed
+  if opts.drift == nil or opts.drift == true then
+    local driftSpeed = 30
+    local dir = math.random() * (2 * math.pi)
+    puck.vel.dx = math.cos(dir) * driftSpeed
+    puck.vel.dy = math.sin(dir) * driftSpeed
+  end
   return puck
 end
 
 function E.puckResetButton(parent, res)
-  local w, h = love.graphics.getDimensions()
+  local w, h = parent.b.w, parent.b.h
   do
     local x, y = w / 2, h / 2
     parent:newEntity({
@@ -272,12 +280,12 @@ function E.puckResetButton(parent, res)
 end
 
 function E.mallet_p1(parent, res)
-  local w, _ = love.graphics.getDimensions()
+  local w = parent.b.w
   return E.mallet(parent, res, w / 2, 75, { name = "mallet_p1", color = "blue" })
 end
 
 function E.mallet_p2(parent, res)
-  local w, h = love.graphics.getDimensions()
+  local w, h = parent.b.w, parent.b.h
   return E.mallet(parent, res, w / 2, h - 75, { name = "mallet_p2", color = "blue" })
 end
 
@@ -310,7 +318,6 @@ function E.mallet(parent, res, x, y, opts)
 end
 
 function E.malletResetButton_p1(parent, res)
-  -- local w, h = love.graphics.getDimensions()
   do
     local x, y = 44, 50
     parent:newEntity({
@@ -337,7 +344,7 @@ function E.malletResetButton_p1(parent, res)
 end
 
 function E.malletResetButton_p2(parent, res)
-  local w, h = love.graphics.getDimensions()
+  local w, h = parent.b.w, parent.b.h
   do
     local x, y = w - 44, h - 50
     parent:newEntity({
@@ -364,7 +371,8 @@ function E.malletResetButton_p2(parent, res)
 end
 
 function E.addReloadButton(parent, res)
-  local w, h = love.graphics.getDimensions()
+  -- (use screen dimensions since this button is "screen" and not "world")
+  local w, _ = love.graphics.getDimensions()
   do
     local x, y = w - 44, 50
     parent:newEntity({
@@ -402,8 +410,8 @@ end
 --   end
 -- end
 
-function E.scoreBoard(parent)
-  local w, h = love.graphics.getDimensions()
+function E.scoreBoard(parent, res)
+  local w, h = parent.b.w, parent.b.h
 
   -- P1 Score
   parent:newEntity({
