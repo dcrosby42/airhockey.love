@@ -1,5 +1,5 @@
 -- require 'castle.helpers'
-local Comp = require 'castle/ecs/component'
+local Comp = require 'castle.ecs.component'
 
 local ext = appendlist
 

@@ -1,4 +1,4 @@
-Comp = require 'castle/ecs/component'
+Comp = require 'castle.ecs.component'
 Entity = require 'castle/ecs/entity'
 require 'castle/ecs/debug'
 

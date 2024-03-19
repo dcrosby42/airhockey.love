@@ -1,4 +1,4 @@
-local Comp = require 'castle/ecs/component'
+local Comp = require 'castle.ecs.component'
 
 Comp.define("mouse_sensor", { 'on', 'pressed', 'eventName', '', 'eventData', '' })
 
