@@ -1,3 +1,4 @@
+require "castle.drawing.drawhelpers"
 local mk_entity_draw_loop = require 'castle.drawing.mk_entity_draw_loop'
 
 local function drawButtonHighlight(e, button, res)

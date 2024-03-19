@@ -33,6 +33,8 @@ function E.initialEntities(res)
 
   E.gameState(estore, res)
 
+  E.dev_state(estore, res)
+
   -- local viewport = E.viewport(estore, res)
   -- local parent = viewport
   -- local parent = estore
@@ -490,6 +492,13 @@ function E.gameState(parent, res)
     { 'name',  { name = 'game_state' } },
     { 'state', { name = 'Player1', value = 0 } },
     { 'state', { name = 'Player2', value = 0 } },
+  })
+end
+
+function E.dev_state(parent, res)
+  parent:newEntity({
+    { 'name',  { name = 'dev_state' } },
+    { 'state', { name = 'debug_draw', value = false } },
   })
 end
 

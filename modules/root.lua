@@ -1,24 +1,23 @@
 local Switcher = require('castle.modules.switcher')
 local GM = require('castle.ecs.gamemodule')
-local modules = {
-  GM.newFromFile("modules/airhockey/resources.lua"),
-  -- GM.newFromFile("modules/newdraw/resources.lua"),
+
+local ModuleMap = {
+  f1 = GM.newFromFile("modules/airhockey/resources.lua"),
+  f2 = GM.newFromFile("modules/newdraw/resources.lua"),
 }
 
 local M = {}
 
 function M.newWorld()
   local w = {}
-  w.switcher = Switcher.newWorld({ modules = modules, current = 1 })
+  w.switcher = Switcher.newWorld({ modules = ModuleMap, current = "f1" })
   return w
 end
 
 function M.updateWorld(w, action)
   if action.type == "keyboard" and action.state == "pressed" then
-    if action.key == "f1" then
-      action = { type = "castle.switcher", index = 1 }
-      -- elseif action.key == "f2" then
-      --   action = { type = "castle.switcher", index = 2 }
+    if ModuleMap[action.key] then
+      action = { type = "castle.switcher", index = action.key }
     end
   end
 

@@ -1,3 +1,4 @@
+require "castle.drawing.drawhelpers"
 local mk_entity_draw_loop = require 'castle.drawing.mk_entity_draw_loop'
 local withTransform = require("castle.drawing.with_transform")
 
@@ -14,7 +15,7 @@ local function draw(e, img, res)
   love.graphics.setColor(img.color)
   love.graphics.draw(picRes.image, picRes.quad, img.x, img.y, img.r, img.sx, img.sy, ox, oy)
 
-  if img.debug then
+  if debugDraw(img, res) then
     -- circle at 0,0 in this entity's transform
     love.graphics.setColor(0.8, 0.8, 1)
     love.graphics.circle("line", 0, 0, 5)

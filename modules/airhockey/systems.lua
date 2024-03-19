@@ -4,6 +4,7 @@ return {
   "castle.systems.physics",
   "castle.systems.sound",
   "castle.systems.touchbutton2",
+  "modules.airhockey.systems.devsystem",
   "modules.airhockey.systems.touch2",
   "modules.airhockey.systems.mallet_reset",
   "modules.airhockey.systems.puck_reset",

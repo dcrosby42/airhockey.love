@@ -10,13 +10,15 @@ return function(e, res)
     end
   end
 
-  if e.b and e.b.debug then
-    local w, h = e.b.w, e.b.h
-    local ox = e.b.cx * w
-    local oy = e.b.cy * h
-    local x, y = e.b.x, e.b.y
-    love.graphics.setColor(1, 1, 0)
-    love.graphics.rectangle("line", x - ox, y - oy, w, h)
+  if debugDraw(e, res) then
+    if e and e.b and e.b.w and e.b.h then
+      local w, h = e.b.w, e.b.h
+      local ox = e.b.cx * w
+      local oy = e.b.cy * h
+      local x, y = e.b.x, e.b.y
+      love.graphics.setColor(1, 1, 0)
+      love.graphics.rectangle("line", x - ox, y - oy, w, h)
+    end
   end
 
   if e.rect2s then

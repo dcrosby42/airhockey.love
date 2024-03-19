@@ -2,7 +2,7 @@ require "castle.ecs.ecshelpers"
 local Debug = require("mydebug").sub("draw_physics_entities", false, false)
 
 local function drawPhysicsDebugShapes(e, res)
-  if not (e.body and (e.body.debug or e.body.debugDraw)) then return end
+  if not (e.body and debugDraw(e.body, res)) then return end
   local cache = e:getEstore():getCache("physics")
 
   local obj = cache[e.body.cid]

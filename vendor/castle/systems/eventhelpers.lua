@@ -50,4 +50,12 @@ function M.on(events, eventType, eventState, fn)
   end
 end
 
+function M.onKeyPressed(events, key, fn)
+  M.on(events, "keyboard", "pressed", function(evt)
+    if evt.key == key then
+      return fn(evt)
+    end
+  end)
+end
+
 return M

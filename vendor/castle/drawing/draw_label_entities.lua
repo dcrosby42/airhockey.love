@@ -29,7 +29,7 @@ local function drawLabel(e, label, res)
   local x, y = label.x - ox, label.y - oy
   if label.align == "middle" then label.align = "center" end
 
-  if label.debug then
+  if debugDraw(e, res) then
     -- 0,0 in this entity's transform
     love.graphics.setColor(0.8, 0.8, 1)
     love.graphics.circle("line", 0, 0, 5)
@@ -45,7 +45,7 @@ local function drawLabel(e, label, res)
     love.graphics.setColor(label.color)
     love.graphics.printf(label.text, 0, texty, label.w, label.align)
 
-    if label.debug then
+    if debugDraw(e, res) then
       -- grey img bounding box
       if label.w and label.h then
         love.graphics.setColor(0.3, 0.3, 0.3)
