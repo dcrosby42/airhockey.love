@@ -96,17 +96,27 @@ function tcopydeep(orig)
 end
 
 function tkeys(t)
-  local keyset = {}
+  local keys = {}
   local n = 0
-  for k, v in pairs(t) do
+  for k, _ in pairs(t) do
     n = n + 1
-    keyset[n] = k
+    keys[n] = k
   end
-  return keyset
+  return keys
 end
 
 function numkeys(t)
   return #tkeys(t)
+end
+
+function tvalues(t)
+  local vals = {}
+  local n = 0
+  for _, v in pairs(t) do
+    n = n + 1
+    vals[n] = v
+  end
+  return vals
 end
 
 function tsetdeep(t, path, value)
