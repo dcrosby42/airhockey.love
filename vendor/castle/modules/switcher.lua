@@ -5,12 +5,15 @@ local M = {}
 M.newWorld = function(opts)
   local modules = opts.modules
   local current = opts.current or 1
+  if not modules[current] then
+    current = tkeys(modules)[1]
+  end
   local w = {}
 
-  w.instances = map(modules, function(module)
+  w.instances = tmap(modules, function(_key, module)
     return memoize0(function()
       local state = module.newWorld()
-      return {module = module, state = state}
+      return { module = module, state = state }
     end)
   end)
   w.current = current
@@ -22,9 +25,8 @@ M.updateWorld = function(w, action)
   if action.type == "castle.switcher" then w.current = action.index end
 
   local inst = w.instances[w.current]() -- gets or creates-on-demand an instance of the module at the current index
+  local sidefx
   inst.state, sidefx = inst.module.updateWorld(inst.state, action)
-  -- handleSidefx(w, sidefx)
-
   return w, sidefx
 end
 
