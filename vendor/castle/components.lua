@@ -34,14 +34,10 @@ Comp.define("label", ext(RectAttrs,
   }))
 
 
-Comp.define("circle", { 'offx', 0, 'offy', 0, 'radius', 0, 'fill', true, 'color', { 0, 0, 0 } })
-Comp.define("rect", { 'offx', 0, 'offy', 0, 'w', 0, 'h', 0, 'color', { 1, 1, 1 }, 'style', 'fill', 'draw', true,
-  'debugonly', false })
+Comp.define("anim",
+  { 'id', '', 'timescale', 1, 'centerx', '', 'centery', '', 'offx', 0, 'offy', 0, 'sx', 1, 'sy', 1, 'r', 0, 'color', { 1, 1, 1, 1 },
+    'drawbounds', false })
 
-Comp.define("pos", { 'x', 0, 'y', 0, 'r', 0 })
-Comp.define("scale", { 'x', 1, 'y', 1 })
-Comp.define("rot", { 'r', 0, 'aboutx', 0, 'abouty', 0 })
-Comp.define("bounds", { 'offx', 0, 'offy', 0, 'w', 0, 'h', 0 })
 
 Comp.define("vel", { 'dx', 0, 'dy', 0, 'angularvelocity', 0, 'lineardamping', 0, 'angulardamping', 0 })
 
@@ -58,12 +54,6 @@ Comp.define("viewportTarget", { 'offx', 0, 'offy', 0 })
 Comp.define("followable", { 'targetname', '' })
 Comp.define("follower", { 'targetname', '' })
 
-Comp.define("pic",
-  { 'id', '', 'centerx', 0, 'centery', 0, 'offx', 0, 'offy', 0, 'sx', 1, 'sy', 1, 'r', 0, 'color', { 1, 1, 1, 1 },
-    'drawbounds', false })
-Comp.define("anim",
-  { 'id', '', 'timescale', 1, 'centerx', '', 'centery', '', 'offx', 0, 'offy', 0, 'sx', 1, 'sy', 1, 'r', 0, 'color', { 1, 1, 1, 1 },
-    'drawbounds', false })
 Comp.define("sound",
   { 'sound', '', 'loop', false, 'state', 'playing', 'volume', 1, 'pitch', 1, 'playtime', 0, 'duration',
     '' })
@@ -114,15 +104,6 @@ Comp.define("button2", {
 
 Comp.define("state", { 'value', '' })
 
-Comp.define('touchable', { 'radius', 20, 'offx', 0, 'offy', 0, 'enabled', true })
-Comp.define("touch", { 'touchid', '', 'state', '',
-  'startscreenx', 0, 'startscreeny', 0,
-  'lastscreenx', 0, 'lastscreeny', 0,
-  'startx', 0, 'starty', 0,
-  'lastx', 0, 'lasty', 0,
-  'lastdx', 0, 'lastdy', 0,
-  'offx', 0, 'offy', 0,
-})
 Comp.define('touchable2', { 'r', 20, 'x', 0, 'y', 0, 'debug', false })
 Comp.define("touch2", {
   'id', '',
@@ -149,6 +130,16 @@ Comp.define("health", { 'hp', 10, 'maxhp', 10 })
 -- DELETEME
 --
 
+--REPLACED:
+-- Comp.define("pos", { 'x', 0, 'y', 0, 'r', 0 })
+-- Comp.define("scale", { 'x', 1, 'y', 1 })
+-- Comp.define("rot", { 'r', 0, 'aboutx', 0, 'abouty', 0 })
+-- Comp.define("bounds", { 'offx', 0, 'offy', 0, 'w', 0, 'h', 0 })
+-- Comp.define("pic", --   { 'id', '', 'centerx', 0, 'centery', 0, 'offx', 0, 'offy', 0, 'sx', 1, 'sy', 1, 'r', 0, 'color', { 1, 1, 1, 1 }, --     'drawbounds', false })
+-- Comp.define("circle", { 'offx', 0, 'offy', 0, 'radius', 0, 'fill', true, 'color', { 0, 0, 0 } })
+-- Comp.define("rect", { 'offx', 0, 'offy', 0, 'w', 0, 'h', 0, 'color', { 1, 1, 1 }, 'style', 'fill', 'draw', true, --   'debugonly', false })
+-- Comp.define('touchable', { 'radius', 20, 'offx', 0, 'offy', 0, 'enabled', true })
+-- Comp.define("touch", { 'touchid', '', 'state', '', 'startscreenx', 0, 'startscreeny', 0, 'lastscreenx', 0, 'lastscreeny', 0, 'startx', 0, 'starty', 0, 'lastx', 0, 'lasty', 0, 'lastdx', 0, 'lastdy', 0, 'offx', 0, 'offy', 0, })
 
 
 return Comp

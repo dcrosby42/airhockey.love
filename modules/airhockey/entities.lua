@@ -87,23 +87,6 @@ function E.game_table(parent, res)
   })
 end
 
--- function E.viewport(estore, res)
---   local w, h = love.graphics.getDimensions()
---   local scale = 1
---   local x, y = 0, 0
---   if DEBUG_ZOOMOUT then
---     scale = 0.7
---     x, y = -100, -100
---   end
-
---   return estore:newEntity({
---     { 'name',     { name = "viewport" } },
---     { 'viewport', { sx = scale, sy = scale } },
---     { 'pos',      { x = x, y = y } },
---     { 'rect',     { w = w, h = h, offx = 0, offy = 0, draw = false } }
---   })
--- end
-
 function E.physicsWorld(estore, res)
   return estore:newEntity({
     { 'name',         { name = "physics_world" } },
@@ -119,8 +102,7 @@ function E.background(estore, res)
   local sy = res.data.screen_size.height / imgH
   estore:newEntity({
     { 'name', { name = "background" } },
-    { 'pos' },
-    { 'pic',  { id = pic_id, sx = sx, sy = sy } }
+    { 'img',  { img = pic_id, sx = sx, sy = sy } }
   })
 end
 
@@ -130,7 +112,7 @@ local function staticBox(x, y, w, h, opts)
     { 'tag',            { name = opts.tag or 'block' } },
     { 'body',           { dynamic = false, debugDraw = DEBUG_DRAW_WALLS } },
     { 'rectangleShape', { w = w, h = h } },
-    { 'pos',            { x = x, y = y } },
+    { 'tr',             { x = x, y = y } },
   }
   if opts.name then
     table.insert(comps, { 'name', { name = opts.name } })
@@ -236,9 +218,6 @@ function E.puck(parent, res, x, y, opts)
     { 'img',  { r = r, img = pic_id, sx = ratio, sy = ratio, cx = 0.5, cy = 0.5, debug = DEBUG_PUCK_IMG } },
     { 'vel',  { dx = 0, dy = 0 } },
 
-    -- { 'pic',  { id = pic_id, sx = ratio, sy = ratio, centerx = 0.5, centery = 0.5 } },
-    -- { 'pos',  { x = x, y = y } },
-    -- { 'vel',  { dx = 0, dy = 0 } },
     { 'body', {
       mass = 1,
       friction = 0.0,
@@ -420,16 +399,7 @@ function E.addReloadButton(parent, res)
 end
 
 -- function E.addDebugButton(parent, res)
---   local w, h = love.graphics.getDimensions()
---   do
---     local x, y = w - 44, h - 50
---     parent:newEntity({
---       { 'name',   { name = "debug_button" } },
---       { 'pic',    { id = 'debug_button', sx = 0.7, sy = 0.7, centerx = 0.5, centery = 0.5, color = { 1, 1, 1, 0.75 } } },
---       { 'pos',    { x = x, y = y } },
---       { 'button', { kind = 'hold', eventtype = 'castle.toggleDebugLog', holdtime = 0.4, radius = 40 } },
---     })
---   end
+--       eventtype = 'castle.toggleDebugLog'
 -- end
 
 function E.scoreBoard(parent, res)
