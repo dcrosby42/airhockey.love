@@ -3,10 +3,10 @@ Debug = Debug.sub("TouchButton", false, false)
 local EventHelpers = require 'castle.systems.eventhelpers'
 
 return function(estore, input, res)
-  estore:walkEntities(hasComps('touch2', 'button2'), function(e)
+  estore:walkEntities(hasComps('touch', 'button2'), function(e)
     local button = e.button2
     if button.kind == 'hold' then
-      local touch = e.touch2
+      local touch = e.touch
       local timer = e.timers and e.timers.holdbutton
 
       -- See if the button has been held long enough to trigger:

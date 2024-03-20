@@ -2,9 +2,9 @@ TODO
 
 Component renames:
 
-- b to bounds
-- touch2
-- touchable2 
+- DONE b to bounds
+- touch
+- touchable 
 - button2
 - rect2
 - circle2

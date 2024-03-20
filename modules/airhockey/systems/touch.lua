@@ -25,20 +25,20 @@ local touchSystem = function(estore, input, res)
 end
 
 touchPressed = function(estore, touchEvt)
-  estore:seekEntity(hasComps("touchable2"), function(e)
+  estore:seekEntity(hasComps("touchable"), function(e)
     local x, y = touchEvt.x, touchEvt.y
 
     -- Detect touch intersection:
     local ex, ey = screenToEntityPt(e, touchEvt.x, touchEvt.y)
-    local targx, targy = e.touchable2.x, e.touchable2.y
+    local targx, targy = e.touchable.x, e.touchable.y
     local d = math.dist(ex, ey, targx, targy)
-    if d > e.touchable2.r then
+    if d > e.touchable.r then
       -- nope!
       return false
     end
 
     -- Add a new touch component to the entity
-    e:newComp('touch2', {
+    e:newComp('touch', {
       name = touchName(touchEvt.id),
       id = touchEvt.id,
       state = 'pressed',
@@ -51,7 +51,7 @@ touchPressed = function(estore, touchEvt)
       x = x,
       y = y,
     })
-    Debug.println(function() return "Start touch " .. inspect(e.touch2) end)
+    Debug.println(function() return "Start touch " .. inspect(e.touch) end)
     return true -- signal to seekEntity that we've hit; stop seeking
   end)
   return true
@@ -65,7 +65,7 @@ touchMoved = function(estore, touchEvt)
     touchComp.prev_y = touchComp.y
     touchComp.x = touchEvt.x
     touchComp.y = touchEvt.y
-    Debug.println(function() return "moved " .. inspect(e.touch2) end)
+    Debug.println(function() return "moved " .. inspect(e.touch) end)
   end
 end
 
@@ -81,14 +81,14 @@ touchReleased = function(estore, touchEvt)
       touchComp.x = touchEvt.x
       touchComp.y = touchEvt.y
     end
-    Debug.println(function() return "released " .. inspect(e.touch2) end)
+    Debug.println(function() return "released " .. inspect(e.touch) end)
   end
 end
 
 cleanupTouches = function(estore, touchEvt)
   -- 'released' touches only live for 1 trip around the update loop:
-  estore:walkEntities(hasComps('touch2'), function(e)
-    for _, touchComp in pairs(e.touch2s) do
+  estore:walkEntities(hasComps('touch'), function(e)
+    for _, touchComp in pairs(e.touchs) do
       if touchComp.state == 'released' then
         e:removeComp(touchComp)
       else
@@ -105,13 +105,13 @@ end
 
 findTouch = function(estore, touchId)
   local e = findEntity(estore, function(e)
-    return e.touch2 and e.touch2.id == touchId
+    return e.touch and e.touch.id == touchId
   end)
   if e then
-    if e.touch2.id == touchId then
-      return e, e.touch2
+    if e.touch.id == touchId then
+      return e, e.touch
     else
-      local touchComp = e.touch2s[touchName(touchId)]
+      local touchComp = e.touchs[touchName(touchId)]
       if not touchComp then
         Debug.println("??? findTouch eid=" .. e.eid .. " mishandling touchid=" .. touchId)
         return nil, nil

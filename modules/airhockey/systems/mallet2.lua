@@ -6,7 +6,7 @@ local Impact = 15
 -- Update the location of e based on touch location.
 -- Touch is in screen coords; dragging happens in e's parent space.
 local function dragPosition(e, xform)
-  local touch = e.touch2
+  local touch = e.touch
   local screenx, screeny = touch.x, touch.y
   -- The touch point in parent-relative coords:
   local parx, pary = xform:inverseTransformPoint(screenx, screeny)
@@ -25,16 +25,16 @@ end
 -- Update the velocity of e based on touch motion.
 -- Touch is in screen coords; dragging happens in e's parent space.
 local function dragVelocity(e, xform)
-  local t = e.touch2
+  local t = e.touch
   local dx, dy = subtractInverseTransformed(xform, t.x, t.y, t.prev_x, t.prev_y)
   e.vel.dx = dx * Impact
   e.vel.dy = dy * Impact
 end
 
 -- Control the mallets (paddles) by touch-n-drag
-return defineUpdateSystem(allOf(hasComps("touch2"), hasTag("mallet")),
+return defineUpdateSystem(allOf(hasComps("touch"), hasTag("mallet")),
   function(e, estore, input, res)
-    if e.touch2.state == "moved" then
+    if e.touch.state == "moved" then
       local xform = computeEntityTransform(e:getParent())
       dragPosition(e, xform)
       dragVelocity(e, xform)
@@ -42,10 +42,10 @@ return defineUpdateSystem(allOf(hasComps("touch2"), hasTag("mallet")),
       e.vel.dx = 0
       e.vel.dy = 0
     end
-    if e.touch2.state ~= "idle" then
+    if e.touch.state ~= "idle" then
       Debug.println(function()
         return "touch= " ..
-            e.touch2.state .. " x,y=" .. inspect({ e.tr.x, e.tr.y }) .. " vel=" .. inspect({ e.vel.dx, e.vel.dy })
+            e.touch.state .. " x,y=" .. inspect({ e.tr.x, e.tr.y }) .. " vel=" .. inspect({ e.vel.dx, e.vel.dy })
       end)
     end
   end)

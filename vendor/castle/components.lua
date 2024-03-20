@@ -119,9 +119,9 @@ Comp.define("button2", {
 })
 
 
-Comp.define('touchable2', { 'r', 20, 'x', 0, 'y', 0, 'debug', false })
+Comp.define('touchable', { 'r', 20, 'x', 0, 'y', 0, 'debug', false })
 
-Comp.define("touch2", {
+Comp.define("touch", {
   'id', '',
   'state', '',
   'init_x', 0,

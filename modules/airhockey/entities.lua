@@ -262,7 +262,7 @@ function E.puckResetButton(parent, res)
         holdtime = 1.5,
         progresssize = 32,
       } },
-      { 'touchable2', { r = 40 } },
+      { 'touchable', { r = 40 } },
     })
   end
 end
@@ -287,12 +287,12 @@ function E.mallet(parent, res, x, y, opts)
   local scale = MALLET_RADIUS / (imgSize / 2)
   scale = scale * 1.05 -- mallet image is a little squished, so inflate the scale a bit
   local mallet = parent:newEntity({
-    { 'name',       { name = opts.name } },
-    { 'tag',        { name = "mallet" } },
-    { 'touchable2', { r = MALLET_RADIUS * 1.20 } },
-    { 'img',        { img = pic_id, sx = scale, sy = scale, cx = 0.5, cy = 0.5, debug = DEBUG_MALLET_IMG } },
-    { 'tr',         { x = x, y = y } },
-    { 'vel',        { dx = 0, dy = 0 } },
+    { 'name',      { name = opts.name } },
+    { 'tag',       { name = "mallet" } },
+    { 'touchable', { r = MALLET_RADIUS * 1.20 } },
+    { 'img',       { img = pic_id, sx = scale, sy = scale, cx = 0.5, cy = 0.5, debug = DEBUG_MALLET_IMG } },
+    { 'tr',        { x = x, y = y } },
+    { 'vel',       { dx = 0, dy = 0 } },
     { 'body', {
       mass = 1,
       friction = 0.0,
@@ -328,7 +328,7 @@ function E.mallet_reset_button(parent, res, opts)
       holdtime = 0.5,
       progresssize = 32,
     } },
-    { 'touchable2', { r = 40 } },
+    { 'touchable', { r = 40 } },
     { 'img', {
       img = 'mallet_icon',
       sx = 0.6,
@@ -358,7 +358,7 @@ function E.malletResetButton_p2(parent, res)
   --     holdtime = 0.5,
   --     progresssize = 32,
   --   } },
-  --   { 'touchable2', { r = 40 } },
+  --   { 'touchable', { r = 40 } },
   --   { 'img', {
   --     img = 'power_button',
   --     sx = 0.25,
@@ -385,7 +385,7 @@ function E.addReloadButton(parent, res)
         holdtime = 0.5,
         progresssize = 32,
       } },
-      { 'touchable2', { r = 40 } },
+      { 'touchable', { r = 40 } },
       { 'img', {
         img = 'power_button',
         sx = 0.25,
