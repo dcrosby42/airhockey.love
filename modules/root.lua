@@ -19,7 +19,7 @@ local M = {}
 
 function M.newWorld()
   local w = {}
-  w.switcher = Switcher.newWorld({ modules = ModuleMap, current = "newdraw" })
+  w.switcher = Switcher.newWorld({ modules = ModuleMap, current = "airhockey" })
   return w
 end
 

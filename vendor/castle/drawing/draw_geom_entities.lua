@@ -10,12 +10,13 @@ return function(e, res)
     end
   end
 
-  -- bounds: draw oonly during debug
+  -- bounds: draw only during debug
   if e.b and e.b.w and e.b.h and debugDraw(e.b, res) then
     local w, h = e.b.w, e.b.h
     local ox = e.b.cx * w
     local oy = e.b.cy * h
     local x, y = e.b.x, e.b.y
+    -- draw a yellow rectangle:
     love.graphics.setColor(1, 1, 0)
     love.graphics.rectangle("line", x - ox, y - oy, w, h)
   end

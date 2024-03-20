@@ -22,16 +22,16 @@ local function drawPhysicsDebugShapes(e, res)
   for _, shape in ipairs(obj.shapes) do
     if shape:type() == "CircleShape" then
       -- CircleShape needs special handling
-      local x, y = obj.body:getWorldPoints(shape:getPoint())
       local r = shape:getRadius()
       love.graphics.circle("line", 0, 0, r)
     elseif shape:type() == "ChainShape" then
       -- ChainShapes don't form a loop; use `line()`
-      love.graphics.line(obj.body:getWorldPoints(shape:getPoints()))
+      -- DELETEME love.graphics.line(obj.body:getWorldPoints(shape:getPoints()))
+      love.graphics.line(shape:getPoints())
     else
       -- Otherwise assume we can draw a polygon of getPoints.
       -- (Eg, rectangle shapes)
-      love.graphics.polygon("line", obj.body:getWorldPoints(shape:getPoints()))
+      love.graphics.polygon("line", shape:getPoints())
       local x, y = obj.body:getWorldCenter()
       love.graphics.points(x, y)
     end
@@ -51,20 +51,3 @@ local function drawPhysicsDebugShapes(e, res)
 end
 
 return drawPhysicsDebugShapes
-
--- local function drawEntities(parent, cache)
---   parent:walkEntities(
---     hasComps("body"),
---     function(e)
---       drawEntity(e, cache)
---     end
---   )
--- end
-
--- local system =
---     defineDrawSystem(
---       { "physicsWorld" },
---       function(physWorldE, estore, res)
---         drawEntities(estore, estore:getCache("physics"))
---       end
---     )

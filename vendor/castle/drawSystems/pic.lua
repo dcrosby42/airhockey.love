@@ -7,4 +7,3 @@ return function(estore, res)
     if e.anim and e.pos then DrawPic.drawAnims(e, res) end
   end)
 end
-
