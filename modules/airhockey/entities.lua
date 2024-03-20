@@ -83,7 +83,7 @@ function E.game_table(parent, res)
   local w, h = love.graphics.getDimensions()
   return parent:newEntity({
     { 'name', { name = "table" } },
-    { 'b',    { w = w, h = h } },
+    { 'box',  { w = w, h = h } },
   })
 end
 
@@ -236,7 +236,7 @@ end
 -- opts.drift (bool,true): add a bit of random drift.
 function E.puck_drop(parent, res, opts)
   opts = opts or {}
-  local w, h = parent.b.w, parent.b.h
+  local w, h = parent.box.w, parent.box.h
   local puck = E.puck(parent, res, w / 2, (h / 2), { color = "red" })
 
   if opts.drift == nil or opts.drift == true then
@@ -249,7 +249,7 @@ function E.puck_drop(parent, res, opts)
 end
 
 function E.puckResetButton(parent, res)
-  local w, h = parent.b.w, parent.b.h
+  local w, h = parent.box.w, parent.box.h
   do
     local x, y = w / 2, h / 2
     parent:newEntity({
@@ -268,12 +268,12 @@ function E.puckResetButton(parent, res)
 end
 
 function E.mallet_p1(parent, res)
-  local w = parent.b.w
+  local w = parent.box.w
   return E.mallet(parent, res, w / 2, 75, { name = "mallet_p1", color = "blue" })
 end
 
 function E.mallet_p2(parent, res)
-  local w, h = parent.b.w, parent.b.h
+  local w, h = parent.box.w, parent.box.h
   return E.mallet(parent, res, w / 2, h - 75, { name = "mallet_p2", color = "blue" })
 end
 
@@ -345,7 +345,7 @@ function E.malletResetButton_p1(parent, res)
 end
 
 function E.malletResetButton_p2(parent, res)
-  local w, h = parent.b.w, parent.b.h
+  local w, h = parent.box.w, parent.box.h
   E.mallet_reset_button(parent, res, { player = "p2", x = w - 44, y = h - 50 })
   -- local x, y = w - 44, h - 50
   -- parent:newEntity({
@@ -403,7 +403,7 @@ end
 -- end
 
 function E.scoreBoard(parent, res)
-  local w, h = parent.b.w, parent.b.h
+  local w, h = parent.box.w, parent.box.h
 
   -- P1 Score
   parent:newEntity({

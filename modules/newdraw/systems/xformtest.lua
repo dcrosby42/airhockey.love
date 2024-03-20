@@ -1,7 +1,7 @@
 local inspect = require "inspect"
 local EventHelpers = require "castle.systems.eventhelpers"
 
--- Compute rectangle coords from a 'b' or 'rect2' component.
+-- Compute rectangle coords from a 'box' or 'rect2' component.
 -- Expected attrs on component: x,y,w,h,cx,cy
 -- Returns rectangle as: x1,y1,x2,y2
 local function bounds2rect(b)
@@ -13,10 +13,10 @@ local function bounds2rect(b)
 end
 
 -- local function calcBounds(e)
---   if not e.b then
---     error("calcBounds needs an entity with a 'b' component")
+--   if not e.box then
+--     error("calcBounds needs an entity with a 'box' component")
 --   end
---   local x1, y1, x2, y2 = bounds2rect(e.b)
+--   local x1, y1, x2, y2 = bounds2rect(e.box)
 --   -- print("bounds2rect: " .. inspect({ x1, y1, x2, y2 }))
 --   local t = calcTransform(e)
 --   if t then
@@ -40,7 +40,7 @@ return function(estore, input, res)
     if greenDot then
       -- transform screen coords -> findme-relative coords:
       local tx, ty = findmeT:inverseTransformPoint(evt.x, evt.y)
-      if math.pointinrect(tx, ty, bounds2rect(findme.b)) then
+      if math.pointinrect(tx, ty, bounds2rect(findme.box)) then
         print("inverseTransformed click:" .. inspect({ tx, ty }))
         greenDot.tr.x = tx
         greenDot.tr.y = ty
@@ -65,7 +65,7 @@ return function(estore, input, res)
     -- check for intersection with the "findme" box
     local x, y = selectbox.tr.x, selectbox.tr.y
     x, y = findmeT:inverseTransformPoint(x, y)
-    if math.pointinrect(x, y, bounds2rect(findme.b)) then
+    if math.pointinrect(x, y, bounds2rect(findme.box)) then
       -- turn red if we're hitting the box
       selectbox.circle2.color = { 1, 0, 0 }
     else

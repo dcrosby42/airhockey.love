@@ -72,7 +72,7 @@ function E.treeTestOuter(estore, res)
     { 'name',    { name = 'selectbox' } },
     { 'tr',      { x = 0, y = 0 } },
     { 'circle2', { style = 'fill', r = 4, color = { 1, 1, 1 } } }
-    -- { 'b',     { w = 100, h = 66, cx = 0.5, cy = 0.5, debug = false } },
+    -- { 'box',     { w = 100, h = 66, cx = 0.5, cy = 0.5, debug = false } },
     -- { 'rect2', { w = 100, h = 66, cx = 0.5, cy = 0.5, color = { 1, 1, 1 } } },
   })
 
@@ -109,13 +109,13 @@ function E.treeTest(parent, res)
     { 'tr',  { x = 100, y = 300, r = 0, sx = 0.8, sy = 0.8 } },
     { 'img', { img = "tree", r = -math.pi / 4, x = 5, cx = 0.5, cy = 1.0, debug = true } },
     { 'img', { img = "grid_white", } },
-    { 'b',   { w = 50, h = 100, cx = 0.5, cy = 0.75, debug = true } }
+    { 'box', { w = 50, h = 100, cx = 0.5, cy = 0.75, debug = true } }
   })
   parent:newEntity({
     { 'tr',  { x = 300, y = 300, r = 0, sx = 1.2, sy = 0.8 } },
     { 'img', { img = "tree", r = -math.pi / 4, x = 5, cx = 0.5, cy = 1.0, debug = true } },
     { 'img', { img = "grid_white", } },
-    { 'b',   { w = 50, h = 100, cx = 0.5, cy = 0.75, debug = true } },
+    { 'box', { w = 50, h = 100, cx = 0.5, cy = 0.75, debug = true } },
     tag("clickable"),
     { 'tag', }
   })
@@ -123,7 +123,7 @@ function E.treeTest(parent, res)
     { 'tr',    { x = 500, y = 300, r = -math.pi / 4, sx = 0.8, sy = 0.8 } },
     { 'img',   { img = "tree", x = 5, cx = 0.5, cy = 1.0, debug = true } },
     { 'img',   { img = "grid_white" } },
-    { 'b',     { w = 50, h = 100, cx = 0.5, cy = 0.75, debug = true } },
+    { 'box',   { w = 50, h = 100, cx = 0.5, cy = 0.75, debug = true } },
     { 'name',  { name = "findme" } },
     { 'tag',   { name = "spinme" } },
     { 'state', { name = "spinspeed", value = 0.7 } },
@@ -141,7 +141,7 @@ function E.treeTest(parent, res)
     { 'tr',  { x = 700, y = 300, r = -math.pi / 4, sx = 1.5, sy = 0.6 } },
     { 'img', { img = "tree", x = 5, cx = 0.5, cy = 1.0, debug = true } },
     { 'img', { img = "grid_white" } },
-    { 'b',   { w = 50, h = 100, cx = 0.5, cy = 0.75, debug = true } },
+    { 'box', { w = 50, h = 100, cx = 0.5, cy = 0.75, debug = true } },
     tag("clickable"),
   })
 end

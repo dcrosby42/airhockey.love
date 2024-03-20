@@ -15,10 +15,10 @@ end
 
 
 local function calcBounds(e)
-  if not e.b then
-    error("calcBounds needs an entity with a 'b' component")
+  if not e.box then
+    error("calcBounds needs an entity with a 'box' component")
   end
-  local x1, y1, x2, y2 = bounds2rect(e.b)
+  local x1, y1, x2, y2 = bounds2rect(e.box)
   -- print("bounds2rect: " .. inspect({ x1, y1, x2, y2 }))
   local t = calcTransform(e)
   if t then
@@ -48,14 +48,14 @@ return function(estore, input, res)
   -- end)
 
   -- estore:walkEntities(
-  --   allOf(hasTag('clickable'), hasComps('b')),
+  --   allOf(hasTag('clickable'), hasComps('box')),
   -- )
   -- EventHelpers.handle(input.events, 'touch', {
   --   moved = function(event)
   --     local x, y = event.x, event.y
-  --     -- local clbls = findEntities(estore, allOf(hasTag('clickable'), hasComps('b')))
+  --     -- local clbls = findEntities(estore, allOf(hasTag('clickable'), hasComps('box')))
   --     estore:walkEntities(
-  --       allOf(hasTag('clickable'), hasComps('tr', 'b')),
+  --       allOf(hasTag('clickable'), hasComps('tr', 'box')),
   --       function(e)
   --         -- local x1, y1, x2, y2 = calcBounds(e)
   --         if math.pointinrect(x, y, calcBounds(e)) then

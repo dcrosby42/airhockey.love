@@ -16,7 +16,7 @@ Comp.define("tr", TrAttrs)
 
 Comp.define("state", { 'value', '' })
 
-Comp.define("b", ext(RectAttrs, { 'debug', false })) -- sx,sy?
+Comp.define("box", ext(RectAttrs, { 'debug', false })) -- sx,sy?
 
 Comp.define("timer", { 't', 0, 'factor', 1, 'reset', 0, 'countDown', true, 'loop', false, 'alarm', false, 'event', '' })
 
