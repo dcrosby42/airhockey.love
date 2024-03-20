@@ -141,60 +141,12 @@ function defineDrawSystem(matchSpec, fn)
   end
 end
 
-function getPos(e)
-  local par = e:getParent()
-  if par and par.pos and not e.body then -- FIXME ZOINKS knowing about 'body' here is bad juju
-    local x, y = getPos(par)
-    return e.pos.x + x, e.pos.y + y
-  else
-    return e.pos.x, e.pos.y
-  end
-end
-
-function getLocation(e)
-  if e.tr then
-    return e.tr.x, e.tr.y
-  elseif e.pos then
-    return e.pos.x, e.pos.y
-  end
-  error("getLocation requires e.pos or e.tr")
-end
-
-function getRotation(e)
-  if e.tr then
-    return e.tr.r
-  elseif e.pos then
-    return e.pos.r
-  end
-  error("getRotation requires e.pos or e.tr")
-end
-
 function getName(e)
   if e.name and e.name.name then
     return e.name.name
   else
     return nil
   end
-end
-
-function getBoundingRect(e)
-  local x, y = getPos(e)
-  local bounds = e.bounds
-  if not bounds then return x, y, 1, 1 end
-
-  local sx = 1
-  local sy = 1
-  if e.scale then
-    sx = e.scale.sx
-    sy = e.scale.sy
-  end
-
-  x = x - bounds.offx * sx
-  y = y - bounds.offy * sy
-  local w = bounds.w * sx
-  local h = bounds.h * sy
-
-  return x, y, w, h
 end
 
 function resolveEntCompKeyByPath(e, path)

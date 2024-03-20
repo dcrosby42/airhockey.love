@@ -54,21 +54,21 @@ local physicsSystem = defineUpdateSystem({ "physicsWorld" },
           e.body.kind)
       end
       -- Apply values from Entity to the physics object
-      local b = obj.body
-      b:setPosition(getLocation(e))
-      b:setAngle(getRotation(e))
+      local body = obj.body
+      body:setPosition(e.tr.x, e.tr.y)
+      body:setAngle(e.tr.r)
       if e.vel then
-        b:setLinearVelocity(e.vel.dx, e.vel.dy)
-        b:setLinearDamping(e.vel.lineardamping)
-        b:setAngularVelocity(e.vel.angularvelocity)
-        b:setAngularDamping(e.vel.angulardamping)
+        body:setLinearVelocity(e.vel.dx, e.vel.dy)
+        body:setLinearDamping(e.vel.lineardamping)
+        body:setAngularVelocity(e.vel.angularvelocity)
+        body:setAngularDamping(e.vel.angulardamping)
       end
       if e.force then
         local f = e.force
-        b:applyForce(f.fx, f.fy)
-        b:applyTorque(f.torque)
-        b:applyLinearImpulse(f.impx, f.impy)
-        b:applyAngularImpulse(f.angimp)
+        body:applyForce(f.fx, f.fy)
+        body:applyTorque(f.torque)
+        body:applyLinearImpulse(f.impx, f.impy)
+        body:applyAngularImpulse(f.angimp)
         -- Impulses need to be reset to 0 here
         f.impx = 0
         f.impy = 0
@@ -401,10 +401,9 @@ function newBody(pw, e)
     return nil
     -- error("newGeneric() requires the Entity have rectangleShape, polygonShape or circleShape component(s)")
   end
-  local x, y = getLocation(e)
   local dyn = "dynamic"
   if not e.body.dynamic then dyn = "static" end
-  local b = P.newBody(pw, x, y, dyn)
+  local b = P.newBody(pw, e.tr.x, e.tr.y, dyn)
   b:setBullet(e.body.bullet)
   b:setFixedRotation(e.body.fixedrotation)
 

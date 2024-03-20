@@ -39,3 +39,57 @@ local function draw(e, img, res)
 end
 
 return mk_entity_draw_loop('imgs', draw)
+
+-- --
+-- -- ANIM
+-- --
+-- if e.anims then
+--   -- local anim = e.anim
+--   for _, anim in pairs(e.anims) do
+--     local animRes = res.anims[anim.id]
+--     if not animRes then
+--       error("No anim resource '" .. anim.id .. "'")
+--     end
+--     local timer = e.timers[anim.name]
+--     if timer then
+--       local picRes = animRes.getFrame(timer.t)
+--       local x, y = getPos(e)
+--       local r = 0
+--       if anim.r then
+--         r = r + anim.r
+--       end
+--       if e.pos.r then
+--         r = r + e.anim.r
+--       end
+
+--       local offx = 0
+--       local offy = 0
+--       if anim.centerx ~= "" then
+--         offx = anim.centerx * picRes.rect.w
+--       else
+--         offx = anim.offx
+--       end
+--       if anim.centery ~= "" then
+--         offy = anim.centery * picRes.rect.h
+--       else
+--         offy = anim.offy
+--       end
+
+--       love.graphics.setColor(unpack(anim.color))
+
+--       love.graphics.draw(picRes.image, picRes.quad, x, y, r, anim.sx, anim.sy, offx, offy)
+
+--       if anim.drawbounds then
+--         love.graphics.rectangle(
+--           "line",
+--           x - (anim.sx * offx),
+--           y - (anim.sy * offy),
+--           picRes.rect.w * anim.sx,
+--           picRes.rect.h * anim.sy
+--         )
+--       end
+--     else
+--       print("For eid=" .. e.eid .. " anim.cid=" .. anim.cid .. " NEED TIMER named '" .. anim.name .. "'")
+--     end -- end if timer
+--   end
+-- end

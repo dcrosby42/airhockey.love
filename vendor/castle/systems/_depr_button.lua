@@ -2,6 +2,8 @@ local Comp = require 'castle.ecs.component'
 
 Comp.define("mouse_sensor", { 'on', 'pressed', 'eventName', '', 'eventData', '' })
 
+-- DEPRECATED (?)
+
 return defineUpdateSystem(
   { 'mouse_sensor', 'pos', 'bounds' },
   function(e, estore, input, res)

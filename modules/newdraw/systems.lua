@@ -3,7 +3,6 @@ return {
   "castle.systems.selfdestruct",
   "castle.systems.physics",
   "castle.systems.sound",
-  "castle.systems.touchbutton",
   "modules.newdraw.systems.devsystem",
   "modules.newdraw.systems.xformtest",
 }
