@@ -233,7 +233,7 @@ local function drawSystem(estore, res)
       -- POLYGON
       --
       if e.polygonShape then
-        local st = e.lineStyle
+        local st = e.polygonLineStyle
         local pol = e.polygonShape
         if st and st.draw then
           love.graphics.setColor(unpack(st.color))

@@ -4,7 +4,11 @@ return {
     name = "main",
     data = {
       entities = { datafile = "modules/newdraw/entities.lua" },
-      components = { data = {} },
+      components = {
+        data = {
+          screen_grid = { 'spacex', 10, 'spacey', '', 'color', { 1, 1, 1, 0.3 } }
+        }
+      },
       systems = { datafile = "modules/newdraw/systems.lua" },
       drawSystems = { datafile = "modules/newdraw/drawSystems.lua" },
       name = "Scenegraph Experiment",

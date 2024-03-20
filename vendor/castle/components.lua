@@ -6,8 +6,30 @@ local TrAttrs = { 'x', 0, 'y', 0, 'r', 0, 'sx', 1, 'sy', 1 }
 local RectAttrs = { 'x', 0, 'y', 0, 'w', 0, 'h', 0, 'cx', 0, 'cy', 0 } -- sx,sy?
 -- local SizeAttrs = { 'w', 0, 'h', 0, 'cx', 0, 'cy', 0 }
 
+--
+-- COMMON
+--
+
+Comp.define("tag", {})
+
 Comp.define("tr", TrAttrs)
+
+Comp.define("state", { 'value', '' })
+
 Comp.define("b", ext(RectAttrs, { 'debug', false })) -- sx,sy?
+
+Comp.define("timer", { 't', 0, 'factor', 1, 'reset', 0, 'countDown', true, 'loop', false, 'alarm', false, 'event', '' })
+
+Comp.define("followable", { 'targetname', '' })
+
+Comp.define("follower", { 'targetname', '' })
+
+--
+-- VISUALS
+--
+
+Comp.define("bgcolor", { 'color', { 0, 0, 0 } })
+
 Comp.define("img", {
   'img', 'UNSET',
   'x', 0, 'y', 0, 'cx', 0, 'cy', 0,
@@ -15,10 +37,10 @@ Comp.define("img", {
   'sx', 1, 'sy', 1,
   'color', { 1, 1, 1, 1 },
   'debug', false,
-}) -- w,h?
-
+})                                                                              -- w,h?
 
 Comp.define("rect2", ext(RectAttrs, { 'style', 'line', 'color', { 1, 1, 1 } })) -- sx,sy?
+
 Comp.define("circle2", { 'style', 'line', 'x', 0, 'y', 0, 'r', 0, 'color', { 1, 1, 1 } })
 
 Comp.define("label", ext(RectAttrs,
@@ -39,26 +61,15 @@ Comp.define("anim",
     'drawbounds', false })
 
 
-Comp.define("vel", { 'dx', 0, 'dy', 0, 'angularvelocity', 0, 'lineardamping', 0, 'angulardamping', 0 })
-
-Comp.define("tag", {})
-
-Comp.define("bgcolor", { 'color', { 0, 0, 0 } })
-
-Comp.define("timer", { 't', 0, 'factor', 1, 'reset', 0, 'countDown', true, 'loop', false, 'alarm', false, 'event', '' })
-
-Comp.define("controller", { 'id', '' })
-
-Comp.define("viewport", { 'x', 0, 'y', 0, 'sx', 1, 'sy', 1 })
-Comp.define("viewportTarget", { 'offx', 0, 'offy', 0 })
-Comp.define("followable", { 'targetname', '' })
-Comp.define("follower", { 'targetname', '' })
-
 Comp.define("sound",
   { 'sound', '', 'loop', false, 'state', 'playing', 'volume', 1, 'pitch', 1, 'playtime', 0, 'duration',
     '' })
 
+--
+-- PHYSICS
+--
 Comp.define('physicsWorld', { 'gx', 0, 'gy', 0, 'allowSleep', true })
+Comp.define("vel", { 'dx', 0, 'dy', 0, 'angularvelocity', 0, 'lineardamping', 0, 'angulardamping', 0 })
 Comp.define('body', {
   'kind', '',
   'group', 0,
@@ -74,24 +85,29 @@ Comp.define('body', {
 })
 Comp.define("force", { 'fx', 0, 'fy', 0, 'torque', 0, 'impx', 0, 'impy', 0, 'angimp', 0 })
 Comp.define('joint',
-  { 'kind', '', 'toEntity', '', 'lowerlimit', '', 'upperlimit', '', 'motorspeed', '', 'maxmotorforce', '', 'docollide', false })
+  { 'kind', '',
+    'toEntity', '',
+    'lowerlimit', '',
+    'upperlimit', '',
+    'motorspeed', '',
+    'maxmotorforce', '',
+    'docollide', false
+  })
 Comp.define("rectangleShape", { 'x', 0, 'y', 0, 'w', 0, 'h', 0, 'angle', 0 })
-Comp.define("polygonShape", { 'vertices', {} })
 Comp.define("circleShape", { 'x', 0, 'y', 0, 'radius', 0 })
 Comp.define("chainShape", { 'vertices', {}, 'loop', false })
+Comp.define("polygonShape", { 'vertices', {} })
 
-Comp.define("lineStyle",
+Comp.define("polygonLineStyle",
   { 'draw', true, 'color', { 1, 1, 1 }, 'linewidth', 1, 'linestyle', 'smooth', 'closepolygon', true })
-
-Comp.define("debug", { 'value', '' })
-Comp.define("debugDraw",
-  { 'on', true, 'pos', true, 'bounds', false, 'rects', false, 'circles', false, 'labels', false, 'color', { 1, 1, 1 } })
 
 Comp.define("contact",
   { 'otherEid', '', 'nx', 0, 'ny', 0, 'myCid', '', 'otherCid', '', 'x', 0, 'y', 0, 'dx', 0, 'dy', 0 })
 
-Comp.define("button", { 'kind', 'tap', 'touchid', '', 'holdtime', 1, 'eventtype', '', 'shape', 'circle', 'radius', 40,
-  'w', 80, 'h', 80 })
+--
+-- INPUT / UI
+--
+
 Comp.define("button2", {
   'kind', 'tap', -- hold, tap
   'eventtype', '',
@@ -102,9 +118,9 @@ Comp.define("button2", {
   'progresscolor', { 1, 1, 1, 0.5 },
 })
 
-Comp.define("state", { 'value', '' })
 
 Comp.define('touchable2', { 'r', 20, 'x', 0, 'y', 0, 'debug', false })
+
 Comp.define("touch2", {
   'id', '',
   'state', '',
@@ -119,11 +135,7 @@ Comp.define("touch2", {
   'debug', false,
 })
 
-Comp.define("manipulator", { 'id', '', 'mode', '', 'x', 0, 'y', 0, 'dx', 0, 'dy', 0 })
 
-Comp.define("screen_grid", { 'spacex', 10, 'spacey', '', 'color', { 1, 1, 1, 0.3 } })
-
-Comp.define("health", { 'hp', 10, 'maxhp', 10 })
 
 
 --
@@ -140,6 +152,18 @@ Comp.define("health", { 'hp', 10, 'maxhp', 10 })
 -- Comp.define("rect", { 'offx', 0, 'offy', 0, 'w', 0, 'h', 0, 'color', { 1, 1, 1 }, 'style', 'fill', 'draw', true, --   'debugonly', false })
 -- Comp.define('touchable', { 'radius', 20, 'offx', 0, 'offy', 0, 'enabled', true })
 -- Comp.define("touch", { 'touchid', '', 'state', '', 'startscreenx', 0, 'startscreeny', 0, 'lastscreenx', 0, 'lastscreeny', 0, 'startx', 0, 'starty', 0, 'lastx', 0, 'lasty', 0, 'lastdx', 0, 'lastdy', 0, 'offx', 0, 'offy', 0, })
+-- Comp.define("button", { 'kind', 'tap', 'touchid', '', 'holdtime', 1, 'eventtype', '', 'shape', 'circle', 'radius', 40, 'w', 80, 'h', 80 })
+
+
+-- RECONSIDER:
+-- Comp.define("debug", { 'value', '' })
+-- Comp.define("debugDraw", { 'on', true, 'pos', true, 'bounds', false, 'rects', false, 'circles', false, 'labels', false, 'color', { 1, 1, 1 } })
+-- Comp.define("controller", { 'id', '' })
+-- Comp.define("viewport", { 'x', 0, 'y', 0, 'sx', 1, 'sy', 1 })
+-- Comp.define("viewportTarget", { 'offx', 0, 'offy', 0 })
+
+-- Comp.define("health", { 'hp', 10, 'maxhp', 10 })
+-- Comp.define("manipulator", { 'id', '', 'mode', '', 'x', 0, 'y', 0, 'dx', 0, 'dy', 0 })
 
 
 return Comp
