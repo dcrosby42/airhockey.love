@@ -21,7 +21,7 @@ R.getMusicSource = memoize1(function(fname)
 end)
 
 -- MyDebug settings:
--- { 
+-- {
 --   someModuleName = { onConsole=true, onScreen=false, doNotes=false },
 --   otherModuleName = { onConsole=true, onScreen=false, doNotes=false },
 --   ...
@@ -30,7 +30,7 @@ function applyMyDebugSettings(myDebugSettings)
   for name, flags in pairs(myDebugSettings) do
     for kind, bool in pairs(flags) do
       assert(MyDebug[kind],
-             "Dunno what kind of logging '" .. kind .. "' is for MyDebug")
+        "Dunno what kind of logging '" .. kind .. "' is for MyDebug")
       MyDebug[kind][name] = bool
     end
   end
@@ -58,7 +58,7 @@ function R.makePic(fname, img, rect, opts)
   if fname and not img then img = R.getImage(fname) end
   if not fname and not img then
     error(
-        "ResourceLoader.makePic() requires filename or image object, but both were nil")
+      "ResourceLoader.makePic() requires filename or image object, but both were nil")
   end
 
   local x, y, w, h
@@ -82,10 +82,10 @@ function R.makePic(fname, img, rect, opts)
   local quad = love.graphics.newQuad(x, y, w, h, img:getDimensions())
   local pic = {
     filename = fname,
-    rect = {x = x, y = y, w = w, h = h},
+    rect = { x = x, y = y, w = w, h = h },
     image = img,
     quad = quad,
-    duration = (opts.duration or 1 / 60),
+    duration = (opts.duration or (1 / 60)),
     frameNum = (opts.frameNum or 1),
     sx = (opts.sx or 1),
     sy = (opts.sy or 1),
@@ -115,10 +115,10 @@ function Anim.simpleSheetToPics(img, w, h, picOpts, count)
     local y = (j - 1) * h
     for i = 1, imgw / w do
       local x = (i - 1) * w
-      local pic = R.makePic(nil, img, {x = x, y = y, w = w, h = h}, picOpts)
+      local pic = R.makePic(nil, img, { x = x, y = y, w = w, h = h }, picOpts)
       table.insert(pics, pic)
       Debug.println("Added pic.rect x=" .. x .. " y=" .. y .. " w=" .. w ..
-                        " h=" .. h)
+        " h=" .. h)
       if count and #pics >= count then
         Debug.println("Reach count limit of " .. count .. "; returning")
         return pics
@@ -148,7 +148,7 @@ end
 
 function Anim.makeSimpleAnim(pics, frameDur)
   frameDur = frameDur or 1 / 60
-  local anim = {pics = {}, duration = (#pics * frameDur)}
+  local anim = { pics = {}, duration = (#pics * frameDur) }
   for i = 1, #pics do
     table.insert(anim.pics, shallowclone(pics[i]))
     -- stamp each frame w duration and frame#
@@ -166,7 +166,7 @@ function Anim.makeSinglePicAnim(pic, framwDur)
   pic = shallowclone(pic)
   pic.frameNum = 1
   pic.duration = frameDur
-  local anim = {pics = {pic}, duration = pic.duration}
+  local anim = { pics = { pic }, duration = pic.duration }
   -- make a frame getter func for this anim
   anim.getFrame = function(t)
     return pic
@@ -176,7 +176,7 @@ function Anim.makeSinglePicAnim(pic, framwDur)
 end
 
 --
--- ResourceSet and ResourceRoot 
+-- ResourceSet and ResourceRoot
 --
 local ResourceSet = {}
 
@@ -252,7 +252,7 @@ function Loaders.picStrip_anim(res, pics, name, data)
         anim = Anim.makeSimpleAnim(myPics)
         for i = 1, #anim.pics do
           anim.pics[i].duration = data.frameDurations[i] or
-                                      anim.pics[i - 1].duration -- assumes there's at least 1 to fall back on
+              anim.pics[i - 1].duration                         -- assumes there's at least 1 to fall back on
         end
         -- update overall anim duration
         Anim.recalcDuration(anim)
@@ -270,8 +270,8 @@ end
 function Loaders.picStrip(res, picStrip)
   local data = Loaders.getData(picStrip)
   local pics = Anim.simpleSheetToPics(R.getImage(data.path), data.picWidth,
-                                      data.picHeight, data.picOptions,
-                                      data.count)
+    data.picHeight, data.picOptions,
+    data.count)
   res:get('picStrips'):put(picStrip.name, pics)
 
   -- Any individual pics called out by the config should get indexed by name:
@@ -289,7 +289,7 @@ end
 
 function Loaders.pic(res, picConfig)
   local data = Loaders.getData(picConfig)
-  local pic = R.makePic(data.path, nil, data.rect, {sx = data.sx, sy = data.sy})
+  local pic = R.makePic(data.path, nil, data.rect, { sx = data.sx, sy = data.sy })
   res:get('pics'):put(picConfig.name, pic)
 end
 
@@ -298,10 +298,10 @@ function Loaders.sound(res, sound)
   local cfg = Loaders.getData(sound)
   if cfg.type == "music" then
     -- Music sounds are loaded as a streaming Source and reused
-    cfg.pool = SoundPool.music({file = cfg.file})
+    cfg.pool = SoundPool.music({ file = cfg.file })
   else
     -- Regular soundfx load and store SoundData for creating many Sources later on
-    cfg.pool = SoundPool.soundEffect({data = R.getSoundData(cfg.file)})
+    cfg.pool = SoundPool.soundEffect({ data = R.getSoundData(cfg.file) })
   end
   cfg.duration = cfg.duration or cfg.pool:getSourceDuration()
   cfg.volume = cfg.volume or 1
@@ -312,7 +312,7 @@ end
 function Loaders.font(res, fontConfig)
   local data = Loaders.getData(fontConfig)
   local choices = data.choices
-  if not choices or #choices == 0 then choices = {name = "default", size = 12} end
+  if not choices or #choices == 0 then choices = { name = "default", size = 12 } end
   for _, choice in ipairs(choices) do
     local font = R.getFont(data.file, choice.size)
     local thisName = fontConfig.name .. "_" .. choice.name
@@ -339,22 +339,22 @@ local loadDataFile = R.loadLuaFile
 
 local function convertData(config, data)
   assert(config.dataconverter.require,
-         "dataconverter requires 'require' parameter. config=" ..
-             inspect(config))
+    "dataconverter requires 'require' parameter. config=" ..
+    inspect(config))
   local module = require(config.dataconverter.require)
   if type(module) == 'table' then
     assert(config.dataconverter.func,
-           "dataconverter module is a table, therefore requires 'func' parameter. config=" ..
-               inspect(config))
+      "dataconverter module is a table, therefore requires 'func' parameter. config=" ..
+      inspect(config))
     assert(module[config.dataconverter.func],
-           "dataconverter '" .. config.dataconverter.require ..
-               "' doesn't export function '" .. config.dataconverter.func .. "'")
+      "dataconverter '" .. config.dataconverter.require ..
+      "' doesn't export function '" .. config.dataconverter.func .. "'")
     return module[config.dataconverter.func](data)
   elseif type(module) == 'function' then
     return module(data)
   else
     error("dataconverter wasn't a table or a function? config=" ..
-              inspect(config))
+      inspect(config))
   end
 end
 
@@ -390,8 +390,8 @@ function Loaders.getData(obj)
     data = loadDataFile(obj.datafile)
   else
     error(
-        "Loader: cannot get data from object, need 'data' or 'datafile': obj=" ..
-            inspect(obj))
+      "Loader: cannot get data from object, need 'data' or 'datafile': obj=" ..
+      inspect(obj))
   end
   if obj.expandDatafiles then
     data = expandDatafiles(data)
@@ -416,7 +416,7 @@ function Loaders.loadConfig(res, config, loaders)
   loaders = loaders or Loaders
   local loader = loaders[config.type]
   assert(loader, "Loaders.loadConfig: no Loader found for type '" ..
-             tostring(config and config.type) .. "': " .. inspect(config))
+    tostring(config and config.type) .. "': " .. inspect(config))
   loader(res, config)
   return res
 end
