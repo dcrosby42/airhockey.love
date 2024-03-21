@@ -255,7 +255,7 @@ function E.puckResetButton(parent, res)
     parent:newEntity({
       { 'name', { name = "puck_reset" } },
       { 'tr',   { x = x, y = y } },
-      { 'button2', {
+      { 'button', {
         kind = 'hold',
         eventtype = "puck_reset",
         eventstate = "center",
@@ -321,7 +321,7 @@ function E.mallet_reset_button(parent, res, opts)
   parent:newEntity({
     { 'name', { name = "mallet_reset_" .. opts.player } }, -- eg "p1"
     { 'tr',   { x = opts.x, y = opts.y, r = r } },
-    { 'button2', {
+    { 'button', {
       kind = 'hold',
       eventtype = "mallet_reset",
       eventstate = opts.player, -- eg "p1"
@@ -351,7 +351,7 @@ function E.malletResetButton_p2(parent, res)
   -- parent:newEntity({
   --   { 'name', { name = "mallet_reset_p1" } },
   --   { 'tr',   { x = x, y = y } },
-  --   { 'button2', {
+  --   { 'button', {
   --     kind = 'hold',
   --     eventtype = "mallet_reset",
   --     eventstate = "p2",
@@ -379,7 +379,7 @@ function E.addReloadButton(parent, res)
     parent:newEntity({
       { 'name', { name = "power_button" } },
       { 'tr',   { x = x, y = y } },
-      { 'button2', {
+      { 'button', {
         kind = 'hold',
         eventtype = 'castle.reloadRootModule',
         holdtime = 0.5,

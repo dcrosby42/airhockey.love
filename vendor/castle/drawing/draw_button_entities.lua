@@ -21,4 +21,4 @@ local function drawButtonHighlight(e, button, res)
   end
 end
 
-return mk_entity_draw_loop('button2s', drawButtonHighlight)
+return mk_entity_draw_loop('buttons', drawButtonHighlight)

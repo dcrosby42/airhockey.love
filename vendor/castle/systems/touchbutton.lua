@@ -1,10 +1,10 @@
 local Debug = require 'mydebug'
-Debug = Debug.sub("TouchButton", false, false)
+Debug = Debug.sub("TouchButton", true, true)
 local EventHelpers = require 'castle.systems.eventhelpers'
 
 return function(estore, input, res)
-  estore:walkEntities(hasComps('touch', 'button2'), function(e)
-    local button = e.button2
+  estore:walkEntities(hasComps('touch', 'button'), function(e)
+    local button = e.button
     if button.kind == 'hold' then
       local touch = e.touch
       local timer = e.timers and e.timers.holdbutton

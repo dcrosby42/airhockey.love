@@ -3,7 +3,7 @@ return {
   "castle.systems.selfdestruct",
   "castle.systems.physics",
   "castle.systems.sound",
-  "castle.systems.touchbutton2",
+  "castle.systems.touchbutton",
   "modules.airhockey.systems.devsystem",
   "modules.airhockey.systems.touch",
   "modules.airhockey.systems.mallet_reset",

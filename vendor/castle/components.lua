@@ -108,7 +108,7 @@ Comp.define("contact",
 -- INPUT / UI
 --
 
-Comp.define("button2", {
+Comp.define("button", {
   'kind', 'tap', -- hold, tap
   'eventtype', '',
   'eventstate', '',
