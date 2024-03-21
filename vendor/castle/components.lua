@@ -37,11 +37,11 @@ Comp.define("img", {
   'sx', 1, 'sy', 1,
   'color', { 1, 1, 1, 1 },
   'debug', false,
-})                                                                              -- w,h?
+})                                                                             -- w,h?
 
-Comp.define("rect2", ext(RectAttrs, { 'style', 'line', 'color', { 1, 1, 1 } })) -- sx,sy?
+Comp.define("rect", ext(RectAttrs, { 'style', 'line', 'color', { 1, 1, 1 } })) -- sx,sy?
 
-Comp.define("circle2", { 'style', 'line', 'x', 0, 'y', 0, 'r', 0, 'color', { 1, 1, 1 } })
+Comp.define("circle", { 'style', 'line', 'x', 0, 'y', 0, 'r', 0, 'color', { 1, 1, 1 } })
 
 Comp.define("label", ext(RectAttrs,
   { 'text', 'Label',

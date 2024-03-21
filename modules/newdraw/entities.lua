@@ -63,17 +63,17 @@ function E.treeTestOuter(estore, res)
   })
 
   estore:newEntity({
-    { 'name',    { name = 'blueDot' } },
-    { 'tr',      { x = 0, y = 0 } },
-    { 'circle2', { style = 'fill', r = 5, color = { 0, 0, 1 } } }
+    { 'name',   { name = 'blueDot' } },
+    { 'tr',     { x = 0, y = 0 } },
+    { 'circle', { style = 'fill', r = 5, color = { 0, 0, 1 } } }
   })
 
   estore:newEntity({
-    { 'name',    { name = 'selectbox' } },
-    { 'tr',      { x = 0, y = 0 } },
-    { 'circle2', { style = 'fill', r = 4, color = { 1, 1, 1 } } }
+    { 'name',   { name = 'selectbox' } },
+    { 'tr',     { x = 0, y = 0 } },
+    { 'circle', { style = 'fill', r = 4, color = { 1, 1, 1 } } },
     -- { 'box',     { w = 100, h = 66, cx = 0.5, cy = 0.5, debug = false } },
-    -- { 'rect2', { w = 100, h = 66, cx = 0.5, cy = 0.5, color = { 1, 1, 1 } } },
+    { 'rect',   { w = 20, h = 20, cx = 0.5, cy = 0.5, color = { 1, 1, 1 } } },
   })
 
   E.treeTest(base, res)
@@ -130,9 +130,9 @@ function E.treeTest(parent, res)
     tag("clickable"),
   })
   findme:newEntity({
-    { 'name',    { name = 'greenDot' } },
-    { 'tr',      { x = 0, y = 0 } },
-    { 'circle2', { style = 'fill', r = 5, color = { 0, 1, 0 } } }
+    { 'name',   { name = 'greenDot' } },
+    { 'tr',     { x = 0, y = 0 } },
+    { 'circle', { style = 'fill', r = 5, color = { 0, 1, 0 } } }
   })
 
 

@@ -1,7 +1,7 @@
 local inspect = require "inspect"
 local EventHelpers = require "castle.systems.eventhelpers"
 
--- Compute rectangle coords from a 'box' or 'rect2' component.
+-- Compute rectangle coords from a 'box' or 'rect' component.
 -- Expected attrs on component: x,y,w,h,cx,cy
 -- Returns rectangle as: x1,y1,x2,y2
 local function bounds2rect(b)
@@ -57,19 +57,19 @@ return function(estore, input, res)
   -- mouse pointer tracking dot
   local selectbox = estore:getEntityByName("selectbox")
   if selectbox then
-    -- move the dot to where the mouse is
+    -- move the mouse dot to where the mouse is
     EventHelpers.on(input.events, 'touch', 'moved', function(evt)
       selectbox.tr.x = evt.x
       selectbox.tr.y = evt.y
     end)
-    -- check for intersection with the "findme" box
+    -- check for intersection of selectbox entity with the "findme" box
     local x, y = selectbox.tr.x, selectbox.tr.y
     x, y = findmeT:inverseTransformPoint(x, y)
     if math.pointinrect(x, y, bounds2rect(findme.box)) then
       -- turn red if we're hitting the box
-      selectbox.circle2.color = { 1, 0, 0 }
+      selectbox.circle.color = { 1, 0, 0 }
     else
-      selectbox.circle2.color = { 1, 1, 1 }
+      selectbox.circle.color = { 1, 1, 1 }
     end
   end
 end

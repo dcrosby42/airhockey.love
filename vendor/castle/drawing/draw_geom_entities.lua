@@ -1,15 +1,4 @@
 return function(e, res)
-  if e.circles then
-    for _, c in pairs(e.circles) do
-      local style = "line"
-      if c.fill then
-        style = "fill"
-      end
-      love.graphics.setColor(c.color)
-      love.graphics.circle(style, c.offx, c.offy, c.radius)
-    end
-  end
-
   -- bounds: draw only during debug
   if e.box and e.box.w and e.box.h and debugDraw(e.box, res) then
     local w, h = e.box.w, e.box.h
@@ -21,8 +10,8 @@ return function(e, res)
     love.graphics.rectangle("line", x - ox, y - oy, w, h)
   end
 
-  if e.rect2s then
-    for _, rect in pairs(e.rect2s) do
+  if e.rects then
+    for _, rect in pairs(e.rects) do
       local x, y, w, h = rect.x, rect.y, rect.w, rect.h
       local ox = rect.cx * w
       local oy = rect.cy * h
@@ -31,8 +20,8 @@ return function(e, res)
     end
   end
 
-  if e.circle2s then
-    for _, c in pairs(e.circle2s) do
+  if e.circles then
+    for _, c in pairs(e.circles) do
       love.graphics.setColor(c.color)
       love.graphics.circle(c.style, c.x, c.y, c.r)
     end
