@@ -8,7 +8,7 @@ Component renames:
 - DONE button2
 - DONE rect2
 - DONE circle2
-- nallet2
+- DONE mallet2
 
 Shore up:
 
