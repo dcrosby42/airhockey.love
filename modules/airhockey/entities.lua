@@ -102,7 +102,7 @@ function E.background(estore, res)
   local sy = res.data.screen_size.height / imgH
   estore:newEntity({
     { 'name', { name = "background" } },
-    { 'img',  { img = pic_id, sx = sx, sy = sy } }
+    { 'pic',  { id = pic_id, sx = sx, sy = sy } }
   })
 end
 
@@ -215,7 +215,7 @@ function E.puck(parent, res, x, y, opts)
     { 'tag',  { name = 'puck' } },
 
     { 'tr',   { x = x, y = y } },
-    { 'img',  { r = r, img = pic_id, sx = ratio, sy = ratio, cx = 0.5, cy = 0.5, debug = DEBUG_PUCK_IMG } },
+    { 'pic',  { r = r, id = pic_id, sx = ratio, sy = ratio, cx = 0.5, cy = 0.5, debug = DEBUG_PUCK_IMG } },
     { 'vel',  { dx = 0, dy = 0 } },
 
     { 'body', {
@@ -290,7 +290,7 @@ function E.mallet(parent, res, x, y, opts)
     { 'name',      { name = opts.name } },
     { 'tag',       { name = "mallet" } },
     { 'touchable', { r = MALLET_RADIUS * 1.20 } },
-    { 'img',       { img = pic_id, sx = scale, sy = scale, cx = 0.5, cy = 0.5, debug = DEBUG_MALLET_IMG } },
+    { 'pic',       { id = pic_id, sx = scale, sy = scale, cx = 0.5, cy = 0.5, debug = DEBUG_MALLET_IMG } },
     { 'tr',        { x = x, y = y } },
     { 'vel',       { dx = 0, dy = 0 } },
     { 'body', {
@@ -329,8 +329,8 @@ function E.mallet_reset_button(parent, res, opts)
       progresssize = 32,
     } },
     { 'touchable', { r = 40 } },
-    { 'img', {
-      img = 'mallet_icon',
+    { 'pic', {
+      id = 'mallet_icon',
       sx = 0.6,
       sy = 0.6,
       cx = 0.5,
@@ -359,8 +359,8 @@ function E.malletResetButton_p2(parent, res)
   --     progresssize = 32,
   --   } },
   --   { 'touchable', { r = 40 } },
-  --   { 'img', {
-  --     img = 'power_button',
+  --   { 'pic', {
+  --     id = 'power_button',
   --     sx = 0.25,
   --     sy = 0.25,
   --     cx = 0.5,
@@ -386,8 +386,8 @@ function E.addReloadButton(parent, res)
         progresssize = 32,
       } },
       { 'touchable', { r = 40 } },
-      { 'img', {
-        img = 'power_button',
+      { 'pic', {
+        id = 'power_button',
         sx = 0.25,
         sy = 0.25,
         cx = 0.5,

@@ -30,8 +30,8 @@ Comp.define("follower", { 'targetname', '' })
 
 Comp.define("bgcolor", { 'color', { 0, 0, 0 } })
 
-Comp.define("img", {
-  'img', 'UNSET',
+Comp.define("pic", {
+  'id', 'UNSET',
   'x', 0, 'y', 0, 'cx', 0, 'cy', 0,
   'r', 0,
   'sx', 1, 'sy', 1,
