@@ -1,10 +1,17 @@
 local withTransform = require("castle.drawing.with_transform")
 
+-- Draw a "pic" or "anim" component.
+-- (This is not a full-fledged System, but rather a helper for pic and anim draw systems)
+-- comp is expected to have PicAttrs (see castle.components): id, x,y,r,sx,sy,cx,cy,color,debug
 local function drawPicLike(comp, picRes, res)
+  -- dimensions are stored on the underlying resource
   local w, h = picRes.rect.w, picRes.rect.h
+  -- draw offset / center of rotation: computed according to cx,cy ratios draw offset / center of rotation: computed according to cx,cy ratios draw offset / center of rotation: computed according to cx,cy proportionals
   local ox, oy = comp.cx * w, comp.cy * h
-  local sx, sy = comp.sx * picRes.sx, comp.sx * picRes.sy
+  -- scale can be controlled both by the component AND the resource.
+  local sx, sy = comp.sx * picRes.sx, comp.sy * picRes.sy
 
+  -- Draw the image
   love.graphics.setColor(comp.color)
   love.graphics.draw(picRes.image, picRes.quad, comp.x, comp.y, comp.r, sx, sy, ox, oy)
 
@@ -35,4 +42,5 @@ local function drawPicLike(comp, picRes, res)
     end)
   end
 end
+
 return drawPicLike
