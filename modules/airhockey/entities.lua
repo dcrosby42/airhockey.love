@@ -97,12 +97,21 @@ end
 function E.background(estore, res)
   if DEBUG_HIDE_BACKGROUND then return nil end
   local pic_id = "rink1"
+  local scrw = res.data.screen_size.width
+  local scrh = res.data.screen_size.height
   local imgW, imgH = res.pics[pic_id].rect.w, res.pics[pic_id].rect.h
-  local sx = res.data.screen_size.width / imgW
-  local sy = res.data.screen_size.height / imgH
+  local sx, sy = scrw / imgW, scrh / imgH
+  -- print("scr " .. inspect({ scrw, scrh }))
+  -- print("img " .. inspect({ imgW, imgH }))
+  -- print("s   " .. inspect({ sx, sy }))
+  -- print("w,h " .. inspect({ sx * imgW, sy * imgH }))
   estore:newEntity({
     { 'name', { name = "background" } },
     { 'pic',  { id = pic_id, sx = sx, sy = sy } }
+  })
+
+  estore:newEntity({
+    { 'rect', { x = 0, y = 0, w = scrw, h = scrh, color = { 0, 1, 0 } } }
   })
 end
 
@@ -347,28 +356,6 @@ end
 function E.malletResetButton_p2(parent, res)
   local w, h = parent.box.w, parent.box.h
   E.mallet_reset_button(parent, res, { player = "p2", x = w - 44, y = h - 50 })
-  -- local x, y = w - 44, h - 50
-  -- parent:newEntity({
-  --   { 'name', { name = "mallet_reset_p1" } },
-  --   { 'tr',   { x = x, y = y } },
-  --   { 'button', {
-  --     kind = 'hold',
-  --     eventtype = "mallet_reset",
-  --     eventstate = "p2",
-  --     holdtime = 0.5,
-  --     progresssize = 32,
-  --   } },
-  --   { 'touchable', { r = 40 } },
-  --   { 'pic', {
-  --     id = 'power_button',
-  --     sx = 0.25,
-  --     sy = 0.25,
-  --     cx = 0.5,
-  --     cy = 0.5,
-  --     color = { 1, 1, 1, 0.2 }
-  --   } },
-  -- })
-  -- end
 end
 
 function E.addReloadButton(parent, res)
@@ -398,63 +385,44 @@ function E.addReloadButton(parent, res)
   end
 end
 
--- function E.addDebugButton(parent, res)
---       eventtype = 'castle.toggleDebugLog'
--- end
-
 function E.scoreBoard(parent, res)
   local w, h = parent.box.w, parent.box.h
 
-  -- P1 Score
-  parent:newEntity({
-    -- Important name format! Player1 corresponds with goal and game_state
-    { 'name',  { name = "score_Player1" } },
+  local scoreLabelComps = {
+    { 'name',  {} },
     { 'state', { name = "score", value = 0 } },
-    { 'tr', {
-      x = w - 45 - 10,
-      y = (h / 2) - 35 - 10,
-      r = math.pi,
-    } },
+    { 'tr',    {} },
     {
       'label',
       {
         text = "00",
-        color = { 0, 0, 1, 0.35 },
+        color = { 1, 1, 1, 0.35 },
         w = 90,
         h = 70,
         cx = 0.5,
         cy = 0.5,
-        -- r = math.pi,
         align = "center",
         valign = "center",
         font = 'alarm_clock_medium',
-        -- debug = true,
+        debug = false,
       },
     },
-  })
+  }
+
+  -- P1 Score
+  local p1 = parent:newEntity(scoreLabelComps)
+  p1.name.name = "score_Player1"
+  p1.tr.x = w - 45 - 10
+  p1.tr.y = (h / 2) - 35 - 10
+  p1.tr.r = math.pi
+  p1.label.color = { 0, 0, 1, 0.35 }
 
   -- P2 Score
-  parent:newEntity({
-    -- Important name format! Player2 corresponds with goal and game_state
-    { 'name',  { name = "score_Player2" } },
-    { 'state', { name = "score", value = 0 } },
-    { 'tr',    { x = 45 + 5, y = (h / 2) + 35 + 10 } },
-    {
-      'label',
-      {
-        text = "00",
-        color = { 1, 0, 0, 0.35 },
-        w = 90,
-        h = 70,
-        cx = 0.5,
-        cy = 0.5,
-        align = "center",
-        valign = "center",
-        font = 'alarm_clock_medium',
-        -- debug = true,
-      },
-    },
-  })
+  local p2 = parent:newEntity(scoreLabelComps)
+  p2.name.name = "score_Player2"
+  p2.tr.x = 45 + 5
+  p2.tr.y = (h / 2) + 35 + 10
+  p2.label.color = { 1, 0, 0, 0.35 }
 end
 
 function E.gameState(parent, res)
