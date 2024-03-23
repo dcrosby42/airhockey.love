@@ -4,6 +4,7 @@ local GM = require('castle.ecs.gamemodule')
 local ModuleMap = {
   airhockey = GM.newFromFile("modules/airhockey/resources.lua"),
   newdraw = GM.newFromFile("modules/newdraw/resources.lua"),
+  girl = GM.newFromFile("modules/girl/resources.lua"),
 }
 
 local function ifKeyPressed(action, key, fn)
@@ -19,7 +20,7 @@ local M = {}
 
 function M.newWorld()
   local w = {}
-  w.switcher = Switcher.newWorld({ modules = ModuleMap, current = "airhockey" })
+  w.switcher = Switcher.newWorld({ modules = ModuleMap, current = "girl" })
   return w
 end
 
@@ -29,6 +30,9 @@ function M.updateWorld(w, action)
   end)
   ifKeyPressed(action, "f2", function()
     action = { type = "castle.switcher", index = "newdraw" }
+  end)
+  ifKeyPressed(action, "f2", function()
+    action = { type = "castle.switcher", index = "girl" }
   end)
 
   local sidefx

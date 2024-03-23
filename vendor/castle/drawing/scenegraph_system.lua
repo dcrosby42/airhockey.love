@@ -2,6 +2,7 @@ local withTransform = require("castle.drawing.with_transform")
 local drawFuncs = {
   require('castle.drawing.draw_screengrid_entity'),
   require('castle.drawing.draw_pic_entities'),
+  require('castle.drawing.draw_anim_entities'),
   -- DrawPic.drawAnims,
   require('castle.drawing.draw_geom_entities'),
   require('castle.drawing.draw_button_entities'),

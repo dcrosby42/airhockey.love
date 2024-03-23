@@ -147,14 +147,17 @@ function Anim.recalcDuration(anim)
 end
 
 function Anim.makeSimpleAnim(pics, frameDur)
-  frameDur = frameDur or 1 / 60
-  local anim = { pics = {}, duration = (#pics * frameDur) }
+  frameDur = frameDur or (1 / 60)
+  local anim = { pics = {}, duration = 0 }
+  local durAccum = 0
   for i = 1, #pics do
     table.insert(anim.pics, shallowclone(pics[i]))
     -- stamp each frame w duration and frame#
     anim.pics[i].frameNum = i
-    anim.pics[i].duration = frameDur
+    anim.pics[i].duration = anim.pics[i].duration or frameDur
+    durAccum = durAccum + anim.pics[i].duration
   end
+  anim.duration = durAccum
   -- make a frame getter func for this anim
   anim.getFrame = Anim.makeFrameLookup(anim)
 
@@ -234,25 +237,24 @@ local Loaders = {}
 -- res: ResourceRoot
 -- name: anim name and key in root.anims[key]
 -- pics: the array of pics loaded from a picStrip
--- data: {pics (list of ints = pic indexes), sx, sy (scale x and y, optional), frameDuration, frameDurations}
+-- data: {picNums (list of ints = pic indexes), sx, sy (scale x and y, optional), frameDuration, frameDurations}
 function Loaders.picStrip_anim(res, pics, name, data)
   local anim
-  if data.pics then
-    if #data.pics == 1 then
+  if data.picNums then
+    if #data.picNums == 1 then
       -- simpler form of anim
-      anim = Anim.makeSinglePicAnim(pics[data.pics[1]])
+      anim = Anim.makeSinglePicAnim(pics[data.picNums[1]])
     else
-      local myPics = map(data.pics, function(picIndex)
+      local myPics = map(data.picNums, function(picIndex)
         return pics[picIndex]
       end)
-      local duration = data.frameDuration
       if data.frameDurations and #data.frameDurations > 0 then
         -- Apply durations per frame, according to data.frameDurations.
         -- If data.frameDurations has fewer entries than anim.pics, that last duration is copied out to the end.
         anim = Anim.makeSimpleAnim(myPics)
         for i = 1, #anim.pics do
           anim.pics[i].duration = data.frameDurations[i] or
-              anim.pics[i - 1].duration                         -- assumes there's at least 1 to fall back on
+              anim.pics[i - 1].duration -- assumes there's at least 1 to fall back on
         end
         -- update overall anim duration
         Anim.recalcDuration(anim)
@@ -264,6 +266,8 @@ function Loaders.picStrip_anim(res, pics, name, data)
     if data.sx then anim.sx = data.sx end
     if data.sy then anim.sy = data.sy end
     res:get('anims'):put(name, anim)
+  else
+    error("picStrip_anim requires picNums")
   end
 end
 
@@ -272,6 +276,7 @@ function Loaders.picStrip(res, picStrip)
   local pics = Anim.simpleSheetToPics(R.getImage(data.path), data.picWidth,
     data.picHeight, data.picOptions,
     data.count)
+
   res:get('picStrips'):put(picStrip.name, pics)
 
   -- Any individual pics called out by the config should get indexed by name:
@@ -287,15 +292,60 @@ function Loaders.picStrip(res, picStrip)
   end
 end
 
+-- Adds a "pic" resource.
+-- picConfig:
+--   name
+--   data (string, or table)
+--    path
+--    rect {x,y,w,h}
+--    sx
+--    sy
 function Loaders.pic(res, picConfig)
   local data = Loaders.getData(picConfig)
+  if type(data) == string then
+    data = { path = data }
+  end
   local pic = R.makePic(data.path, nil, data.rect, { sx = data.sx, sy = data.sy })
   res:get('pics'):put(picConfig.name, pic)
 end
 
+-- animConfig:
+--   name
+--   data
+--     path_prefix
+--     frame_duration
+--     pics
+--       path
+function Loaders.anim(res, animConfig)
+  local data = Loaders.getData(animConfig)
+
+  local frameDur = data.frame_duration
+  local prefix = data.path_prefix
+
+  -- Generate pics
+  local pics = {}
+  if data.pics then
+    for i, picConfig in ipairs(data.pics) do
+      local c = picConfig
+      if type(c) == "string" then
+        c = { path = c }
+      end
+      if prefix then
+        c.path = prefix .. c.path
+      end
+      c.duration = c.duration or frameDur
+      local pic = R.makePic(c.path, nil, c.rect, { sx = c.sx, sy = c.sy, duration = c.duration })
+      table.insert(pics, pic)
+    end
+  end
+
+  local anim = Anim.makeSimpleAnim(pics, frameDur)
+  res:get('anims'):put(animConfig.name, anim)
+end
+
 -- soundConfig: {type,name, data:{file,type=[music|sound], duration(optional), volume=(optional)}}
-function Loaders.sound(res, sound)
-  local cfg = Loaders.getData(sound)
+function Loaders.sound(res, soundConfig)
+  local cfg = Loaders.getData(soundConfig)
   if cfg.type == "music" then
     -- Music sounds are loaded as a streaming Source and reused
     cfg.pool = SoundPool.music({ file = cfg.file })
@@ -305,7 +355,7 @@ function Loaders.sound(res, sound)
   end
   cfg.duration = cfg.duration or cfg.pool:getSourceDuration()
   cfg.volume = cfg.volume or 1
-  res:get('sounds'):put(sound.name, cfg)
+  res:get('sounds'):put(soundConfig.name, cfg)
 end
 
 -- fontConfig: {type,name, data:{file, choices={{name="dude",size=14}...}}}

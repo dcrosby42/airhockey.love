@@ -5,6 +5,8 @@ local ext = appendlist
 local TrAttrs = { 'x', 0, 'y', 0, 'r', 0, 'sx', 1, 'sy', 1 }
 local RectAttrs = { 'x', 0, 'y', 0, 'w', 0, 'h', 0, 'cx', 0, 'cy', 0 } -- sx,sy?
 -- local SizeAttrs = { 'w', 0, 'h', 0, 'cx', 0, 'cy', 0 }
+local PicAttrs = ext(TrAttrs, { 'id', 'UNSET', 'cx', 0, 'cy', 0, 'color', { 1, 1, 1, 1 },
+  'debug', false })
 
 --
 -- COMMON
@@ -30,14 +32,9 @@ Comp.define("follower", { 'targetname', '' })
 
 Comp.define("bgcolor", { 'color', { 0, 0, 0 } })
 
-Comp.define("pic", {
-  'id', 'UNSET',
-  'x', 0, 'y', 0, 'cx', 0, 'cy', 0,
-  'r', 0,
-  'sx', 1, 'sy', 1,
-  'color', { 1, 1, 1, 1 },
-  'debug', false,
-})                                                                             -- w,h?
+Comp.define("pic", PicAttrs)
+
+Comp.define("anim", ext(PicAttrs, { 'timer', '', 'timescale', 1 }))
 
 Comp.define("rect", ext(RectAttrs, { 'style', 'line', 'color', { 1, 1, 1 } })) -- sx,sy?
 
@@ -55,10 +52,6 @@ Comp.define("label", ext(RectAttrs,
     'debug', false,
   }))
 
-
-Comp.define("anim",
-  { 'id', '', 'timescale', 1, 'centerx', '', 'centery', '', 'offx', 0, 'offy', 0, 'sx', 1, 'sy', 1, 'r', 0, 'color', { 1, 1, 1, 1 },
-    'drawbounds', false })
 
 
 Comp.define("sound",
