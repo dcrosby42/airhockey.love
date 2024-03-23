@@ -13,23 +13,24 @@ function E.initialEntities(res)
   local estore = Estore:new()
 
   estore:newEntity({
-    { 'bgcolor', { color = { 0.5, 0.5, 1.0 } } }
+    { 'bgcolor', { color = { 0.2, 0.2, 0.6 } } }
   })
 
   local parent = estore
 
   parent:newEntity({
-    { 'tr',    { x = 0, y = 0 } },
+    { 'tr',    { x = 300, y = 700 } },
     { 'anim', {
       name = "catgirl",
-      id = "sungirl_stand", -- 620x1000
-      x = 200,
-      y = 700,
+      id = "sungirl_run", -- 620x1000
+      -- x = -100,
+      -- y = -50,
       cx = 0.5,
       cy = 1,
-      -- sx = 0.5,
-      -- sy = 0.5,
-      debug = false,
+      sx = 0.5,
+      sy = 0.5,
+      -- r = math.pi / 4,
+      debug = true,
       timer = "mytimer"
     } },
     { 'timer', { name = "mytimer", countDown = false } }

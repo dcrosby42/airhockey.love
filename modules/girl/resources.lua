@@ -35,6 +35,8 @@ return {
     data = {
       path_prefix = "modules/girl/images/",
       frame_duration = 1 / 8,
+      sx = 0.5,
+      sy = 0.5,
       pics = {
         {
           path = "Sun_girl_animation-3.png",
@@ -56,6 +58,8 @@ return {
     name = "sungirl_stand",
     data = {
       path_prefix = "modules/girl/images/",
+      sx = 0.5,
+      sy = 0.5,
       pics = {
         {
           path = "Sun_girl_animation-2.png",

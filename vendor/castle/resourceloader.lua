@@ -334,6 +334,8 @@ function Loaders.anim(res, animConfig)
         c.path = prefix .. c.path
       end
       c.duration = c.duration or frameDur
+      c.sx = c.sx or data.sx
+      c.sy = c.sy or data.sy
       local pic = R.makePic(c.path, nil, c.rect, { sx = c.sx, sy = c.sy, duration = c.duration })
       table.insert(pics, pic)
     end

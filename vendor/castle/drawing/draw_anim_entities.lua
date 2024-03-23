@@ -4,11 +4,11 @@ local withTransform = require("castle.drawing.with_transform")
 
 local function drawPicLike(picLike, picRes, res)
   local w, h = picRes.rect.w, picRes.rect.h
-  local ox = picLike.cx * w
-  local oy = picLike.cy * h
+  local ox, oy = picLike.cx * w, picLike.cy * h
+  local sx, sy = picLike.sx * picRes.sx, picLike.sx * picRes.sy
 
   love.graphics.setColor(picLike.color)
-  love.graphics.draw(picRes.image, picRes.quad, picLike.x, picLike.y, picLike.r, picLike.sx, picLike.sy, ox, oy)
+  love.graphics.draw(picRes.image, picRes.quad, picLike.x, picLike.y, picLike.r, sx, sy, ox, oy)
 
   if debugDraw(picLike, res) then
     -- circle at 0,0 in this entity's transform
@@ -18,7 +18,6 @@ local function drawPicLike(picLike, picRes, res)
     -- (offset requires manual scaling here; the above .draw does this on the fly)
     local scox, scoy = ox * picLike.sx, oy * picLike.sy
     local x, y = picLike.x - scox, picLike.y - scoy
-    -- withTransform(x, y, pic.r, ox, oy, pic.sx, pic.sy, function()
     withTransform(x, y, picLike.r, scox, scoy, picLike.sx, picLike.sy, function()
       -- greay pic bounding box
       love.graphics.setColor(0.3, 0.3, 0.3)
@@ -46,7 +45,7 @@ local function draw(e, anim, res)
   local timer = e.timers[tname]
   if not timer then
     print("!! MISSING TIMER? anim eid=" ..
-    e.eid .. " " .. anim.name .. " anim.cid=" .. anim.cid .. " NO TIMER NAMED '" .. tname .. "'")
+      e.eid .. " " .. anim.name .. " anim.cid=" .. anim.cid .. " NO TIMER NAMED '" .. tname .. "'")
     return
   end
 
