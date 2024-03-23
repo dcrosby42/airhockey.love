@@ -30,13 +30,29 @@ return {
     },
   },
   {
+    type = "pic",
+    name = "tree",
+    data = {
+      path = "modules/newdraw/images/Tree2_85x110.png"
+    },
+  },
+  {
+    type = "pic",
+    name = "girl3",
+    data = {
+      path = "modules/girl/images/Sun_girl_animation-3.png",
+      sx = 0.5,
+      sy = 0.5,
+    },
+  },
+  {
     type = "anim",
     name = "sungirl_run",
     data = {
       path_prefix = "modules/girl/images/",
       frame_duration = 1 / 8,
-      sx = 0.5,
-      sy = 0.5,
+      sx = 0.3,
+      sy = 0.3,
       pics = {
         {
           path = "Sun_girl_animation-3.png",
