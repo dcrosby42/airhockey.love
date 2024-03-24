@@ -1,7 +1,7 @@
 local inspect = require('inspect')
 local SoundPool = require "castle.soundpool"
 local MyDebug = require('mydebug')
-local Debug = MyDebug.sub("resourceloader")
+local Debug = MyDebug.sub("resourceloader", false, false)
 
 local R = {}
 
@@ -345,26 +345,51 @@ function Loaders.anim(res, animConfig)
   res:get('anims'):put(animConfig.name, anim)
 end
 
--- soundConfig: {type,name, data:{file,type=[music|sound], duration(optional), volume=(optional)}}
-function Loaders.sound(res, soundConfig)
+-- soundConfig:
+--   file: path to sound file
+--   volume: default 1.0
+--   music: default false
+--   duration: sound len in seconds, default 0 for music, autodected otherwise
+-- 3rd arg "music" is in internal convenience, may be nil
+function Loaders.sound(res, soundConfig, asMusic)
   local cfg = Loaders.getData(soundConfig)
-  if cfg.type == "music" then
-    -- Music sounds are loaded as a streaming Source and reused
-    cfg.pool = SoundPool.music({ file = cfg.file })
+  local music = firstNonNil(asMusic, cfg.music, cfg.type == "music")
+  local soundRes = {
+    name = soundConfig.name,
+    file = cfg.file,
+    duration = 0,
+    volume = cfg.volume or 1,
+    music = music
+  }
+  if soundRes.music then
+    Debug.println(function()
+      return "Loaded music sound " .. soundRes.name
+          .. " from " .. soundRes.file
+    end)
   else
-    -- Regular soundfx load and store SoundData for creating many Sources later on
-    cfg.pool = SoundPool.soundEffect({ data = R.getSoundData(cfg.file) })
+    -- static sounds are loaded/cached as SoundData, and duration is computed:
+    soundRes.data = R.getSoundData(cfg.file)
+    soundRes.duration = cfg.duration or soundRes.data:getDuration()
+    Debug.println(function()
+      return "Loaded static sound " .. soundRes.name
+          .. " duration=" .. tostring(soundRes.duration)
+          .. " from " .. soundRes.file
+    end)
   end
-  cfg.duration = cfg.duration or cfg.pool:getSourceDuration()
-  cfg.volume = cfg.volume or 1
-  res:get('sounds'):put(soundConfig.name, cfg)
+  res:get('sounds'):put(soundConfig.name, soundRes)
+end
+
+function Loaders.music(res, musicConfig)
+  Loaders.sound(res, musicConfig, true)
 end
 
 -- fontConfig: {type,name, data:{file, choices={{name="dude",size=14}...}}}
 function Loaders.font(res, fontConfig)
   local data = Loaders.getData(fontConfig)
   local choices = data.choices
-  if not choices or #choices == 0 then choices = { name = "default", size = 12 } end
+  if not choices or #choices == 0 then
+    choices = { { name = "default", size = 12 } }
+  end
   for _, choice in ipairs(choices) do
     local font = R.getFont(data.file, choice.size)
     local thisName = fontConfig.name .. "_" .. choice.name

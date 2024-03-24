@@ -4,16 +4,17 @@ package.path = package.path .. ";" .. dir .. "/?/init.lua"
 package.path = package.path .. ";" .. dir .. "/vendor/?.lua"
 package.path = package.path .. ";" .. dir .. "/vendor/?/init.lua"
 
+local MyDebug = require 'mydebug'
+MyDebug.setup()
+
 local ModuleLoader = require "castle.moduleloader"
 local GC = require 'garbagecollect'
 
-local MyDebug = require 'mydebug'
-MyDebug.setup()
+local soundmanager = require 'castle.soundmanager'
+
 local showDebugLog = false
 local Debug = MyDebug.sub("castle.main", true, true)
 
-local SoundCanvas = require "castle.soundcanvas"
-local sndCanvas = SoundCanvas.default
 local Joystick = require "castle.joystick"
 local DefaultConfig = {
   width = love.graphics.getWidth(),
@@ -147,16 +148,18 @@ local function drawErrorScreen(w)
 end
 
 function love.draw()
-  sndCanvas:startFrame()
   if errWorld then
     drawErrorScreen(errWorld)
   else
     local ok, err = xpcall(function()
       RootModule.drawWorld(world)
     end, debug.traceback)
-    if not ok then setErrorMode(err, debug.traceback()) end
+    if not ok then
+      setErrorMode(err, debug.traceback())
+    end
+    -- Maintenance of ongoing sound state.  Notably: stop/remove unmaintained sounds:
+    soundmanager.cleanup()
   end
-  sndCanvas:endFrame()
 end
 
 --

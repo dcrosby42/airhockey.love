@@ -794,3 +794,13 @@ function attrstring(t, keys)
     return key .. ": " .. tostring(t[key])
   end), ", ")
 end
+
+function firstNonNil(...)
+  local items = { ... }
+  for i = 1, #items do
+    if items[i] ~= nil then
+      return items[i]
+    end
+  end
+  return nil
+end

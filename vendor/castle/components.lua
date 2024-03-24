@@ -54,9 +54,15 @@ Comp.define("label", ext(RectAttrs,
 
 
 
-Comp.define("sound",
-  { 'sound', '', 'loop', false, 'state', 'playing', 'volume', 1, 'pitch', 1, 'playtime', 0, 'duration',
-    '' })
+Comp.define("sound", {
+  'sound', '',
+  'music', false,
+  'loop', false,
+  'state', 'playing',
+  'volume', 1,
+  'playtime', 0,
+  'duration', 0,
+})
 
 --
 -- PHYSICS

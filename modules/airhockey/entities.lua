@@ -101,13 +101,11 @@ function E.background(estore, res)
   local scrh = res.data.screen_size.height
   local imgW, imgH = res.pics[pic_id].rect.w, res.pics[pic_id].rect.h
   local sx, sy = scrw / imgW, scrh / imgH
-  -- print("scr " .. inspect({ scrw, scrh }))
-  -- print("img " .. inspect({ imgW, imgH }))
-  -- print("s   " .. inspect({ sx, sy }))
-  -- print("w,h " .. inspect({ sx * imgW, sy * imgH }))
   estore:newEntity({
     { 'name', { name = "background" } },
-    { 'pic',  { id = pic_id, sx = sx, sy = sy } }
+    { 'pic',  { id = pic_id, sx = sx, sy = sy } },
+    -- { 'sound', { sound = "city", loop = true } },
+    -- { 'sound', { sound = "enterprise", loop = true, } },
   })
 
   estore:newEntity({
@@ -278,7 +276,7 @@ end
 
 function E.mallet_p1(parent, res)
   local w = parent.box.w
-  return E.mallet(parent, res, w / 2, 75, { name = "mallet_p1", color = "blue" })
+  return E.mallet(parent, res, w / 2, 75, { name = "mallet_p1", color = "blue", inverted = true })
 end
 
 function E.mallet_p2(parent, res)
@@ -295,11 +293,15 @@ function E.mallet(parent, res, x, y, opts)
   local imgSize = res.pics[pic_id].rect.w
   local scale = MALLET_RADIUS / (imgSize / 2)
   scale = scale * 1.05 -- mallet image is a little squished, so inflate the scale a bit
+  local rot = 0
+  if opts.inverted then
+    rot = math.pi
+  end
   local mallet = parent:newEntity({
     { 'name',      { name = opts.name } },
     { 'tag',       { name = "mallet" } },
     { 'touchable', { r = MALLET_RADIUS * 1.20 } },
-    { 'pic',       { id = pic_id, sx = scale, sy = scale, cx = 0.5, cy = 0.5, debug = DEBUG_MALLET_IMG } },
+    { 'pic',       { id = pic_id, sx = scale, sy = scale, cx = 0.5, cy = 0.5, r = rot, debug = DEBUG_MALLET_IMG } },
     { 'tr',        { x = x, y = y } },
     { 'vel',       { dx = 0, dy = 0 } },
     { 'body', {
