@@ -65,9 +65,9 @@ return function(estore, input, res)
   --   end
   -- })
 
-  -- pan to the right:
+  -- pan to the right and zoom slowly:
   local baseE = estore:getEntityByName("base")
-  if baseE then
+  if baseE and baseE.tags and baseE.tags.panzoom then
     baseE.tr.x = baseE.tr.x - (30 * input.dt)
     -- zoom slowly:
     baseE.tr.sx = baseE.tr.sx + (0.05 * input.dt)
@@ -82,6 +82,15 @@ return function(estore, input, res)
         e.tr.r = e.tr.r + (e.states.spinspeed.value * input.dt)
       end
     end)
+
+  -- if keydown(evts, "w") then
+  -- end
+  -- if keydown(evts, "a") then
+  -- end
+  -- if keydown(evts, "s") then
+  -- end
+  -- if keydown(evts, "d") then
+  -- end
 end
 
 --   local viewportE = Entities.getViewport(estore)

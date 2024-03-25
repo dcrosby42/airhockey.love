@@ -12,11 +12,46 @@ function E.initialEntities(res)
 
   local estore = Estore:new()
 
-  E.treeTestOuter(estore, res)
+  -- E.treeTestOuter(estore, res)
   -- E.transformTestGrids(estore, res)
   -- E.testLabels(estore, res)
+  E.testViewport(estore, res)
 
   return estore
+end
+
+function E.testViewport(estore, res)
+  local viewport = estore:newEntity({
+    { 'name',     { name = "viewport" } },
+    { 'keystate', {} },
+    { 'tr',       {} }
+  })
+
+  viewport:newEntity({
+    { 'screen_grid', { spacex = 100, color = { 1, 1, 1, 0.2 } } }
+  })
+
+  local base = viewport:newEntity({
+    { 'name', { name = "base" } },
+    -- { 'tag',  { name = 'panzoom' } },
+    { 'tr',   { x = 0, y = 0, r = 0, sx = 1, sy = 1 } },
+  })
+
+  estore:newEntity({
+    { 'name',   { name = 'blueDot' } },
+    { 'tr',     { x = 0, y = 0 } },
+    { 'circle', { style = 'fill', r = 5, color = { 0, 0, 1 } } }
+  })
+
+  estore:newEntity({
+    { 'name',   { name = 'selectbox' } },
+    { 'tr',     { x = 0, y = 0 } },
+    { 'circle', { style = 'fill', r = 4, color = { 1, 1, 1 } } },
+    -- { 'box',     { w = 100, h = 66, cx = 0.5, cy = 0.5, debug = false } },
+    { 'rect',   { w = 20, h = 20, cx = 0.5, cy = 0.5, color = { 1, 1, 1 } } },
+  })
+
+  E.treeTest(base, res)
 end
 
 function E.testLabels(estore, res)
@@ -77,6 +112,7 @@ function E.treeTestOuter(estore, res)
   })
 
   E.treeTest(base, res)
+  return base
 end
 
 function E.treeTest(parent, res)

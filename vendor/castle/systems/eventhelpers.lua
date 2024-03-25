@@ -36,7 +36,7 @@ function M.on(events, eventType, eventState, fn)
     if events[i].type == eventType then
       if (not eventState) or events[i].state == eventState then
         local consumeMe = fn(events[i])
-        if consumeMe ~= false then
+        if consumeMe == true then
           -- unless the handler func explicitly returns false, consume the event
           consumed[#consumed + 1] = i
         end
