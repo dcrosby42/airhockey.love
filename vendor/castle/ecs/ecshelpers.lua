@@ -244,6 +244,13 @@ function computeEntityTransform(e)
   if e.tr then
     transform:apply(trToTransform(e.tr))
   end
+  if e.viewport then
+    local camE = e:getEstore():getEntityByName(e.viewport.camera)
+    if camE and camE.tr then
+      local camTransf = love.math.newTransform(e.box.w / 2 - camE.tr.x, e.box.h / 2 - camE.tr.y, -camE.tr.r, 1, 1)
+      transform:apply(camTransf)
+    end
+  end
   return transform
 end
 

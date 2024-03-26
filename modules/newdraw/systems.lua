@@ -6,5 +6,6 @@ return {
   "modules.newdraw.systems.keystate",
   "modules.newdraw.systems.devsystem",
   "modules.newdraw.systems.xformtest",
-  "modules.newdraw.systems.testviewport",
+  -- "modules.newdraw.systems.testviewport",
+  "modules.newdraw.systems.testcamera",
 }

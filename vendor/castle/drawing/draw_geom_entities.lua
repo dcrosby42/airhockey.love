@@ -6,7 +6,7 @@ return function(e, res)
     local oy = e.box.cy * h
     local x, y = e.box.x, e.box.y
     -- draw a yellow rectangle:
-    love.graphics.setColor(1, 1, 0)
+    love.graphics.setColor(e.box.color)
     love.graphics.rectangle("line", x - ox, y - oy, w, h)
   end
 
