@@ -38,14 +38,23 @@ local function withCameraTransform(cameraEnt, callback)
   love.graphics.pop()
 end
 
-local function withViewportCameraTransform(viewportE, cameraEnt, callback)
-  local transf = computeCameraTransform(cameraEnt)
+local function withViewportCameraTransform(vpE, camE, callback)
+  local offx = (vpE.box.w / 2)
+  local offy = (vpE.box.h / 2)
+  local tr = camE.tr
 
-  -- local bw, bh = viewportE.box.w, viewportE.box.h
-  -- local sbw, sbh = trToTransform(cameraEnt.tr):transformPoint(bw / 2, bh / 2)
-  -- local sbw, sbh = cameraEnt.tr.sx * bw / 2, cameraEnt.tr.sy * bh / 2
-  -- print("b=" .. bw .. "," .. bh .. " sb=" .. sbw .. "," .. sbh)
-  -- transf:translate(sbw, sbh)
+  local transf = love.math.newTransform()
+
+  offx, offy = love.math.newTransform(0, 0, 0, tr.sx, tr.sy):transformPoint(offx, offy)
+  transf:translate(tr.x - offx, tr.y - offy)
+
+  transf:translate(offx, offy)
+  transf:rotate(tr.r)
+  transf:translate(-offx, -offy)
+
+  transf:scale(tr.sx, tr.sy)
+
+  transf = transf:inverse()
 
   love.graphics.push()
   love.graphics.applyTransform(transf)
@@ -64,8 +73,8 @@ return function(estore, res)
         local camE = estore:getEntityByName(e.viewport.camera)
         if e.box then
           withStencil(e.box, function()
-            withCameraTransform(camE, continue)
-            -- withViewportCameraTransform(e, camE, continue)
+            -- withCameraTransform(camE, continue)
+            withViewportCameraTransform(e, camE, continue)
           end)
         else
           withCameraTransform(camE, continue)
