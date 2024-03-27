@@ -30,26 +30,47 @@ local function drawEntity(e, res)
   end
 end
 
+local function withCameraTransform(cameraEnt, callback)
+  local transf = computeCameraTransform(cameraEnt)
+  love.graphics.push()
+  love.graphics.applyTransform(transf)
+  callback()
+  love.graphics.pop()
+end
+
+local function withViewportCameraTransform(viewportE, cameraEnt, callback)
+  local transf = computeCameraTransform(cameraEnt)
+
+  -- local bw, bh = viewportE.box.w, viewportE.box.h
+  -- local sbw, sbh = trToTransform(cameraEnt.tr):transformPoint(bw / 2, bh / 2)
+  -- local sbw, sbh = cameraEnt.tr.sx * bw / 2, cameraEnt.tr.sy * bh / 2
+  -- print("b=" .. bw .. "," .. bh .. " sb=" .. sbw .. "," .. sbh)
+  -- transf:translate(sbw, sbh)
+
+  love.graphics.push()
+  love.graphics.applyTransform(transf)
+  callback()
+  love.graphics.pop()
+end
+
 -- Walk the Entity hierarchy and apply drawing functions.
 -- Entities with tr components will have their transforms applied as
 -- their children are drawn.
 return function(estore, res)
   BGColorSystem(estore, res)
   estore:walkEntities2(nil, function(e, continue)
-    if e.viewport and e.box then
+    if e.viewport then
       withTransform(e.tr.x, e.tr.y, e.tr.r, 0, 0, e.tr.sx, e.tr.sy, function()
-        withStencil(e.box, function()
-          local camE = estore:getEntityByName(e.viewport.camera)
-          withTransform(
-            e.box.w / 2 - camE.tr.x,
-            e.box.h / 2 - camE.tr.y,
-            0, 0, 0,
-            1, 1, -- sx,sy -- camera.zoom?
-            function()
-              continue()
-            end)
-        end)
-        drawEntity(e, res)
+        local camE = estore:getEntityByName(e.viewport.camera)
+        if e.box then
+          withStencil(e.box, function()
+            withCameraTransform(camE, continue)
+            -- withViewportCameraTransform(e, camE, continue)
+          end)
+        else
+          withCameraTransform(camE, continue)
+        end
+        drawEntity(e, res) -- eg, draw the viewport's box shape
       end)
     elseif e.tr then
       withTransform(e.tr.x, e.tr.y, e.tr.r, 0, 0, e.tr.sx, e.tr.sy, function()

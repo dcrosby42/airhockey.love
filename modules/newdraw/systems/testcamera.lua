@@ -31,33 +31,42 @@ local ZFACT_SLOW = 0.01
 
 local function updateCamera(e)
   local keyst = e.keystate
+  local loc = e.tr
   if keyst.held["a"] then
     local step = shifted(keyst, STEP_SLOW, STEP_FAST)
-    e.tr.x = e.tr.x - step
+    loc.x = e.tr.x - step
   end
   if keyst.held["d"] then
     local step = shifted(keyst, STEP_SLOW, STEP_FAST)
-    e.tr.x = e.tr.x + step
+    loc.x = e.tr.x + step
   end
   if keyst.held["w"] then
     local step = shifted(keyst, STEP_SLOW, STEP_FAST)
-    e.tr.y = e.tr.y - step
+    loc.y = e.tr.y - step
   end
   if keyst.held["s"] then
     local step = shifted(keyst, STEP_SLOW, STEP_FAST)
-    e.tr.y = e.tr.y + step
+    loc.y = e.tr.y + step
   end
   if keyst.held["q"] then
-    e.tr.r = e.tr.r - 0.01
-    -- local zfact = shifted(keyst, ZFACT_SLOW, ZFACT_FAST)
-    -- e.box.w = e.box.w - (zfact * e.box.w)
-    -- e.box.h = e.box.h - (zfact * e.box.h)
+    loc.r = e.tr.r + 0.01
   end
   if keyst.held["e"] then
-    e.tr.r = e.tr.r + 0.01
-    -- local zfact = shifted(keyst, ZFACT_SLOW, ZFACT_FAST)
-    -- e.box.w = e.box.w + (zfact * e.box.w)
-    -- e.box.h = e.box.h + (zfact * e.box.h)
+    loc.r = e.tr.r - 0.01
+  end
+  if keyst.held["1"] then
+    loc.sx = 1
+    loc.sy = 1
+  end
+  if keyst.held["-"] then
+    local zfact = shifted(keyst, ZFACT_SLOW, ZFACT_FAST)
+    loc.sx = loc.sx + (zfact * loc.sx)
+    loc.sy = loc.sx
+  end
+  if keyst.held["="] then
+    local zfact = shifted(keyst, ZFACT_SLOW, ZFACT_FAST)
+    loc.sx = loc.sx - (zfact * loc.sx)
+    loc.sy = loc.sx
   end
 end
 

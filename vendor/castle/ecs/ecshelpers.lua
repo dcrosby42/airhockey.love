@@ -223,11 +223,18 @@ function findEntities(estore, filter)
 end
 
 -- Given a tr component, return a new love2d transform
-function trToTransform(tr)
+function trToTransform(tr, rotx, roty)
   if tr then
-    return love.math.newTransform(tr.x, tr.y, tr.r, tr.sx, tr.sy)
+    return love.math.newTransform(tr.x, tr.y, tr.r, tr.sx, tr.sy, rotx, roty)
   end
   return love.math.newTransform()
+end
+
+function computeCameraTransform(camE)
+  if not camE then
+    return love.math.newTransform()
+  end
+  return trToTransform(camE.tr):inverse()
 end
 
 -- Compute the love2d Transform for the given entity by accumulating transformations
@@ -246,10 +253,11 @@ function computeEntityTransform(e)
   end
   if e.viewport then
     local camE = e:getEstore():getEntityByName(e.viewport.camera)
-    if camE and camE.tr then
-      local camTransf = love.math.newTransform(e.box.w / 2 - camE.tr.x, e.box.h / 2 - camE.tr.y, -camE.tr.r, 1, 1)
-      transform:apply(camTransf)
-    end
+    transform:apply(computeCameraTransform(camE))
+    -- if camE and camE.tr then
+    --   local camTransf = love.math.newTransform(e.box.w / 2 - camE.tr.x, e.box.h / 2 - camE.tr.y, -camE.tr.r, 1, 1)
+    --   transform:apply(camTransf)
+    -- end
   end
   return transform
 end

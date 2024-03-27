@@ -26,14 +26,16 @@ Comps.define('camera', { 'zoom', 1 })
 
 function E.testViewport(estore, res)
   local w, h = love.graphics.getDimensions()
+
   local viewport = estore:newEntity({
     { 'name',     { name = "viewport" } },
     { 'viewport', { camera = 'cam1' } },
     { 'keystate', {} },
-    { 'tr',       {} },
+    { 'tr',       { x = 70, y = 90 } },
     -- { 'box',      { x = 50, y = 100, w = 326, h = 246, debug = true } },
     -- { 'box',      { x = 75, y = 60, w = 640, h = 480, debug = true } },
-    { 'box',      { w = w / 2, h = h / 2, debug = true } },
+    -- { 'box',      { w = w / 2, h = h / 2, debug = true } },
+    { 'box',      { w = 640, h = 480, debug = true } },
   })
 
   -- viewport:newEntity({
@@ -75,9 +77,9 @@ function E.testViewport(estore, res)
       { 'name',     { name = name } },
       { 'tag',      { name = "camera" } },
       { 'camera',   { zoom = 1 } },
-      { 'tr',       { x = 200, y = 200, r = 0, sx = 0.5, sy = 0.5 } },
+      { 'tr',       { x = 200, y = 200, r = 0, sx = 1, sy = 1 } },
       -- { 'box',      { w = camw, h = camh, cx = 0.5, cy = 0.5, debug = true, color = color } },
-      { 'circle',   { style = "line", r = 5, color = color } },
+      { 'circle',   { style = "line", r = 10, color = color } },
       { 'label',    { text = name, color = color } },
       { 'keystate', {} },
     })
