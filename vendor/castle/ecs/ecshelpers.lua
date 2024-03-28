@@ -230,11 +230,40 @@ function trToTransform(tr, rotx, roty)
   return love.math.newTransform()
 end
 
-function computeCameraTransform(camE)
-  if not camE then
+-- Compute x,y offset of camera's center to the upper-left corner of the viewport
+function computeCameraOffset(vpE, camE)
+  local offx, offy = 0, 0
+  if vpE and vpE.box then
+    offx, offy = vpE.box.w / 2, vpE.box.h / 2
+  end
+  return love.math.newTransform(0, 0, 0, camE.tr.sx, camE.tr.sy):transformPoint(offx, offy)
+end
+
+function viewportCameraTransform(vpE, camE)
+  if not camE or not camE.tr then
     return love.math.newTransform()
   end
-  return trToTransform(camE.tr):inverse()
+
+  -- Start building a "camera transform"
+  local tr = camE.tr
+  local transf = love.math.newTransform()
+
+  -- Translate the camera's pos to the center of the viewport
+  local offx, offy = computeCameraOffset(vpE, camE)
+  transf:translate(tr.x - offx, tr.y - offy)
+
+  -- Rotate, centered on the camera:
+  transf:translate(offx, offy)
+  transf:rotate(tr.r)
+  transf:translate(-offx, -offy)
+
+  -- Use camera's scale vars as "zoom"
+  transf:scale(tr.sx, tr.sy)
+
+  -- invert the xform, to create the desired viewport-relative effects
+  transf = transf:inverse()
+
+  return transf
 end
 
 -- Compute the love2d Transform for the given entity by accumulating transformations
@@ -253,7 +282,7 @@ function computeEntityTransform(e)
   end
   if e.viewport then
     local camE = e:getEstore():getEntityByName(e.viewport.camera)
-    transform:apply(computeCameraTransform(camE))
+    transform:apply(viewportCameraTransform(e, camE))
     -- if camE and camE.tr then
     --   local camTransf = love.math.newTransform(e.box.w / 2 - camE.tr.x, e.box.h / 2 - camE.tr.y, -camE.tr.r, 1, 1)
     --   transform:apply(camTransf)

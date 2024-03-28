@@ -20,27 +20,23 @@ function E.initialEntities(res)
   return estore
 end
 
-local Comps = require("castle.components")
-Comps.define('viewport', { 'camera', '' })
-Comps.define('camera', { 'zoom', 1 })
-
 function E.testViewport(estore, res)
   local w, h = love.graphics.getDimensions()
 
-  local viewport = estore:newEntity({
-    { 'name',     { name = "viewport" } },
-    { 'viewport', { camera = 'cam1' } },
-    { 'keystate', {} },
-    { 'tr',       { x = 70, y = 90 } },
-    -- { 'box',      { x = 50, y = 100, w = 326, h = 246, debug = true } },
-    -- { 'box',      { x = 75, y = 60, w = 640, h = 480, debug = true } },
-    -- { 'box',      { w = w / 2, h = h / 2, debug = true } },
-    { 'box',      { w = 640, h = 480, debug = true } },
+  estore:newEntity({
+    { 'bgcolor', { color = { 0.2, 0, 0 } } },
   })
 
-  -- viewport:newEntity({
-  --   { 'screen_grid', { spacex = 100, color = { 1, 1, 1, 0.2 } } }
-  --})
+  local viewport = estore:newEntity({
+    { 'name',     { name = "viewport" } },
+    { 'viewport', { camera = 'cam1', } },
+    -- { 'viewport', { camera = 'cam1', blockout = true, bgcolor = { 0, 0, 0.2 } } },
+    { 'keystate', {} },
+    { 'tr',       { x = 70, y = 90, r = 0.0 } },
+    { 'box',      { w = 640, h = 480, debug = false } },
+    -- { 'tr',       {} },
+    -- { 'box',      { w = w, h = h } },
+  })
 
   local base = viewport:newEntity({
     { 'name',        { name = "base" } },
@@ -48,6 +44,7 @@ function E.testViewport(estore, res)
     { 'tr',          { x = 0, y = 0, r = 0, sx = 1, sy = 1 } },
     { 'screen_grid', { spacex = 100, color = { 1, 1, 1, 0.2 } } }
   })
+
 
   estore:newEntity({
     { 'name',   { name = 'blueDot' } },
@@ -65,25 +62,18 @@ function E.testViewport(estore, res)
 
   E.treeTest(base, res)
 
-  do
-    local w, h = love.graphics.getDimensions()
-    local whratio = w / h
-    local camw = 320
-    local camh = camw / whratio
+  E.debugCamera(base, "cam1", 200, 100)
+end
 
-    local color = { 1, 0.5, 0 }
-    local name = "cam1"
-    local camera = base:newEntity({
-      { 'name',     { name = name } },
-      { 'tag',      { name = "camera" } },
-      { 'camera',   { zoom = 1 } },
-      { 'tr',       { x = 200, y = 200, r = 0, sx = 1, sy = 1 } },
-      -- { 'box',      { w = camw, h = camh, cx = 0.5, cy = 0.5, debug = true, color = color } },
-      { 'circle',   { style = "line", r = 10, color = color } },
-      { 'label',    { text = name, color = color } },
-      { 'keystate', {} },
-    })
-  end
+function E.debugCamera(parent, name, x, y)
+  local color = { 1, 0.5, 0 }
+  return parent:newEntity({
+    { 'name',     { name = name } },
+    { 'tr',       { x = x, y = y, r = 0, sx = 1, sy = 1 } },
+    { 'circle',   { style = "line", r = 10, color = color } },
+    { 'label',    { text = name, color = color } },
+    { 'keystate', {} },
+  })
 end
 
 function E.testLabels(estore, res)

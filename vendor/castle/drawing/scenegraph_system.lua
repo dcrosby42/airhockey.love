@@ -30,32 +30,8 @@ local function drawEntity(e, res)
   end
 end
 
-local function withCameraTransform(cameraEnt, callback)
-  local transf = computeCameraTransform(cameraEnt)
-  love.graphics.push()
-  love.graphics.applyTransform(transf)
-  callback()
-  love.graphics.pop()
-end
-
 local function withViewportCameraTransform(vpE, camE, callback)
-  local offx = (vpE.box.w / 2)
-  local offy = (vpE.box.h / 2)
-  local tr = camE.tr
-
-  local transf = love.math.newTransform()
-
-  offx, offy = love.math.newTransform(0, 0, 0, tr.sx, tr.sy):transformPoint(offx, offy)
-  transf:translate(tr.x - offx, tr.y - offy)
-
-  transf:translate(offx, offy)
-  transf:rotate(tr.r)
-  transf:translate(-offx, -offy)
-
-  transf:scale(tr.sx, tr.sy)
-
-  transf = transf:inverse()
-
+  local transf = viewportCameraTransform(vpE, camE)
   love.graphics.push()
   love.graphics.applyTransform(transf)
   callback()
@@ -69,25 +45,44 @@ return function(estore, res)
   BGColorSystem(estore, res)
   estore:walkEntities2(nil, function(e, continue)
     if e.viewport then
-      withTransform(e.tr.x, e.tr.y, e.tr.r, 0, 0, e.tr.sx, e.tr.sy, function()
+      --
+      -- Viewport
+      --
+      local drawViewport = function()
         local camE = estore:getEntityByName(e.viewport.camera)
         if e.box then
-          withStencil(e.box, function()
-            -- withCameraTransform(camE, continue)
-            withViewportCameraTransform(e, camE, continue)
-          end)
-        else
-          withCameraTransform(camE, continue)
+          love.graphics.setColor(e.viewport.bgcolor)
+          love.graphics.rectangle("fill", e.box.x, e.box.y, e.box.w, e.box.h)
+          if e.viewport.blockout then
+            withStencil(e.box, function()
+              withViewportCameraTransform(e, camE, continue)
+            end)
+            drawEntity(e, res)
+            return
+          end
         end
-        drawEntity(e, res) -- eg, draw the viewport's box shape
-      end)
+        withViewportCameraTransform(e, camE, continue)
+        drawEntity(e, res)
+      end
+      if e.tr then
+        -- The viewport itself, like any drawable, has a transform:
+        withTransform(e.tr.x, e.tr.y, e.tr.r, 0, 0, e.tr.sx, e.tr.sy, drawViewport)
+      else
+        -- just render it
+        drawViewport()
+      end
     elseif e.tr then
+      --
+      -- Entity with transformation
+      --
       withTransform(e.tr.x, e.tr.y, e.tr.r, 0, 0, e.tr.sx, e.tr.sy, function()
         drawEntity(e, res)
         continue()
       end)
     else
+      --
       -- Regular (non-transformed) drawing:
+      --
       drawEntity(e, res)
       continue()
     end
