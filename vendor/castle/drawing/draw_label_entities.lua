@@ -2,13 +2,13 @@ local mk_entity_draw_loop = require 'castle.drawing.mk_entity_draw_loop'
 local withTransform = require("castle.drawing.with_transform")
 
 local function drawLabel(e, label, res)
-  -- if label.font then
-  --   -- lookup font and apply it
-  --   local font = res.fonts[label.font]
-  --   if font then
-  --     love.graphics.setFont(font)
-  --   end
-  -- end
+  if label.font then
+    -- lookup font and apply it
+    local font = res.fonts[label.font]
+    if font then
+      love.graphics.setFont(font)
+    end
+  end
 
   -- ox and oy are computed based on cx and cy, used to both "recenter the box" and as center of rotation
   -- These offsets are optional, and can only be used in context of optional width and height
