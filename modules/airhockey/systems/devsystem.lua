@@ -15,21 +15,21 @@ local function toggleState(e, sname)
 end
 
 return defineUpdateSystem(hasName("dev_state"), function(e, estore, input, res)
+  --
+  -- Toggle "debug mode" when "d" is pressed
+  --
   EventHelpers.onKeyPressed(input.events, "d", function(evt)
+    -- Set the "global" debug flag:
     res.data.debug_draw = toggleState(e, "debug_draw")
-    print("debug " .. tostring(res.data.debug_draw))
-
-    local viewroot = estore:getEntityByName("viewroot")
-    if res.data.debug_draw then
-      viewroot.tr.x = 100
-      viewroot.tr.y = 100
-      viewroot.tr.sx = 0.7
-      viewroot.tr.sy = 0.7
-    else
-      viewroot.tr.x = 0
-      viewroot.tr.y = 0
-      viewroot.tr.sx = 1
-      viewroot.tr.sy = 1
+    -- Adjust camera zoom level:
+    local camE = estore:getEntityByName("camera1")
+    if camE then
+      local scale = 1
+      if res.data.debug_draw then
+        -- zoom out a bit so we can see the walls etc
+        scale = 1.5
+      end
+      camE.tr.sx, camE.tr.sy = scale, scale
     end
   end)
 end)

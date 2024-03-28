@@ -33,40 +33,41 @@ function E.initialEntities(res)
 
   E.gameState(estore, res)
 
-  E.dev_state(estore, res)
+  E.devState(estore, res)
 
-  -- local viewport = E.viewport(estore, res)
-  -- local parent = viewport
-  -- local parent = estore
-  local viewroot = estore:newEntity({
-    { 'name', { name = 'viewroot' } },
-    { 'tr',   {} },
-    -- { 'tr',   { x = 150, y = 150, r = 0.3, sx = 0.7, sy = 0.7 } }
+  local viewport = estore:newEntity({
+    { 'name',     { name = 'viewroot' } },
+    { 'viewport', { camera = "" } },
+    { 'tr',       {} },
+    { 'box',      { w = w, h = h, debug = true } }
   })
-  if DEBUG_ZOOMOUT then
-    viewroot.tr.x = 100
-    viewroot.tr.y = 100
-    viewroot.tr.sx = 0.7
-    viewroot.tr.sy = 0.7
-  end
-  local gameTable = E.game_table(viewroot, res)
-  local parent = gameTable
 
-  E.physicsWorld(parent, res)
+  local gameTable = viewport:newEntity({
+    { 'name', { name = "table" } },
+    { 'box',  { w = w, h = h } },
+  })
 
-  E.background(parent, res)
+  E.physicsWorld(gameTable, res)
 
-  E.add_walls(parent, res)
+  E.background(gameTable, res)
 
-  E.scoreBoard(parent, res)
-  E.malletResetButton_p1(parent, res)
-  E.malletResetButton_p2(parent, res)
-  E.puckResetButton(parent, res)
+  E.add_walls(gameTable, res)
 
-  E.puck_drop(parent, res, { drift = false })
+  E.scoreBoard(gameTable, res)
+  E.malletResetButton_p1(gameTable, res)
+  E.malletResetButton_p2(gameTable, res)
+  E.puckResetButton(gameTable, res)
 
-  E.mallet_p1(parent, res)
-  E.mallet_p2(parent, res)
+  E.puck_drop(gameTable, res, { drift = false })
+
+  E.mallet_p1(gameTable, res)
+  E.mallet_p2(gameTable, res)
+
+  gameTable:newEntity({
+    { 'name', { name = "camera1" } },
+    { 'tr',   { x = w / 2, y = h / 2 } }
+  })
+  viewport.viewport.camera = "camera1"
 
 
   if SHOW_RELOAD_BUTTON then
@@ -435,11 +436,7 @@ function E.gameState(parent, res)
   })
 end
 
-function E.dev_state(parent, res)
-  parent:newEntity({
-    { 'name',  { name = 'dev_state' } },
-    { 'state', { name = 'debug_draw', value = false } },
-  })
+function E.devState(parent, res)
 end
 
 return E
