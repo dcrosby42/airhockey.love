@@ -35,17 +35,9 @@ function E.initialEntities(res)
 
   E.devState(estore, res)
 
-  local viewport = estore:newEntity({
-    { 'name',     { name = 'viewroot' } },
-    { 'viewport', { camera = "" } },
-    { 'tr',       {} },
-    { 'box',      { w = w, h = h, debug = true } }
-  })
+  local viewport = E.viewport(estore, res, w, h)
 
-  local gameTable = viewport:newEntity({
-    { 'name', { name = "table" } },
-    { 'box',  { w = w, h = h } },
-  })
+  local gameTable = E.gameTable(viewport, res)
 
   E.physicsWorld(gameTable, res)
 
@@ -63,10 +55,7 @@ function E.initialEntities(res)
   E.mallet_p1(gameTable, res)
   E.mallet_p2(gameTable, res)
 
-  gameTable:newEntity({
-    { 'name', { name = "camera1" } },
-    { 'tr',   { x = w / 2, y = h / 2 } }
-  })
+  E.camera(gameTable, res, "camera1")
   viewport.viewport.camera = "camera1"
 
 
@@ -80,8 +69,36 @@ function E.initialEntities(res)
   return estore
 end
 
-function E.game_table(parent, res)
-  local w, h = love.graphics.getDimensions()
+function E.viewport(parent, res, w, h)
+  return parent:newEntity({
+    { 'name',     { name = 'viewroot' } },
+    { 'viewport', { camera = "" } },
+    { 'tr',       {} },
+    { 'box',      { w = w, h = h, debug = true } }
+  })
+end
+
+function E.camera(parent, res, name)
+  local w, h
+  if parent.box then
+    w, h = parent.box.w, parent.box.h
+  else
+    w, h = love.graphics.getDimensions()
+  end
+  parent:newEntity({
+    { 'name', { name = name } },
+    { 'tr',   { x = w / 2, y = h / 2 } }
+  })
+end
+
+function E.gameTable(parent, res)
+  -- local w, h = love.graphics.getDimensions()
+  local w, h
+  if parent.box then
+    w, h = parent.box.w, parent.box.h
+  else
+    w, h = love.graphics.getDimensions()
+  end
   return parent:newEntity({
     { 'name', { name = "table" } },
     { 'box',  { w = w, h = h } },
@@ -437,6 +454,11 @@ function E.gameState(parent, res)
 end
 
 function E.devState(parent, res)
+  parent:newEntity({
+    { 'name',     { name = 'dev_state' } },
+    { 'state',    { name = 'debug_draw', value = false } },
+    { 'keystate', {} },
+  })
 end
 
 return E
