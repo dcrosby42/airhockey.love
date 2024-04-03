@@ -118,6 +118,8 @@ end
 local function matchSpecToFn(matchSpec)
   if type(matchSpec) == "function" then
     return matchSpec
+  elseif type(matchSpec) == "string" then
+    return hasComps(matchSpec)
   else
     return hasComps(unpack(matchSpec))
   end

@@ -33,7 +33,7 @@ function E.initialEntities(res)
 
   E.gameState(estore, res)
 
-  E.devState(estore, res)
+  E.dev_state(estore, res)
 
   local viewport = E.viewport(estore, res, w, h)
 
@@ -71,7 +71,7 @@ end
 
 function E.viewport(parent, res, w, h)
   return parent:newEntity({
-    { 'name',     { name = 'viewroot' } },
+    { 'name',     { name = 'viewport' } },
     { 'viewport', { camera = "" } },
     { 'tr',       {} },
     { 'box',      { w = w, h = h, debug = true } }
@@ -453,7 +453,7 @@ function E.gameState(parent, res)
   })
 end
 
-function E.devState(parent, res)
+function E.dev_state(parent, res)
   parent:newEntity({
     { 'name',     { name = 'dev_state' } },
     { 'state',    { name = 'debug_draw', value = false } },

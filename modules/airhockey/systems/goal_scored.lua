@@ -33,9 +33,9 @@ return defineUpdateSystem(
 
       -- update game_state: increment score for point winner
       local winner = e.states.winner.value
-      local gs = findEntity(estore, hasName("game_state"))
-      local score = gs.states[winner].value + 1
-      gs.states[winner].value = score
+      local gameState = findEntity(estore, hasName("game_state"))
+      local score = gameState.states[winner].value + 1
+      gameState.states[winner].value = score
 
       -- Update the score
       local labelName = "score_" .. winner
@@ -48,14 +48,14 @@ return defineUpdateSystem(
 
 
       fsm.setState(e, "grace_period")
-      return
     elseif state == "grace_period" then
       if e.timers.cooldown.alarm then
         -- Add the puck back to the table
         E.puck_drop(e:getParent(), res)
         fsm.setState(e, "done")
+        -- Remove this goal_scored entity
+        estore:destroyEntity(e)
       end
-      return
     end
   end
 )

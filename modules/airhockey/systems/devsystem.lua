@@ -1,5 +1,3 @@
-local EventHelpers = require "castle.systems.eventhelpers"
-
 local function getState(e, sname)
   return e.states[sname].value
 end
@@ -18,10 +16,11 @@ return defineUpdateSystem(hasName("dev_state"), function(e, estore, input, res)
   --
   -- Toggle "debug mode" when "d" is pressed
   --
-  EventHelpers.onKeyPressed(input.events, "d", function(evt)
+  if e.keystate.pressed["d"] then
     -- Set the "global" debug flag:
     res.data.debug_draw = toggleState(e, "debug_draw")
-    -- Adjust camera zoom level:
+
+    -- Toggle camera zoom level (zoom out 50% in debug mode)
     local camE = estore:getEntityByName("camera1")
     if camE then
       local scale = 1
@@ -31,5 +30,5 @@ return defineUpdateSystem(hasName("dev_state"), function(e, estore, input, res)
       end
       camE.tr.sx, camE.tr.sy = scale, scale
     end
-  end)
+  end
 end)

@@ -51,8 +51,10 @@ return function(estore, res)
       local drawViewport = function()
         local camE = estore:getEntityByName(e.viewport.camera)
         if e.box then
+          -- Viewports with boxes can set an opaque bgcolor:
           love.graphics.setColor(e.viewport.bgcolor)
           love.graphics.rectangle("fill", e.box.x, e.box.y, e.box.w, e.box.h)
+          -- Viewports with "blockout" flag set true are stencil'd (limited) to drawing inside their boxes
           if e.viewport.blockout then
             withStencil(e.box, function()
               withViewportCameraTransform(e, camE, continue)
@@ -61,6 +63,7 @@ return function(estore, res)
             return
           end
         end
+        -- Viewports with NO box, or with box but NO stenciling:
         withViewportCameraTransform(e, camE, continue)
         drawEntity(e, res)
       end
