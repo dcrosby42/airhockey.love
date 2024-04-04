@@ -31,11 +31,18 @@ function E.initialEntities(res)
 
   local estore = Estore:new()
 
-  E.gameState(estore, res)
+  -- E.airhockeyGame(estore, res)
+  E.testEndGame(estore, res)
+
+  return estore
+end
+
+function E.airhockeyGame(estore, res)
+  E.game_state(estore, res)
 
   E.dev_state(estore, res)
 
-  local viewport = E.viewport(estore, res, w, h)
+  local viewport = E.viewport(estore, res)
 
   local gameTable = E.gameTable(viewport, res)
 
@@ -65,11 +72,10 @@ function E.initialEntities(res)
   -- if SHOW_DEBUG_TOGGLE_BUTTON then
   --   E.addDebugButton(estore, res)
   -- end
-
-  return estore
 end
 
-function E.viewport(parent, res, w, h)
+function E.viewport(parent, res)
+  local w, h = res.data.screen_size.width, res.data.screen_size.height
   return parent:newEntity({
     { 'name',     { name = 'viewport' } },
     { 'viewport', { camera = "" } },
@@ -445,8 +451,8 @@ function E.scoreBoard(parent, res)
   p2.label.color = { 1, 0, 0, 0.35 }
 end
 
-function E.gameState(parent, res)
-  parent:newEntity({
+function E.game_state(parent, res)
+  return parent:newEntity({
     { 'name',  { name = 'game_state' } },
     { 'state', { name = 'Player1', value = 0 } },
     { 'state', { name = 'Player2', value = 0 } },
@@ -458,6 +464,27 @@ function E.dev_state(parent, res)
     { 'name',     { name = 'dev_state' } },
     { 'state',    { name = 'debug_draw', value = false } },
     { 'keystate', {} },
+  })
+end
+
+function E.testEndGame(estore, res)
+  local gameState = E.game_state(estore, res)
+  local w = res.data.screen_size.width
+  local h = res.data.screen_size.height
+
+  local parent = estore:newEntity({
+    { 'box', { w = w, h = h } }
+  })
+  E.scoreBoard(parent, res)
+
+
+  local updateScoreBoard = require("modules.airhockey.funcs").updateScoreBoard
+  gameState.states.Player1.value = 10
+  gameState.states.Player2.value = 7
+  updateScoreBoard(estore, gameState)
+
+  estore:newEntity({
+    { 'tag', { name = "game_over" } }
   })
 end
 

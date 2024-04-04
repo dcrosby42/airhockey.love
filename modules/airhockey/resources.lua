@@ -17,6 +17,7 @@ return {
           "castle.systems.physics",
           "castle.systems.sound",
           "castle.systems.touchbutton",
+          "castle.systems.tween",
           "modules.newdraw.systems.keystate",
           "modules.airhockey.systems.devsystem",
           "modules.airhockey.systems.touch",
@@ -25,6 +26,7 @@ return {
           "modules.airhockey.systems.mallet",
           "modules.airhockey.systems.puck",
           "modules.airhockey.systems.goal_scored",
+          "modules.airhockey.systems.game_over",
         }
       },
       drawSystems = {

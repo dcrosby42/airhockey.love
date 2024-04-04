@@ -65,6 +65,19 @@ Comp.define("sound", {
   'duration', 0,
 })
 
+Comp.define('tween', {
+  'comp', '',
+  'prop', '',
+  'from', 0,
+  'to', 0,
+  'duration', 1,
+  'timer', '',
+  'func', 'lerp',
+  -- 'easing', 'linear',
+  'finished', false,
+  'killtimer', false,
+})
+
 --
 -- PHYSICS
 --

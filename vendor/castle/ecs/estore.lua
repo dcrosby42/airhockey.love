@@ -198,10 +198,10 @@ function Estore:detachComp(e, comp)
 
     -- If this comp was the singular comp ref, pick a different comp (or nil) to replace it:
     if e[key] and e[key].cid == comp.cid then
-      _, val = next(e[keyp], nil) -- pluck any comp from the plural ref
-      e[key] = val                -- will either be another comp or nil, if there weren't any more
+      local _, val = next(e[keyp], nil) -- pluck any comp from the plural ref
+      e[key] = val                      -- will either be another comp or nil, if there weren't any more
       if not val then
-        e[keyp] = nil             -- plural ref was empty, clean it out
+        e[keyp] = nil                   -- plural ref was empty, clean it out
       end
     end
 
