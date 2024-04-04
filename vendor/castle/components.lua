@@ -72,8 +72,7 @@ Comp.define('tween', {
   'to', 0,
   'duration', 1,
   'timer', '',
-  'func', 'lerp',
-  -- 'easing', 'linear',
+  'easing', 'linear',
   'finished', false,
   'killtimer', false,
 })
