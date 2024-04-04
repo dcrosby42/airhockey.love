@@ -8,7 +8,7 @@ local function getScoreLabels(estore)
   return score1, score2
 end
 
-local function startAnimations(e, estore)
+local function startScoreTweens(e, estore)
   local score1, score2 = getScoreLabels(estore)
   local parent = score1:getParent()
   local w, h = parent.box.w, parent.box.h
@@ -37,14 +37,96 @@ local function startAnimations(e, estore)
     })
 end
 
+local function startShowWinner(e, estore)
+  -- Find the score label entity for the winner:
+  local score1, score2 = getScoreLabels(estore)
+  local scoreLabelW = score1
+  if e.states.winner.value ~= "Player1" then
+    scoreLabelW = score2
+  end
+  -- Figure out the area we're on:
+  local parent = scoreLabelW:getParent()
+  local w, h = parent.box.w, parent.box.h
+
+  -- (compute start/end positional params for the winner label tween)
+  -- upper part of the screen:
+  local voffset = -100
+  -- (upside-down off to the left)
+  local offright = -150
+  local rot = math.pi
+  if e.states.winner.value ~= "Player1" then
+    -- lower part of the screen
+    voffset = -voffset
+    -- off to the right
+    offright = w + 150
+    -- rightside up
+    rot = 0
+  end
+
+  -- Compute winner's color (red or blue prolly)
+  local winColorStart = lcopy(scoreLabelW.label.color)
+  winColorStart[4] = 0
+  local winColorEnd = lcopy(winColorStart)
+  winColorEnd[4] = 1
+
+  -- Add a WINNER label
+  local winnerLabel = parent:newEntity({
+    { 'name', { name = "winner_label" } },
+    { 'tr',   { x = offright, y = h / 2 + voffset } },
+    {
+      'label',
+      {
+        text = "WINNER",
+        color = winColorStart,
+        r = rot,
+        w = 300,
+        h = 100,
+        cx = 0.5,
+        cy = 0.5,
+        align = "center",
+        valign = "center",
+        font = 'alarm_clock_medium',
+        debug = false,
+      },
+    },
+
+  })
+  TweenHelpers.addTweens(winnerLabel, "slide_in", {
+      label = { color = winColorEnd },
+      tr = { x = w / 2, }
+    },
+    {
+      duration = 1,
+      easing = "outCubic",
+    })
+end
+
 return defineUpdateSystem(
   hasTag("game_over"),
   function(e, estore, input, res)
     local state = FSM.getState(e)
     if state == "start" then
-      startAnimations(e, estore)
-      FSM.setState(e, "sliding_stuff")
-    elseif state == "sliding_stuff" then
-      -- ...
+      startScoreTweens(e, estore)
+      e:newComp('timer', { name = "sliding", t = 1 })
+      FSM.setState(e, "sliding_scores")
+    elseif state == "sliding_scores" then
+      if e.timers.sliding.alarm then
+        startShowWinner(e, estore)
+        e:removeComp(e.timers.sliding)
+        e:newComp('timer', { name = "winning", t = 1 })
+        FSM.setState(e, "showing_winner")
+      end
+      -- local score1, score2 = getScoreLabels(estore)
+      -- if score1 and score1.tween and score1.tween.finished then
+      --   startShowWinner(e, estore)
+      --   FSM.setState(e, "showing_winner")
+      -- end
+    elseif state == "showing_winner" then
+      if e.timers.winning.alarm then
+        FSM.setState(e, "finished")
+        e:removeComp(e.timers.winning)
+        print("DONE")
+      end
+    elseif state == "finished" then
     end
   end)

@@ -459,7 +459,7 @@ Comp.define('game_state', {
 function E.game_state(parent, res)
   return parent:newEntity({
     { 'name',       { name = 'game_state' } },
-    { 'game_state', { max_score = 10, } },
+    { 'game_state', { max_score = 1, } },
   })
 end
 
@@ -483,9 +483,9 @@ function E.testEndGame(estore, res)
 
 
   local updateScoreBoard = require("modules.airhockey.funcs").updateScoreBoard
-  gameState.states.Player1.value = 10
-  gameState.states.Player2.value = 7
-  updateScoreBoard(estore, gameState)
+  gameState.game_state.scores.Player1 = 10
+  gameState.game_state.scores.Player2 = 7
+  updateScoreBoard(estore, gameState.game_state)
 
   E.game_over(estore, { winner = "Player1" })
 end

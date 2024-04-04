@@ -2,8 +2,6 @@ local Funcs = {}
 local inspect = require "inspect"
 
 function Funcs.incrementScore(gameState, winner)
-  print(inspect(gameState))
-  print(inspect(winner))
   gameState.scores[winner] = gameState.scores[winner] + 1
 end
 
