@@ -31,8 +31,8 @@ function E.initialEntities(res)
 
   local estore = Estore:new()
 
-  -- E.airhockeyGame(estore, res)
-  E.testEndGame(estore, res)
+  E.airhockeyGame(estore, res)
+  -- E.testEndGame(estore, res)
 
   return estore
 end
@@ -451,11 +451,15 @@ function E.scoreBoard(parent, res)
   p2.label.color = { 1, 0, 0, 0.35 }
 end
 
+Comp.define('game_state', {
+  'scores', { Player1 = 0, Player2 = 0 },
+  'max_score', 10,
+})
+
 function E.game_state(parent, res)
   return parent:newEntity({
-    { 'name',  { name = 'game_state' } },
-    { 'state', { name = 'Player1', value = 0 } },
-    { 'state', { name = 'Player2', value = 0 } },
+    { 'name',       { name = 'game_state' } },
+    { 'game_state', { max_score = 10, } },
   })
 end
 
@@ -483,8 +487,16 @@ function E.testEndGame(estore, res)
   gameState.states.Player2.value = 7
   updateScoreBoard(estore, gameState)
 
-  estore:newEntity({
-    { 'tag', { name = "game_over" } }
+  E.game_over(estore, { winner = "Player1" })
+end
+
+function E.game_over(parent, opts)
+  opts = opts or {}
+  local winner = opts.winner or "???"
+  parent:newEntity({
+    { 'tag',   { name = "game_over" } },
+    { 'state', { name = "winner", value = winner } },
+    { 'state', { name = 'fsm', value = 'start' } },
   })
 end
 
