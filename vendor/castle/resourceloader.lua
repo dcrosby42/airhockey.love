@@ -386,15 +386,30 @@ end
 -- fontConfig: {type,name, data:{file, choices={{name="dude",size=14}...}}}
 function Loaders.font(res, fontConfig)
   local data = Loaders.getData(fontConfig)
-  local choices = data.choices
-  if not choices or #choices == 0 then
-    choices = { { name = "default", size = 12 } }
+  local choices = data.choices or {}
+  -- Expand any abbreviated choice definitions.
+  --   - choice defs normally look like { name="medium", size=24 }
+  --   - abbreviated choices may be simple integers, eg, 32, which expands to {name="32",size=32}
+  for i, choice in ipairs(choices) do
+    if type(choice) == "number" then
+      choices[i] = { name = tostring(choice), size = choice }
+    end
   end
+  -- Ensure there's a 'default' choice for this font
+  if choices[fontConfig.name .. "_default"] == nil then
+    local size = 12 -- default default
+    if #choices > 0 then
+      -- if there's at least one configured choice, make its size the default
+      size = choices[1].size
+    end
+    choices[fontConfig.name .. "_default"] = { name = "default", size = size }
+  end
+  -- Load and cache font choices:
   for _, choice in ipairs(choices) do
-    local font = R.getFont(data.file, choice.size)
-    local thisName = fontConfig.name .. "_" .. choice.name
-    -- Debug.println("font: " .. thisName .. " "..tostring(font).." ("..love.graphics.)
-    res:get('fonts'):put(thisName, font)
+    local sizedFont = R.getFont(data.file, choice.size)
+    local fontChoiceName = fontConfig.name .. "_" .. choice.name
+    res:get('fonts'):put(fontChoiceName, sizedFont)
+    Debug.println("configured font: " .. fontChoiceName)
   end
 end
 
