@@ -1,5 +1,4 @@
 local inspect = require('inspect')
-local SoundPool = require "castle.soundpool"
 local MyDebug = require('mydebug')
 local Debug = MyDebug.sub("resourceloader", false, false)
 
