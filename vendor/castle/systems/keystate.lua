@@ -5,13 +5,6 @@ local function isHandling(keyst, key)
   return lcontains(keyst.handle, key)
 end
 
-Comps.define('keystate', {
-  'handle', {},
-  'pressed', {},
-  'held', {},
-  'released', {},
-})
-
 return defineUpdateSystem({ "keystate" },
   function(e, estore, input, res)
     local keyst = e.keystate

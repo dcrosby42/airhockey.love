@@ -120,6 +120,13 @@ Comp.define("contact",
 -- INPUT / UI
 --
 
+Comp.define("keystate", {
+  'handle', {},   -- list of key names to be tracked
+  'pressed', {},  -- set of keys recently pressed
+  'held', {},     -- set of keys recently pressed and/or held
+  'released', {}, -- set of keys released
+})
+
 Comp.define("button", {
   'kind', 'tap', -- hold, tap
   'eventtype', '',

@@ -15,7 +15,7 @@ return {
           "castle.systems.sound",
           "castle.systems.touchbutton",
           "castle.systems.tween",
-          "modules.newdraw.systems.keystate",
+          "castle.systems.keystate",
           "modules.airhockey.systems.devsystem",
           "modules.airhockey.systems.touch",
           "modules.airhockey.systems.mallet_reset",
