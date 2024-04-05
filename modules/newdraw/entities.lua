@@ -15,7 +15,8 @@ function E.initialEntities(res)
   -- E.treeTestOuter(estore, res)
   -- E.transformTestGrids(estore, res)
   -- E.testLabels(estore, res)
-  E.testViewport(estore, res)
+  -- E.testViewport(estore, res)
+  E.testFonts(estore, res)
 
   return estore
 end
@@ -74,6 +75,58 @@ function E.debugCamera(parent, name, x, y)
     { 'label',    { text = name, color = color } },
     { 'keystate', {} },
   })
+end
+
+function E.testFonts(estore, res)
+  -- local fonts = {
+  --   "Adventure",
+  --   "Adventure_Outline",
+  --   "goingtodogreatthings",
+  --   "LuckiestGuy",
+  --   "narpassword",
+  --   "alarm_clock",
+  --   "font",
+  -- }
+  local fonts = {
+    "Adventure_24",
+    "Adventure_48",
+    "Adventure_64",
+    "AdventureOutline_24",
+    "AdventureOutline_48",
+    "AdventureOutline_64",
+    "Lucky_24",
+    "Lucky_48",
+    "Lucky_64",
+    "narpassword_24",
+    "narpassword_48",
+    "narpassword_64",
+  }
+
+  local x, y = 10, 10
+  for i, font in ipairs(fonts) do
+    -- local text = font
+    local text = "WINNER"
+    local color = { 1, 1, 1, 1 }
+    -- local font = "alarm_clock_small"
+    -- local font = "alarm_clock_medium"
+
+    estore:newEntity({
+      { 'tr', { x = x, y = y, r = 0, sx = s, sy = s } },
+      { 'label', {
+        text = text,
+        color = color,
+        font = font,
+        align = "center",
+        valign = "center",
+        debug = true,
+      } },
+    })
+    y = y + 75
+    if i % 9 == 0 then
+      x = x + 230
+      y = 10
+    end
+  end
 end
 
 function E.testLabels(estore, res)

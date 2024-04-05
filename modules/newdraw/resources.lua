@@ -114,29 +114,48 @@ return {
       file = "modules/airhockey/fonts/alarm_clock.ttf",
       choices = {
         { name = "small",  size = 24 },
-        -- { name = "medium", size = 48 },
         { name = "medium", size = 64 },
       },
     },
   },
-  -- {
-  --   type = "sound",
-  --   name = "pig",
-  --   data = {
-  --     file = "modules/barnyard/sounds/pig.wav",
-  --     type = "sound",
-  --     volume = 0.5,
-  --   },
-  -- },
-  -- {
-  --   type = "font",
-  --   name = "cartoon",
-  --   data = {
-  --     file = "modules/barnyard/fonts/LuckiestGuy.ttf",
-  --     choices = {
-  --       { name = "small",  size = 24 },
-  --       { name = "medium", size = 48 },
-  --     },
-  --   },
-  -- },
+  {
+    type = "font",
+    name = "Adventure",
+    data = {
+      file = "modules/common/fonts/Adventure.ttf",
+      choices = { 24, 48, 64 },
+    },
+  },
+  {
+    type = "font",
+    name = "AdventureOutline",
+    data = {
+      file = "modules/common/fonts/Adventure_Outline.ttf",
+      choices = { 24, 48, 64 },
+    },
+  },
+  {
+    type = "font",
+    name = "GreatThings",
+    data = {
+      file = "modules/common/fonts/goingtodogreatthings.ttf",
+      choices = { 24, 48, 64 },
+    },
+  },
+  {
+    type = "font",
+    name = "Lucky",
+    data = {
+      file = "modules/common/fonts/LuckiestGuy.ttf",
+      choices = { 24, 48, 64 },
+    },
+  },
+  {
+    type = "font",
+    name = "narpassword",
+    data = {
+      file = "modules/common/fonts/narpassword.ttf",
+      choices = { 24, 48, 64 },
+    },
+  },
 }
