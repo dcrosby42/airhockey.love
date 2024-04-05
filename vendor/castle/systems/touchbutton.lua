@@ -1,6 +1,5 @@
 local Debug = require 'mydebug'
-Debug = Debug.sub("TouchButton", true, true)
-local EventHelpers = require 'castle.systems.eventhelpers'
+Debug = Debug.sub("TouchButton", false, false)
 
 return function(estore, input, res)
   estore:walkEntities(hasComps('touch', 'button'), function(e)
