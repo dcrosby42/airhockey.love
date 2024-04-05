@@ -137,7 +137,6 @@ end
 D.toLines = toLines
 D.println = println
 D.setup = setup
-D.update = update
 D.draw = draw
 D.drawNotes = drawNotes
 D.sub = makeSub

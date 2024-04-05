@@ -451,15 +451,10 @@ function E.scoreBoard(parent, res)
   p2.label.color = { 1, 0, 0, 0.35 }
 end
 
-Comp.define('game_state', {
-  'scores', { Player1 = 0, Player2 = 0 },
-  'max_score', 10,
-})
-
 function E.game_state(parent, res)
   return parent:newEntity({
     { 'name',       { name = 'game_state' } },
-    { 'game_state', { max_score = 1, } },
+    { 'game_state', { max_score = 10, } },
   })
 end
 

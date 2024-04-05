@@ -238,7 +238,7 @@ function tdebug(t, ind)
     local count = 0
     for k, v in pairs(t) do
       local s = ind .. k .. ": " .. tdebug(v, ind .. "  ")
-      tappend(lines, s)
+      table.insert(lines, s)
       count = count + 1
     end
     if count > 0 then
@@ -273,8 +273,8 @@ function debugStringBytes(str)
 end
 
 function keyvalsearch(t, matchFn, callbackFn)
-  for _, v in pairs(t) do
-    if fn(k, v) then
+  for k, v in pairs(t) do
+    if matchFn(k, v) then
       callbackFn(k, v)
     end
   end
@@ -282,7 +282,7 @@ end
 
 function valsearch(t, matchFn, callbackFn)
   for _, v in pairs(t) do
-    if fn(v) then
+    if matchFn(v) then
       callbackFn(v)
     end
   end
@@ -290,7 +290,7 @@ end
 
 function valsearchfirst(t, matchFn, callbackFn)
   for _, v in pairs(t) do
-    if fn(v) then
+    if matchFn(v) then
       return callbackFn(v)
     end
   end
@@ -350,7 +350,7 @@ end
 function lfind(list, fn)
   for i = 1, #list do
     if fn(list[i], i) == true then
-      return v
+      return list[i]
     end
   end
 end
@@ -373,7 +373,7 @@ function lfindall(list, fn)
   return res
 end
 
-function lfindallby(t, key, val)
+function lfindallby(list, key, val)
   local res = {}
   for i = 1, #list do
     if list[i][key] == val then
@@ -637,18 +637,6 @@ end
 
 function colorstring(c)
   return "Color(" .. c[1] .. "," .. c[2] .. "," .. c[3] .. "," .. tostring(c[4]) .. ")"
-end
-
-function string:split(sep)
-  local sep, fields = sep or ":", {}
-  local pattern = string.format("([^%s]+)", sep)
-  self:gsub(
-    pattern,
-    function(c)
-      fields[#fields + 1] = c
-    end
-  )
-  return fields
 end
 
 function map(array, func)

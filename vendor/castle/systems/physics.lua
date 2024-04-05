@@ -281,7 +281,7 @@ function generateCollisionEvents(collbuf, estore, events)
             x = a_x,
             y = a_y,
             dx = a_dx,
-            y = a_dy,
+            dy = a_dy,
           })
           -- Add a contact for entity B
           b_ent:newComp("contact", {

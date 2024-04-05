@@ -1,4 +1,4 @@
-require 'castle/helpers'
+require 'castle.helpers'
 
 local ObjPool = {}
 

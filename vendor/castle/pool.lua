@@ -1,4 +1,4 @@
-require "castle/helpers"
+require "castle.helpers"
 
 local Debug = require("mydebug").sub("pool")
 
@@ -75,8 +75,8 @@ end
 function Pool:expand()
   local newCap = (self.cap * self.mulSize) + self.incSize
   Debug.println(
-      "newCap " .. newCap .. " / oldcap " .. self.cap .. " mulSize " ..
-          self.mulSize .. " incSize " .. self.incSize)
+    "newCap " .. newCap .. " / oldcap " .. self.cap .. " mulSize " ..
+    self.mulSize .. " incSize " .. self.incSize)
   local start = #self.items + 1
   local num = newCap - self.cap
   for i = start, num do

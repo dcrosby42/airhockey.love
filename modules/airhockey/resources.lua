@@ -5,10 +5,7 @@ return {
     data = {
       entities = { datafile = "modules/airhockey/entities.lua" },
       components = {
-        -- datafile = "modules/airhockey/components.lua",
-        data = {
-          -- animalspawner = {'kind', ''},
-        }
+        datafile = "modules/airhockey/components.lua",
       },
       systems = {
         data = {
