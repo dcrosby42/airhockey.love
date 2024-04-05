@@ -123,6 +123,15 @@ return {
       },
     },
   },
+  {
+    type = "font",
+    name = "narpassword",
+    data = {
+      file = "modules/common/fonts/narpassword.ttf",
+      -- choices = { 24, 48, 64 },
+      choices = { 64 },
+    },
+  },
   -- {
   --   type = "sound",
   --   name = "drop_puck1",

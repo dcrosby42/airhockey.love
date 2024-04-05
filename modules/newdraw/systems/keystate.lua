@@ -1,7 +1,12 @@
 local EventHelpers = require "castle.systems.eventhelpers"
 local Comps = require "castle.components"
 
+local function isHandling(keyst, key)
+  return lcontains(keyst.handle, key)
+end
+
 Comps.define('keystate', {
+  'handle', {},
   'pressed', {},
   'held', {},
   'released', {},
@@ -18,14 +23,18 @@ return defineUpdateSystem({ "keystate" },
     end
     EventHelpers.handle(input.events, "keyboard", {
       pressed = function(evt)
-        keyst.pressed[evt.key] = true
-        keyst.held[evt.key] = true
+        local key = evt.key
+        if not isHandling(keyst, key) then return false end
+        keyst.pressed[key] = true
+        keyst.held[key] = true
         -- return false
       end,
       released = function(evt)
-        keyst.pressed[evt.key] = false
-        keyst.held[evt.key] = false
-        keyst.released[evt.key] = true
+        local key = evt.key
+        if not isHandling(keyst, key) then return false end
+        keyst.pressed[key] = false
+        keyst.held[key] = false
+        keyst.released[key] = true
         -- return false
       end,
     })

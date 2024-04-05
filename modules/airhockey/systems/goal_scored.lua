@@ -18,24 +18,24 @@ return defineUpdateSystem(
 
       -- update game_state: increment score for point winner
       local winner = e.states.winner.value
-
       local gameState = estore:getEntityByName("game_state").game_state
       incrementScore(gameState, winner)
       updateScoreBoard(estore, gameState)
 
-      if maxScoreReached(gameState) then
-        -- Transition to game over sequence
-        E.game_over(estore, { winner = winner })
-        estore:destroyEntity(e)
-      else
-        -- Enter grace period before puck reset
-        FSM.setState(e, "grace_period")
-        e:newComp("timer", { name = "grace_period", t = GRACE_PERIOD })
-      end
+      -- Enter grace period before puck reset
+      FSM.setState(e, "grace_period")
+      e:newComp("timer", { name = "grace_period", t = GRACE_PERIOD })
     elseif state == "grace_period" then
       if e.timers.grace_period.alarm then
-        -- Add the puck back to the table
-        E.puck_drop(e:getParent(), res)
+        local winner = e.states.winner.value
+        local gameState = estore:getEntityByName("game_state").game_state
+        if maxScoreReached(gameState) then
+          -- Trigger the game over sequence
+          E.game_over(estore, { winner = winner })
+        else
+          -- Add the puck back to the table
+          E.puck_drop(e:getParent(), res)
+        end
         -- Remove this goal_scored entity
         estore:destroyEntity(e)
       end

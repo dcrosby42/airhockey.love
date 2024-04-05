@@ -467,7 +467,7 @@ function E.dev_state(parent, res)
   parent:newEntity({
     { 'name',     { name = 'dev_state' } },
     { 'state',    { name = 'debug_draw', value = false } },
-    { 'keystate', {} },
+    { 'keystate', { handle = { 'd' } } },
   })
 end
 
@@ -494,9 +494,10 @@ function E.game_over(parent, opts)
   opts = opts or {}
   local winner = opts.winner or "???"
   parent:newEntity({
-    { 'tag',   { name = "game_over" } },
-    { 'state', { name = "winner", value = winner } },
-    { 'state', { name = 'fsm', value = 'start' } },
+    { 'tag',      { name = "game_over" } },
+    { 'state',    { name = "winner", value = winner } },
+    { 'state',    { name = 'fsm', value = 'start' } },
+    { 'keystate', { handle = { "return", "space" } } },
   })
 end
 

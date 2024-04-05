@@ -79,13 +79,13 @@ local function startShowWinner(e, estore)
         text = "WINNER",
         color = winColorStart,
         r = rot,
-        w = 300,
+        w = 350,
         h = 100,
         cx = 0.5,
         cy = 0.5,
         align = "center",
         valign = "center",
-        font = 'alarm_clock_medium',
+        font = 'narpassword_64',
         debug = false,
       },
     },
@@ -101,11 +101,19 @@ local function startShowWinner(e, estore)
     })
 end
 
+local function teardownPlayers(estore)
+  for _, name in pairs({ "mallet_p1", "mallet_p2" }) do
+    local e = estore:getEntityByName(name)
+    estore:destroyEntity(e)
+  end
+end
+
 return defineUpdateSystem(
   hasTag("game_over"),
   function(e, estore, input, res)
     local state = FSM.getState(e)
     if state == "start" then
+      teardownPlayers(estore)
       startScoreTweens(e, estore)
       e:newComp('timer', { name = "sliding", t = 1 })
       FSM.setState(e, "sliding_scores")
@@ -116,17 +124,18 @@ return defineUpdateSystem(
         e:newComp('timer', { name = "winning", t = 1 })
         FSM.setState(e, "showing_winner")
       end
-      -- local score1, score2 = getScoreLabels(estore)
-      -- if score1 and score1.tween and score1.tween.finished then
-      --   startShowWinner(e, estore)
-      --   FSM.setState(e, "showing_winner")
-      -- end
     elseif state == "showing_winner" then
       if e.timers.winning.alarm then
-        FSM.setState(e, "finished")
         e:removeComp(e.timers.winning)
-        print("DONE")
+        FSM.setState(e, "finished")
       end
     elseif state == "finished" then
+      -- user hitting spac or return key
+      local pressed = e.keystate.pressed
+      if pressed["space"] or pressed["return"] or pressed["enter"] then
+        table.insert(input.events, {
+          type = 'castle.reloadRootModule',
+        })
+      end
     end
   end)
