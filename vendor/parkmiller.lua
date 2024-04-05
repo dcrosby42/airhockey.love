@@ -1,4 +1,4 @@
-
+-- Per https://en.wikipedia.org/wiki/Lehmer_random_number_generator
 local A = 48271
 local B = 2147483647 -- 2^31 - 1
 
@@ -6,29 +6,29 @@ local function nextState(s)
   return (s * A) % B
 end
 
-local function churnState(s,n)
-  for i=1,n do
+local function churnState(s, n)
+  for i = 1, n do
     s = nextState(s)
   end
   return s
 end
 
-local function randomFloat(s, lo,hi)
-  lo=lo or 0.0
-  hi=hi or 1.0
+local function randomFloat(s, lo, hi)
+  lo = lo or 0.0
+  hi = hi or 1.0
   local s1 = nextState(s)
-  return (s1/B)*(hi-lo)+lo, s1
+  return (s1 / B) * (hi - lo) + lo, s1
 end
 
 -- lo and hi are INclusive
-local function randomInt(s, lo,hi)
-  local f,s1 = randomFloat(s)
-  return math.floor(f * (hi-lo+1)) + lo, s1
+local function randomInt(s, lo, hi)
+  local f, s1 = randomFloat(s)
+  return math.floor(f * (hi - lo + 1)) + lo, s1
 end
 
 local function randomChance(s, w)
   w = w or 0.5
-  local f,s1 = randomFloat(s)
+  local f, s1 = randomFloat(s)
   return (f <= w), s1
 end
 
@@ -37,46 +37,15 @@ local function pickRandom(s, list)
   return list[i], s1
 end
 
-local function localRandom(seed, x,y)
-  local num = (seed % B) * math.floor(math.pow(love.math.noise(x/10,y/10)*10000,2))
-  num = churnState(num,5)
+local function localRandom(seed, x, y)
+  local num = (seed % B) * math.floor(math.pow(love.math.noise(x / 10, y / 10) * 10000, 2))
+  num = churnState(num, 5)
   return num
 end
 
--- local Rng = {
--- }
---
--- function Rng:new(s)
---   local o = {
---     s=s,
---   }
---   setmetatable(o, self)
---   self.__index = self
---   return o
--- end
---
--- function Rng:nextState()
---   self.s = nextState(self.s)
--- end
---
--- function Rng:setState(s)
---   self.s = s
--- end
---
--- function Rng:getState()
---   return self.s
--- end
---
--- function Rng:randomFloat()
---   local f
---   f, self.s = nextState(self.s)
---   return f
--- end
-
-
 return {
-  A=A,
-  B=B,
+  A = A,
+  B = B,
   nextState = nextState,
   churnState = churnState,
   randomFloat = randomFloat,
@@ -86,6 +55,3 @@ return {
   localRandom = localRandom,
   -- new = function(s) return Rng:new(s) end,
 }
-
-
-
