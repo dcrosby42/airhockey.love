@@ -2,6 +2,7 @@ local EventHelpers = require 'castle.systems.eventhelpers'
 local Debug = require('mydebug').sub("Touch", false, false)
 local inspect = require("inspect")
 
+-- Pre-declare helper funcs (so we can write the system func first)
 local touchPressed, touchMoved, touchReleased
 local findTouch, cleanupTouches, touchName
 
@@ -54,7 +55,6 @@ touchPressed = function(estore, touchEvt)
     Debug.println(function() return "Start touch " .. inspect(e.touch) end)
     return true -- signal to seekEntity that we've hit; stop seeking
   end)
-  return true
 end
 
 touchMoved = function(estore, touchEvt)

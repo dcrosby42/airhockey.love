@@ -32,7 +32,6 @@ function E.initialEntities(res)
   local estore = Estore:new()
 
   E.airhockeyGame(estore, res)
-  -- E.testEndGame(estore, res)
 
   return estore
 end
@@ -464,25 +463,6 @@ function E.dev_state(parent, res)
     { 'state',    { name = 'debug_draw', value = false } },
     { 'keystate', { handle = { 'd' } } },
   })
-end
-
-function E.testEndGame(estore, res)
-  local gameState = E.game_state(estore, res)
-  local w = res.data.screen_size.width
-  local h = res.data.screen_size.height
-
-  local parent = estore:newEntity({
-    { 'box', { w = w, h = h } }
-  })
-  E.scoreBoard(parent, res)
-
-
-  local updateScoreBoard = require("modules.airhockey.funcs").updateScoreBoard
-  gameState.game_state.scores.Player1 = 10
-  gameState.game_state.scores.Player2 = 7
-  updateScoreBoard(estore, gameState.game_state)
-
-  E.game_over(estore, { winner = "Player1" })
 end
 
 function E.game_over(parent, opts)
