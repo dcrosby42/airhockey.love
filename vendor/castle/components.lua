@@ -154,6 +154,7 @@ Comp.define("touch", {
   'debug', false,
 })
 
+Comp.define('screen_grid', { 'spacex', 10, 'spacey', '', 'color', { 1, 1, 1, 0.3 } })
 
 
 

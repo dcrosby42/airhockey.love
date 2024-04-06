@@ -6,7 +6,6 @@ return {
       entities = { datafile = "modules/newdraw/entities.lua" },
       components = {
         data = {
-          screen_grid = { 'spacex', 10, 'spacey', '', 'color', { 1, 1, 1, 0.3 } }
         }
       },
       systems = { datafile = "modules/newdraw/systems.lua" },
