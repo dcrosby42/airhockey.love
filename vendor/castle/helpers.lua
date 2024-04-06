@@ -11,7 +11,7 @@ if unpack == nil then
 end
 
 function flattenTable(t)
-  s = ""
+  local s = ""
   for k, v in pairs(t) do
     if #s > 0 then
       s = s .. " "

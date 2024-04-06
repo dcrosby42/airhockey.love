@@ -103,6 +103,7 @@ function E.testFonts(estore, res)
   }
 
   local x, y = 10, 10
+  local s = 1
   for i, font in ipairs(fonts) do
     -- local text = font
     local text = "WINNER"
