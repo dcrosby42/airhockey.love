@@ -315,15 +315,6 @@ function Estore:seekEntity(matchFn, doFn)
   end
 end
 
-function Estore:findEntity(matchFn)
-  local found
-  self:seekEntity(matchFn, function(e)
-    found = e
-    return true
-  end)
-  return found
-end
-
 -- (recursive step of seekEntity)
 function Estore:_seekEntity(e, matchFn, doFn)
   if (not matchFn) or matchFn(e) then -- execute doFn if either a) no matcher, or b) matcher provided and returns true
@@ -338,6 +329,40 @@ function Estore:_seekEntity(e, matchFn, doFn)
       return true
     end
   end
+end
+
+-- Bottom-up search.
+-- (Eg, reverse draw order... ie, touch-hit detection that aligns with the order of drawing)
+function Estore:seekEntityBottomUp(matchFn, doFn, ents)
+  if ents == nil then
+    ents = self._root._children
+  end
+  -- Iterate entities in reverse, since later-drawn entities appear on top of earlier-drawn
+  for i = #ents, 1, -1 do
+    local e = ents[i]
+    -- Search children first. (Children would be drawn on top of parents)
+    if self:seekEntityBottomUp(matchFn, doFn, e._children) == true then
+      -- doFn returning explicitly true means: seeking should end
+      return true
+    end
+    -- Check self after children:
+    if (not matchFn) or matchFn(e) then -- execute doFn if either a) no matcher, or b) matcher provided and returns true
+      if doFn(e) == true then
+        -- stop seeking
+        return true
+      end
+    end
+  end
+  return false -- keep seeking
+end
+
+function Estore:findEntity(matchFn)
+  local found
+  self:seekEntity(matchFn, function(e)
+    found = e
+    return true
+  end)
+  return found
 end
 
 function Estore:getEntityByName(name)

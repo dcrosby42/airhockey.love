@@ -22,6 +22,7 @@ local DrawFuncs = {
   require('castle.drawing.draw_physics_entities'),
   require('castle.drawing.draw_label_entities'),
   require('castle.drawing.draw_sound_entities'),
+  require('castle.drawing.draw_touch_debugs'),
 }
 
 local function drawEntity(e, res)

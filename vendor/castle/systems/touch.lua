@@ -1,5 +1,6 @@
 local EventHelpers = require 'castle.systems.eventhelpers'
-local Debug = require('mydebug').sub("Touch", false, false)
+local DoDebug = false
+local Debug = require('mydebug').sub("Touch", DoDebug, DoDebug)
 local inspect = require("inspect")
 
 -- Pre-declare helper funcs (so we can write the system func first)
@@ -26,7 +27,8 @@ local touchSystem = function(estore, input, res)
 end
 
 touchPressed = function(estore, touchEvt)
-  estore:seekEntity(hasComps("touchable"), function(e)
+  -- use bottom-up search to emulate reversed draw-order
+  estore:seekEntityBottomUp(hasComps("touchable"), function(e)
     local x, y = touchEvt.x, touchEvt.y
 
     -- Detect touch intersection:
@@ -51,6 +53,7 @@ touchPressed = function(estore, touchEvt)
       prev_y = y,
       x = x,
       y = y,
+      debug = DoDebug or e.touchable.debug,
     })
     Debug.println(function() return "Start touch " .. inspect(e.touch) end)
     return true -- signal to seekEntity that we've hit; stop seeking
