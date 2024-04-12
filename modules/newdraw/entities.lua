@@ -15,8 +15,8 @@ function E.initialEntities(res)
   -- E.treeTestOuter(estore, res)
   -- E.transformTestGrids(estore, res)
   -- E.testLabels(estore, res)
-  -- E.testViewport(estore, res)
-  E.testFonts(estore, res)
+  E.testViewport(estore, res)
+  -- E.testFonts(estore, res)
 
   return estore
 end
