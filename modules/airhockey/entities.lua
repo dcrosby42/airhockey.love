@@ -2,11 +2,6 @@ local Debug = require("mydebug").sub("AirHockey", true, true)
 local Estore = require "castle.ecs.estore"
 local inspect = require "inspect"
 
-local PUCK_RADIUS = 40
-local MALLET_RADIUS = 60
-local GOAL_WIDTH = 250
-local GOAL_DEPTH = 90
-
 local SHOW_RELOAD_BUTTON = true
 local SHOW_DEBUG_TOGGLE_BUTTON = false
 
@@ -24,10 +19,20 @@ local DEBUG_ZOOMOUT = false
 
 local E = {}
 
-
-function E.initialEntities(res)
+local function captureSettings(res)
   local w, h = love.graphics.getDimensions()
   res:get("data"):put("screen_size", { width = w, height = h })
+
+  local os = love.system.getOS() -- "OS X", "Windows", "Linux", "Android" or "iOS"
+  local is_mobile = (os == "iOS" or os == "Android")
+  res:get("data"):put("system", {
+    os = os,
+    is_mobile = is_mobile,
+  })
+end
+
+function E.initialEntities(res)
+  captureSettings(res)
 
   local estore = Estore:new()
 
@@ -160,10 +165,12 @@ function E.add_walls(parent, res)
   local right = sw
   local thick = 100
 
+  local goal_width = 250
+  local goal_depth = 90
 
   do
     -- top left
-    local w = sw / 2 - (GOAL_WIDTH / 2)
+    local w = sw / 2 - (goal_width / 2)
     local h = thick
     local x = w / 2
     local y = top - (thick / 2)
@@ -171,7 +178,7 @@ function E.add_walls(parent, res)
   end
   do
     -- top right
-    local w = sw / 2 - (GOAL_WIDTH / 2)
+    local w = sw / 2 - (goal_width / 2)
     local h = thick
     local x = sw - (w / 2)
     local y = top - (thick / 2)
@@ -179,17 +186,17 @@ function E.add_walls(parent, res)
   end
   do
     -- top goal net
-    local w = GOAL_WIDTH
+    local w = goal_width
     local h = thick
     local x = sw / 2
-    local y = top - GOAL_DEPTH - (thick / 2)
+    local y = top - goal_depth - (thick / 2)
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "top_goal", tag = "wall" }))
     e:newComp('tag', { name = "goal" })
     e:newComp('state', { name = "winner", value = "Player2" })
   end
   do
     -- bottom left
-    local w = sw / 2 - (GOAL_WIDTH / 2)
+    local w = sw / 2 - (goal_width / 2)
     local h = thick
     local x = w / 2
     local y = bottom + (thick / 2)
@@ -197,7 +204,7 @@ function E.add_walls(parent, res)
   end
   do
     -- bottom right
-    local w = sw / 2 - (GOAL_WIDTH / 2)
+    local w = sw / 2 - (goal_width / 2)
     local h = thick
     local x = sw - (w / 2)
     local y = bottom + (thick / 2)
@@ -205,10 +212,10 @@ function E.add_walls(parent, res)
   end
   do
     -- bottom goal net
-    local w = GOAL_WIDTH
+    local w = goal_width
     local h = thick
     local x = sw / 2
-    local y = bottom + GOAL_DEPTH + (thick / 2)
+    local y = bottom + goal_depth + (thick / 2)
     local e = parent:newEntity(staticBox(x, y, w, h, { name = "bottom_goal", tag = "wall" }))
     e:newComp('tag', { name = "goal" })
     e:newComp('state', { name = "winner", value = "Player1" })
@@ -237,8 +244,15 @@ function E.puck(parent, res, x, y, opts)
   local pic_id = "puck_" .. opts.color
   opts.name = opts.name or "puck"
 
+  local puck_radius
+  if res.data.system.is_mobile then
+    puck_radius = 60
+  else
+    puck_radius = 40
+  end
+
   local imgSize = res.pics[pic_id].rect.w
-  local ratio = PUCK_RADIUS / (imgSize / 2)
+  local ratio = puck_radius / (imgSize / 2)
   local r = math.pi / 4
   local puck = parent:newEntity({
     { 'name', { name = opts.name } },
@@ -255,7 +269,7 @@ function E.puck(parent, res, x, y, opts)
       debugDraw = DEBUG_PUCK_BODY,
     } },
     { 'force',       {} },
-    { 'circleShape', { radius = PUCK_RADIUS } },
+    { 'circleShape', { radius = puck_radius } },
 
     { 'sound',       { sound = "drop_puck1", volume = 1 } },
   })
@@ -313,8 +327,15 @@ function E.mallet(parent, res, x, y, opts)
   local pic_id = "mallet_" .. opts.color
   opts.name = opts.name or pic_id
 
+  local mallet_radius
+  if res.data.system.is_mobile then
+    mallet_radius = 80
+  else
+    mallet_radius = 60
+  end
+
   local imgSize = res.pics[pic_id].rect.w
-  local scale = MALLET_RADIUS / (imgSize / 2)
+  local scale = mallet_radius / (imgSize / 2)
   scale = scale * 1.05 -- mallet image is a little squished, so inflate the scale a bit
   local rot = 0
   if opts.inverted then
@@ -323,7 +344,7 @@ function E.mallet(parent, res, x, y, opts)
   local mallet = parent:newEntity({
     { 'name',      { name = opts.name } },
     { 'tag',       { name = "mallet" } },
-    { 'touchable', { r = MALLET_RADIUS * 1.20 } },
+    { 'touchable', { r = mallet_radius * 1.20 } },
     { 'pic',       { id = pic_id, sx = scale, sy = scale, cx = 0.5, cy = 0.5, r = rot, debug = DEBUG_MALLET_IMG } },
     { 'tr',        { x = x, y = y } },
     { 'vel',       { dx = 0, dy = 0 } },
@@ -334,7 +355,7 @@ function E.mallet(parent, res, x, y, opts)
       debugDraw = DEBUG_MALLET_BODY,
     } },
     { 'force',       {} },
-    { 'circleShape', { radius = MALLET_RADIUS } },
+    { 'circleShape', { radius = mallet_radius } },
   })
   return mallet
 end

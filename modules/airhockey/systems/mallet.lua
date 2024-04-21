@@ -1,8 +1,6 @@
 local Debug = require("mydebug").sub("Mallet", false, false)
 local inspect = require "inspect"
 
-local Impact = 15
-
 -- Update the location of e based on touch location.
 -- Touch is in screen coords; dragging happens in e's parent space.
 local function dragPosition(e, xform)
@@ -24,20 +22,26 @@ end
 
 -- Update the velocity of e based on touch motion.
 -- Touch is in screen coords; dragging happens in e's parent space.
-local function dragVelocity(e, xform)
+local function dragVelocity(e, xform, vel_boost)
   local t = e.touch
   local dx, dy = subtractInverseTransformed(xform, t.x, t.y, t.prev_x, t.prev_y)
-  e.vel.dx = dx * Impact
-  e.vel.dy = dy * Impact
+  e.vel.dx = dx * vel_boost
+  e.vel.dy = dy * vel_boost
 end
 
 -- Control the mallets (paddles) by touch-n-drag
 return defineUpdateSystem(allOf(hasComps("touch"), hasTag("mallet")),
   function(e, estore, input, res)
+    local vel_boost
+    if res.data.system.is_mobile then
+      vel_boost = 30
+    else
+      vel_boost = 15
+    end
     if e.touch.state == "moved" then
       local xform = computeEntityTransform(e:getParent())
       dragPosition(e, xform)
-      dragVelocity(e, xform)
+      dragVelocity(e, xform, vel_boost)
     else
       e.vel.dx = 0
       e.vel.dy = 0
